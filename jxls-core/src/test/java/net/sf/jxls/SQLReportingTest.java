@@ -1,17 +1,16 @@
 package net.sf.jxls;
 
 import junit.framework.TestCase;
-
-import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.Map;
-import java.util.HashMap;
-import java.io.*;
-
-import net.sf.jxls.transformer.XLSTransformer;
 import net.sf.jxls.report.ReportManager;
 import net.sf.jxls.report.ReportManagerImpl;
+import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+import java.io.*;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Leonid Vysochyn
@@ -113,10 +112,7 @@ public class SQLReportingTest extends TestCase {
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         // todo
-        OutputStream os = new BufferedOutputStream(new FileOutputStream(reportDest));
-        resultWorkbook.write(os);
-        os.flush();
-        os.close();
+        saveWorkbook( resultWorkbook, reportDest );
     }
 
 
@@ -139,8 +135,18 @@ public class SQLReportingTest extends TestCase {
         }
         rs.close();
         stmt.close();
-
-
     }
+
+    private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
+        String saveResultsProp = System.getProperty("saveResults");
+        if( "true".equalsIgnoreCase(saveResultsProp) ){
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(fileName));
+            resultWorkbook.write(os);
+            os.flush();
+            os.close();
+        }
+    }
+
+
 
 }

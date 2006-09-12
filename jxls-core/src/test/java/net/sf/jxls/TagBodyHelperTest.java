@@ -1,18 +1,17 @@
 package net.sf.jxls;
 
 import junit.framework.TestCase;
+import net.sf.jxls.tag.Block;
+import net.sf.jxls.util.TagBodyHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import net.sf.jxls.util.TagBodyHelper;
-import net.sf.jxls.tag.Block;
-import net.sf.jxls.CellsChecker;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Leonid Vysochyn
@@ -46,11 +45,8 @@ public class TagBodyHelperTest extends TestCase {
         checker.checkRows(sheet, sheet, 1, 7, 3);
 //        checker.checkRows(sheet, sheet, 4, 10, 1);
 
-        OutputStream os = new BufferedOutputStream(new FileOutputStream(simpeBeanDestXLS));
-        workbook.write(os);
         is.close();
-        os.flush();
-        os.close();
+        saveWorkbook( workbook, simpeBeanDestXLS);
     }
 
     public void testReplaceProperty() throws IOException {
@@ -70,13 +66,20 @@ public class TagBodyHelperTest extends TestCase {
         props.put( "mainBean.beans", "item");
         CellsChecker checker = new CellsChecker(props);
         checker.checkRows(sheet, sheet, 0, 0, 5);
-
-        OutputStream os = new BufferedOutputStream(new FileOutputStream(grouping1DestXLS));
-        workbook.write(os);
         is.close();
-        os.flush();
-        os.close();
-
+        saveWorkbook( workbook, grouping1DestXLS);
     }
+
+    private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
+        String saveResultsProp = System.getProperty("saveResults");
+        if( "true".equalsIgnoreCase(saveResultsProp) ){
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(fileName));
+            resultWorkbook.write(os);
+            os.flush();
+            os.close();
+        }
+    }
+
+
 
 }
