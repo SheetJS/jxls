@@ -45,10 +45,15 @@
         </fileSet>
         <fileSet>
             <directory>jxls-core/target/javadoc</directory>
-            <outputDirectory>doc/api</outputDirectory>
+            <outputDirectory>doc/apidocs</outputDirectory>
             <includes>
                 <include>**</include>
             </includes>
+            <excludes>
+                <exclude>options</exclude>
+                <exclude>files</exclude>
+                <exclude>packagelist</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>jxls-examples</directory>

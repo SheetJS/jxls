@@ -4,7 +4,7 @@
       <title>jx: Tags Sample</title>
     </properties>
     <body>
-        <section id="basicTags" name="jx:forEach and jx:if tags sample">
+        <section id="basicTags" name="jx Tags Sample">
             <p>This sample demonstrates how to export a collection of depatments and their employees using jx:forEach and jx:if tags</p>
             <source>
                 List departmens = new ArrayList();

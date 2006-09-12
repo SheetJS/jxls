@@ -1,8 +1,13 @@
 <project name="jxls">
-  <bannerRight>
+  <bannerLeft>
     <name>jXLS</name>
     <href>http://jxls.sourceforge.net</href>
-  </bannerRight>
+  </bannerLeft>
+    <bannerRight>
+      <name>SourceForge</name>
+      <src>http://sourceforge.net/sflogo.php?group_id=141729&amp;type=1</src>
+    </bannerRight>
+    <publishDate format="dd MMM yyyy"/>
   <body>
     <links>
       <item name="jXLS on Sourceforge" href="http://sourceforge.net/projects/jxls"/>
@@ -36,12 +41,6 @@
       <item name="Dynamic Style" href="samples/dynamicstylesample.html"/>
       <item name="JDBC ResultSet" href="samples/resultsetsample.html"/>
     </menu>
-      <powered-by>
-          <item
-            name="Hosted by SourceForge"
-            href="http://www.sourceforge.net"
-            img="http://sourceforge.net/sflogo.php?group_id=16035&amp;type=1"/>
-    </powered-by>
     ${reports}
   </body>
 </project>

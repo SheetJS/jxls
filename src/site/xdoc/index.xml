@@ -6,13 +6,13 @@
     <body>
         <section name="News">
             <p><strong>jXLS v.0.9 released</strong></p>
-            <p>This was mainly refactoring and restructuring release. Here is the list of main changes:  </p>
+            <p>This is mainly re-engineering release. Here is the list of main changes:  </p>
             <ul>
                 <li>Performance enhancements</li>
                 <li>Root packages were changed to net.sf.jxls to correspond actual project domain</li>
                 <li>Project build system was migrated to <a href="http://maven.apache.org">Maven 2</a></li>
                 <li>Source Code repository was migrated to Subversion. Details on jXLS Subversion access can be found <a
-                href="https://sourceforge.net/svn/?group_id=141729">here</a></li>
+                href="source-repository.html">here</a></li>
                 <li>Formulas processing re-engineering</li>
                 <li>Some issues have been fixed</li>
             </ul>
