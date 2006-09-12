@@ -1,0 +1,21 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Spreadsheet Operations</title>
+    </properties>
+    <body>
+        <section name="Spreadsheet Operations" id="sheetOperations">
+            <subsection id="hiding" name="Spreadsheet hiding">
+                <p>You can hide some sheet dynamically in your Excel export with the method <code>void setSpreadsheetsToHide(String[] names)</code>
+                    of <code>XLSTransformer</code> class. It takes the names of spreadsheets to hide. </p>
+            </subsection>
+            <subsection id="renaming" name="Spreadsheet renaming">
+                <title></title>
+                <p>Sometimes it is required to set sheet name dynamically. It can be done with <code>void setSpreadsheetToRename(String name, String newName)</code>
+                    method of <code>XLSTransformer</code>. This method takes template spreadsheet <code>name</code> and schedules it to be renamed into <code>newName</code>.
+                    The method may be invoked multiple times.
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>

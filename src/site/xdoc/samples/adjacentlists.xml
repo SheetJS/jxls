@@ -1,0 +1,46 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Adjacent Lists Sample</title>
+    </properties>
+    <body>
+        <section name="Adjacent Lists Export" id="adjacentlistsample">
+            <p>This sample demonstrates how to export adjacent collections. Source code is as following</p>
+            <source>
+                Department depIT = new Department("IT");
+                Employee elsa = new Employee("Elsa", 28, 1500, 0.15);
+                depIT.addEmployee(elsa);
+                Employee oleg = new Employee("Oleg", 32, 2300, 0.25);
+                depIT.addEmployee(oleg);
+                Employee neil = new Employee("Neil", 34, 2500, 0.00);
+                depIT.addEmployee(neil);
+                Employee maria = new Employee("Maria", 34, 1700, 0.15);
+                depIT.addEmployee(maria);
+                Employee john = new Employee("John", 35, 2800, 0.20);
+                depIT.addEmployee(john);
+                Department depHR = new Department("IT");
+                Employee natali = new Employee("Natali", 25, 1200, 0.1);
+                depHR.addEmployee( natali );
+                Employee helen = new Employee("Helen", 27, 1100, 0.20);
+                depHR.addEmployee(helen);
+                Employee olga = new Employee("Olga", 24, 1150, 0.00);
+                depHR.addEmployee(olga);
+                Map beans = new HashMap();
+                beans.put("depIT", depIT);
+                beans.put("depHR", depHR);
+                XLSTransformer transformer = new XLSTransformer();
+                transformer.transformXLS(templateFileName, beans, destFileName);
+            </source>
+            <p>Template file screenshot</p>
+            <img src="../images/adjacentListTemplateXLS.gif" alt="Screenshot of Adjacent List XLS template file"/>
+            <p>You can also download Excel version
+                <a href="../xls/adjacentlists.xls">adjacentlists.xls</a>
+            </p>
+            <p>Output file looks like</p>
+            <img src="../images/adjacentListOutputXLS.gif" alt="Screenshot of Adjacent List XLS output"/>
+            <p> Excel file
+                <a href="../xls/adjacentlist_output.xls">adjacentlist_output.xls</a>
+            </p>
+        </section>
+    </body>
+</document>

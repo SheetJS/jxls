@@ -1,0 +1,102 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Reporting Sample</title>
+    </properties>
+	<body>
+		<section id="overview" name="Overview">
+			<p>This sample demonstrates usage of reporting techniques available in jXLS.
+                See also <a href="../reference/sqlreporting.html">SQL Reporting</a> section for detailed explanation of
+                how it works.
+            </p>
+			<p>In the next sample we use two tables <code>employee</code> and <code>department</code>.
+                <code>id</code> column in the <code>department</code> table is referenced by foreign key <code>depid</code>
+                column from the <code>employee</code> table.
+                We use the same template to demonstrate several ways of using SQL queries to get required data.
+                The template can be found in here <a href="../xls/report.xls">report.xls</a>.
+                And the result is here <a href="../xls/report_output.xls">report_output.xls</a>.
+                Screenshot of XLS template file
+            </p>
+            <img src="../images/reportTemplateXLS.gif" alt="Screenshot of simple query results output"/>
+            <section id="simplequery" name="Simple Query">
+				<p>This is an example of rather a simple query which joins <code>employee</code> and <code>department</code>
+                    tables to list all employees and their corresponding departments
+                </p>
+				<source>
+             &lt;jx:forEach items="${rm.exec('SELECT d.name depname, e.name empname, payment, bonus FROM employee e, department d where d.id = e.depid order by age desc')}" var="employee">
+             ${employee.empname} | ${employee.payment} | ${employee.bonus} | $[B4*(1+C4)] | ${employee.depname}
+             &lt;/jx:forEach>
+                </source>
+				<p>The screenshot is here </p>
+                <img src="../images/reportOutput1XLS.gif" alt="Screenshot of simple query results output"/>
+            </section>
+			<section id="groupingResults" name="Grouping Results">
+				<p>This sample demonstrates how to group the results of the previous join by department names</p>
+				<source>
+ &lt;jx:forEach items="${rm.exec('SELECT d.name depname, e.name empname, payment, bonus FROM employee e, department d where d.id = e.depid order by age desc')}" groupBy="depname">
+ Department: ${group.item.depname}
+ Name | Payment | Bonus | Total
+ &lt;jx:forEach items="${group.items}" var="employee">
+ ${employee.empname} | ${employee.payment} | ${employee.bonus} | $[B13*(1+C13)]
+ &lt;/jx:forEach>
+ &lt;/jx:forEach>
+                </source>
+				<p>Result looks like</p>
+				<img src="../images/reportOutput2XLS.gif" alt="Screenshot of Grouping Data XLS output"/>
+			</section>
+			<section id="dependentQueries" name="Dependent Queries">
+				<p>This sample demonstrates how to execute dependent queries.
+                First we select all the departments using the next query</p>
+                <source>
+                    SELECT d.name, d.id FROM department d
+                </source>
+                <p>Then we iterate the results and for each department executing a query to get all
+                employees for this department</p>
+                <source>
+                SELECT name, age, payment, bonus, birthDate FROM employee e where e.depid = dep.id
+                </source>
+                <p>In the template it looks like this</p>
+                <source>
+ &lt;jx:forEach  items="${rm.exec('SELECT d.name, d.id FROM department d')}" var="dep">
+ Department: ${dep.name}
+ Name | Payment | Bonus | Total
+ &lt;jx:forEach items="${rm.exec('SELECT name, payment, bonus FROM employee e where e.depid = ' + dep.id)}" var="employee">
+ ${employee.empname} | ${employee.payment} | ${employee.bonus} | $[B23*(1+C23)]
+ &lt;/jx:forEach>
+ &lt;/jx:forEach>
+                </source>
+                <p>Pay attention that we place every department in the <code>dep</code> object and
+                then use it in the dependent query as a parameter</p>
+                <source>
+                    'SELECT name, age, payment, bonus, birthDate FROM employee e where e.depid = ' + dep.id
+                </source>
+                <p>Take care not to include <code>dep.id</code> into the quoted string as it will not be replaced by real value in such case.</p>
+                <p>Result looks like</p>
+				<img src="../images/reportOutput3XLS.gif" alt="Screenshot of Dependent Queries XLS output"/>
+			</section>
+            <section id="parameterizedQueriesWithQuotes" name="Parameterized Queries. Queries containing quotes">
+                <p>This sample shows how to use a parameter in SQL query and how to construct queries containing quotes</p>
+                <p>Let assume we need to get all employees having birthdate between '1975-01-01' and some <code>minDate</code> parameter
+                which is set dynamically before report generation. In this case we have to pass required date to XLSTransformer
+                    with <code>minDate</code> key before transforming template</p>
+                <source>
+                    Map beans = new HashMap();
+                    ReportManager reportManager = new ReportManagerImpl( conn, beans );
+                    beans.put("rm", reportManager);
+                    beans.put("minDate", "1979-01-01");
+                    XLSTransformer transformer = new XLSTransformer();
+                    transformer.transformXLS(templateFileName, beans, destFileName);
+                </source>
+                <p>In the template we may invoke corresponding <code>rm.exec()</code> method using the following syntax </p>
+                <source>
+${rm.exec("SELECT d.name depname, e.name empname, age, payment, bonus, birthDate FROM employee e, department d WHERE d.id = e.depid AND birthDate &gt; '1975-01-01' AND birthDate &lt; '" + minDate + "' order by age desc")}
+                </source>
+                <p>
+                 See the last section in the template file <a href="xls/report.xls">report.xls</a> and in the result output <a href="xls/report_output.xls">report_output.xls</a>
+                    to understand how the whole jx:forEach tag works in this case.
+                 The result looks like this</p>
+                    <img src="../images/reportOutput4XLS.gif" alt="Screenshot of Parameterized Query with quotes XLS output"/>
+            </section>
+        </section>
+	</body>
+</document>

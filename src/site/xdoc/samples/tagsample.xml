@@ -1,0 +1,29 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>jx: Tags Sample</title>
+    </properties>
+    <body>
+        <section id="basicTags" name="jx:forEach and jx:if tags sample">
+            <p>This sample demonstrates how to export a collection of depatments and their employees using jx:forEach and jx:if tags</p>
+            <source>
+                List departmens = new ArrayList();
+                // initilize list of departments in some way
+                Map beans = new HashMap();
+                beans.put("departments", departments);
+                XLSTransformer transformer = new XLSTransformer();
+                transformer.transformXLS(templateFileName, beans, destFileName);
+            </source>
+            <p>Template file screenshot</p>
+            <img src="../images/basicTagsTemplateXLS.gif" alt="Screenshot of XLS template file"/>
+            <p>You can also download Excel version
+                <a href="../xls/basictags.xls">basictags.xls</a>
+            </p>
+            <p>Output file looks like</p>
+            <img src="../images/basicTagsOutputXLS.gif" alt="Screenshot of XLS export result"/>
+            <p> Download excel file here
+                <a href="../xls/basictags_output.xls">basictags_output.xls</a>
+            </p>
+        </section>
+    </body>
+</document>

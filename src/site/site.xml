@@ -1,0 +1,47 @@
+<project name="jxls">
+  <bannerRight>
+    <name>jXLS</name>
+    <href>http://jxls.sourceforge.net</href>
+  </bannerRight>
+  <body>
+    <links>
+      <item name="jXLS on Sourceforge" href="http://sourceforge.net/projects/jxls"/>
+    </links>
+    <menu name="Overview">
+      <item name="Home" href="index.html"/>
+      <item name="Downloads" href="http://sourceforge.net/project/showfiles.php?group_id=141729"/>
+      <item name="Installation" href="reference/installation.html"/>
+    </menu>
+    <menu name="Reference">
+      <item name="Simple Beans" href="reference/simplebeans.html"/>
+      <item name="Using Tags" href="reference/tags.html"/>
+      <item name="SQL Reporting" href="reference/sqlreporting.html"/>
+      <item name="Collections" href="reference/collections.html"/>
+      <item name="Advanced Collections" href="reference/advancedcollections.html"/>
+      <item name="Dynamic Sheets" href="reference/dynamicsheets.html"/>
+      <item name="Using Expressions" href="reference/expressions.html"/>
+      <item name="Formulas Notation" href="reference/formulas.html"/>
+      <item name="Column Hiding" href="reference/columnhiding.html"/>
+      <item name="Spreadsheet Operations" href="reference/sheetoperations.html"/>
+      <item name="Custom Processor" href="reference/customprocessor.html"/>
+      <item name="JDBC ResultSet" href="reference/resultset.html"/>
+      <item name="Version Compatibility" href="reference/compatibility.html"/>
+    </menu>
+    <menu name="Samples">
+      <item name="Tags Sample" href="samples/tagsample.html"/>
+      <item name="Charts" href="samples/chartsample.html"/>
+      <item name="Reporting Sample" href="samples/reportsample.html"/>
+      <item name="Collections" href="samples/collectionsample.html"/>
+      <item name="Adjacent Lists" href="samples/adjacentlists.html"/>
+      <item name="Dynamic Style" href="samples/dynamicstylesample.html"/>
+      <item name="JDBC ResultSet" href="samples/resultsetsample.html"/>
+    </menu>
+      <powered-by>
+          <item
+            name="Hosted by SourceForge"
+            href="http://www.sourceforge.net"
+            img="http://sourceforge.net/sflogo.php?group_id=16035&amp;type=1"/>
+    </powered-by>
+    ${reports}
+  </body>
+</project>

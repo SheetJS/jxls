@@ -1,0 +1,160 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Dynamic Style samples</title>
+    </properties>
+    <body>
+        <section id="overview" name="Overview">
+            <p>This section contains samples demonstrating how to dynamically change style of some cells during export</p>
+        </section>
+        <!--<section id="cellProcessorSample">-->
+			<!--<title>Colouring sample - SAMPLE DEPRECATED</title>-->
+            <!--<warning>This sample is currently deprecated as it will no longer work with new full JEXL support.-->
+            <!--This time you may use jx tags to put conditional formatting into cells.</warning>-->
+            <!--<p>This sample demonstrates how to set custom cell colour depending on the values of exported beans.-->
+                <!--See also <a href="site:reference/customprocessor/cellprocessor">Customizing jXLS output</a> reference section for details on writing custom <code>CellProcessor</code>.-->
+			<!--</p>-->
+            <!--<p>Let's look at <code>RedCellProcessor</code> class that implements <code>CellProcessor</code> interface</p>-->
+			<!--<source>-->
+<!--public class RedCellProcessor implements CellProcessor {-->
+<!---->
+    <!--static HSSFCellStyle hssfCellStyle;-->
+    <!--public static final String RED_CELL = "red";-->
+    <!--String beanName;-->
+<!---->
+    <!--public RedCellProcessor(String collectionName) {-->
+        <!--this.beanName = collectionName.replace('.', '_');-->
+    <!--}-->
+<!---->
+    <!--public void processCell(final Cell cell, final Map namedCells) {-->
+        <!--if( cell.getProperties().size()>0 ){-->
+            <!--Property property = (Property) cell.getProperties().get(0);-->
+            <!--if (property != null &amp;&amp; property.getBeanName() != null &amp;&amp;-->
+                <!--property.getBeanName().indexOf(beanName) >= 0 &amp;&amp;-->
+                <!--property.getBean() instanceof Employee) {-->
+                <!--Employee employee = (Employee) property.getBean();-->
+                <!--if (employee.getPayment().doubleValue() >= 2000) {-->
+                    <!--if (namedCells.containsKey(RED_CELL + "_" + property.getPropertyNameAfterLastDot())) {-->
+                        <!--Cell redCell = (Cell) namedCells.get(RED_CELL + "_" +-->
+                <!--property.getPropertyNameAfterLastDot());-->
+                        <!--HSSFCellStyle redStyle = redCell.getHssfCell().getCellStyle();-->
+                        <!--cell.getHssfCell().setCellStyle(redStyle);-->
+                    <!--}-->
+                <!--}-->
+            <!--}-->
+        <!--}-->
+    <!--}-->
+<!--}-->
+            <!--</source>-->
+			<!--<p>In <code>ColouringSample</code> class we instantiate <code>RedCellProcessor</code> register it with XLSTransformer object-->
+			<!--</p>-->
+			<!--<source>-->
+			        <!--Map beans = new HashMap();-->
+			        <!--beans.put("department", department);-->
+			        <!--XLSTransformer transformer = new XLSTransformer();-->
+			        <!--transformer.registerCellProcessor(new RedCellProcessor("department.staff"));-->
+			        <!--transformer.transformXLS(templateFileName, beans, destFileName);-->
+            <!--</source>-->
+			<!--<p>Template file should contain named cells with required style. You can see that in template below the first line is hidden.-->
+                <!--It contains required named cells.</p>-->
+			<!--<img src="../images/colouringTemplateXLS.gif" alt="Screenshot of colouring XLS template file"/>-->
+			<!--<p>See excel version-->
+                <!--<a href="xls/colouring.xls"> colouring.xls </a>-->
+			<!--</p>-->
+			<!--<p>Output is </p>-->
+			<!--<img src="../images/colouringOutputXLS.gif" alt="Screenshot of colouring XLS output"/>-->
+			<!--<p> Excel is here-->
+                <!--<a href="xls/colouring_output.xls">colouring_output.xls</a>-->
+			<!--</p>-->
+		<!--</section>-->
+        <section id="rowProcessorSample" name="Row Style sample">
+			<p>This sample demonstrates how to use custom <code>RowProcessor</code> to higlight rows for all employees
+                with payment greater than <code>2000</code>.
+                See also <a href="../reference/customprocessor.html#rowprocessor">Customizing jXLS output</a> reference section for details on writing custom <code>RowProcessor</code>.</p>
+            <p>In this sample we have <code>StyleRowProcessor</code> class implementing <code>RowProcessor</code> interface</p>
+            <source>
+public class StyleRowProcessor implements RowProcessor {
+
+    String collectionName;
+    String styleCellLabel = "customRow";
+
+    public StyleRowProcessor(String collectionName) {
+        this.collectionName = collectionName;
+    }
+
+    public void processRow(Row row, Map namedCells) {
+        // check if processed row has a parent row
+        if( row.getParentRow()!=null ){
+            // Processed row has parent row. It means we are processing some collection item
+            RowCollection rowCollection = row.getParentRow().getRowCollectionByCollectionName( collectionName );
+            if( rowCollection.getIterateObject() instanceof Employee){
+                Employee employee = (Employee) rowCollection.getIterateObject();
+                if( employee.getPayment().doubleValue() >= 2000 ){
+                    if( namedCells.containsKey( styleCellLabel ) ){
+                        Cell customCell = (Cell) namedCells.get( styleCellLabel );
+                        for (int i = 0; i &lt; row.getCells().size(); i++) {
+                            Cell cell = (Cell) row.getCells().get(i);
+                            HSSFCell hssfCell = cell.getHssfCell();
+                            if( hssfCell!=null ){
+                                copyStyle( row.getHssfWorkbook(), customCell.getHssfCell(), hssfCell );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void copyStyle(HSSFWorkbook workbook, HSSFCell fromCell, HSSFCell toCell){
+        HSSFCellStyle toStyle = toCell.getCellStyle();
+        HSSFCellStyle fromStyle = fromCell.getCellStyle();
+        if( fromStyle.getDataFormat() == toStyle.getDataFormat() ){
+            toCell.setCellStyle( fromStyle );
+        }else{
+            HSSFCellStyle newStyle = workbook.createCellStyle();
+            newStyle.setAlignment( toStyle.getAlignment() );
+            newStyle.setBorderBottom( toStyle.getBorderBottom() );
+            newStyle.setBorderLeft( toStyle.getBorderLeft() );
+            newStyle.setBorderRight( toStyle.getBorderRight() );
+            newStyle.setBorderTop( toStyle.getBorderTop() );
+            newStyle.setBottomBorderColor( toStyle.getBottomBorderColor() );
+            newStyle.setDataFormat( toStyle.getDataFormat() );
+            newStyle.setFillBackgroundColor( fromStyle.getFillBackgroundColor() );
+            newStyle.setFillForegroundColor( fromStyle.getFillForegroundColor() );
+            newStyle.setFillPattern( fromStyle.getFillPattern() );
+            newStyle.setFont( workbook.getFontAt( fromStyle.getFontIndex() ) );
+            newStyle.setHidden( toStyle.getHidden() );
+            newStyle.setIndention( toStyle.getIndention() );
+            newStyle.setLeftBorderColor( toStyle.getLeftBorderColor() );
+            newStyle.setLocked( toStyle.getLocked() );
+            newStyle.setRightBorderColor( toStyle.getRightBorderColor() );
+            newStyle.setTopBorderColor( toStyle.getTopBorderColor() );
+            newStyle.setVerticalAlignment( toStyle.getVerticalAlignment() );
+            newStyle.setWrapText( toStyle.getWrapText() );
+            toCell.setCellStyle( newStyle );
+        }
+    }
+}
+            </source>
+			<p> In <code>StyleRowSample</code> class we create <code>StyleRowProcessor</code> object and register it with XLSTransformer.	</p>
+			<source>
+            Map beans = new HashMap();
+            beans.put("department", department);
+            XLSTransformer transformer = new XLSTransformer();
+            transformer.registerRowProcessor(new StyleRowProcessor("department.staff"));
+            transformer.transformXLS(templateFileName, beans, destFileName);
+            </source>
+			<p>The first row in XLS template is hidden. And its first cell contains custom style to use for highligting.</p>
+            <p>Take a look at screenshot of template</p>
+            <img src="../images/rowstyleTemplateXLS.gif" alt="Screenshot of RowStyle sample XLS template file"/>
+			<p>See excel version
+                <a href="../xls/rowstyle.xls">rowstyle.xls</a>
+			</p>
+			<p>Sample output screenshot is </p>
+            <img src="../images/rowstyleOutputXLS.gif" alt="Screenshot of RowStyle sample output"/>
+			<p> Excel version is
+                <a href="../xls/rowstyle_output.xls">rowstyle_output.xls</a>
+			</p>
+		</section>
+	</body>
+</document>

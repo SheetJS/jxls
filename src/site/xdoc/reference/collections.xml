@@ -1,0 +1,208 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Collections</title>
+    </properties>
+    <body>
+        <section id="introduction" name="Introduction">
+            <p>This section specifies how to export collections with jXLS in a simplest way.
+            An alternative is to use <code>&lt;jx:forEach></code>. See <a href="tags.html#foreach">Using tags</a> section for details.
+            Another option is to export every collection item into a separate excel worksheet. See <a href="dynamicsheets.html">Dynamic sheets</a> section for details.
+            </p>
+            <p>We assume that we have two dependent Java beans of type
+                <a href="../samples/departmentbean.html">Department</a> and
+                <a href="../samples/employeebean.html">Employee</a> which are passed to XLSTransformer in a code like this
+            </p>
+            <source>
+				        Department department;
+				        ... //initialization
+				        Map beans = new HashMap();
+				        beans.put("department", department);
+				        XLSTransformer transformer = new XLSTransformer();
+				        transformer.transformXLS(xlsTemplateFileName, beans, outputFileName);
+            </source>
+        </section>
+        <section id="collectionPropertyAccess" name="Collection Property Access">
+            <p>Collection properties can be specified in the same way as ordinary properties but will be processed differently.
+			Usually we don' know the size of collection in the time we create XLS template and it should be determined during execution of application.
+			jXLS engine will iterate specified collection and insert a new row for each collection item preserving original row style. All related collection properties in these rows will be set to corresponding collection item property values.
+			All other cells will be processed as usual. For example, to access the names and the payment of all employees in the staff of some department we can write XLS template in the way</p>
+            <table>
+                <tr>
+                    <th/>
+                    <th>A</th>
+                    <th>B</th>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>1</strong>
+                    </td>
+                    <td>
+                        <strong>Employee Name</strong>
+                    </td>
+                    <td>
+                        <strong>Employee Payment</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>2</strong>
+                    </td>
+                    <td>${department.staff.name}</td>
+                    <td>${department.staff.payment}</td>
+                </tr>
+            </table>
+            <p>We'll get an output like</p>
+            <table>
+                <tr>
+                    <th/>
+                    <th>A</th>
+                    <th>B</th>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>1</strong>
+                    </td>
+                    <td>
+                        <strong>Employee Name</strong>
+                    </td>
+                    <td>
+                        <strong>Employee Payment</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>2</strong>
+                    </td>
+                    <td>John</td>
+                    <td>3000</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>2</strong>
+                    </td>
+                    <td>Neil</td>
+                    <td>2000</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>2</strong>
+                    </td>
+                    <td>Oleg</td>
+                    <td>2500</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="fixedSizeCollections" name="Fixed Size Collections">
+            <p>If you know the size of exported collection you may want not to create new row for every collection item but to export all collection to the rows already presented in XLS template. This can be done using
+                <em>fixed size collection</em> feature.
+            </p>
+            <p>In this case the template should be as follows (assuming
+                <code>employee</code> is a collection with 3 items)
+            </p>
+            <table>
+                <tr>
+                    <th/>
+                    <th>A</th>
+                    <th>B</th>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>1</strong>
+                    </td>
+                    <td>
+                        <strong>Employee Name</strong>
+                    </td>
+                    <td>
+                        <strong>Employee Payment</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>2</strong>
+                    </td>
+                    <td>${employee.name}</td>
+                    <td>${employee.payment}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>3</strong>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>4</strong>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            <p>To indicate that
+                <code>employee</code> is a
+                <em>fixed size collection</em> we have to invoke
+                <code>markAsFixedSizeCollection</code> method of
+                <code>XLSTransformer</code>.
+            </p>
+            <source>
+			        List staff = new ArrayList();
+			        staff.add(new Employee("Derek", 35, 3000, 0.30));
+			        staff.add(new Employee("Elsa", 28, 1500, 0.15));
+			        staff.add(new Employee("Oleg", 32, 2300, 0.25));
+			        Map beans = new HashMap();
+			        beans.put("employee", staff);
+			        XLSTransformer transformer = new XLSTransformer();
+			        transformer.markAsFixedSizeCollection("employee");
+			        transformer.transformXLS(templateFileName, beans, destFileName);
+            </source>
+            <p>For the code and  template above we will get an output of
+                <code>employee</code> collection into the existing template rows.
+            </p>
+            <table>
+                <tr>
+                    <th/>
+                    <th>A</th>
+                    <th>B</th>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>1</strong>
+                    </td>
+                    <td>
+                        <strong>Employee Name</strong>
+                    </td>
+                    <td>
+                        <strong>Employee Payment</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>2</strong>
+                    </td>
+                    <td>Derek</td>
+                    <td>3000.0</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>3</strong>
+                    </td>
+                    <td>Elsa</td>
+                    <td>1500.0</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>4</strong>
+                    </td>
+                    <td>Oleg</td>
+                    <td>2300.0</td>
+                </tr>
+            </table>
+            <p>See also
+                <a href="../samples/chartsample.html">Chart sample</a>.
+            </p>
+        </section>
+
+    </body>
+</document>
