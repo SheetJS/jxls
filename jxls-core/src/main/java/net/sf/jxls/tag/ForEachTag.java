@@ -1,21 +1,20 @@
 package net.sf.jxls.tag;
 
+import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.parser.Expression;
+import net.sf.jxls.transformation.ResultTransformation;
+import net.sf.jxls.transformer.Configuration;
+import net.sf.jxls.transformer.SheetTransformer;
+import net.sf.jxls.util.GroupData;
+import net.sf.jxls.util.ReportUtil;
+import net.sf.jxls.util.Util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import net.sf.jxls.util.Util;
-import net.sf.jxls.util.ReportUtil;
-import net.sf.jxls.util.GroupData;
-import net.sf.jxls.tag.BaseTag;
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformation.ResultTransformation;
-import net.sf.jxls.transformer.SheetTransformer;
-import net.sf.jxls.transformer.Configuration;
-import net.sf.jxls.parser.Expression;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Iterator;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * jx:forEach tag implementation
@@ -114,28 +113,6 @@ public class ForEachTag extends BaseTag {
         }
     }
 
-    private void parseItemsPropertyOrig() {
-        if( items != null ){
-            if( items.startsWith( configuration.getStartExpressionToken() ) && items.endsWith( configuration.getEndExpressionToken())){
-                items = items.substring( 2, items.length() - 1 );
-                int dotCharIndex = items.indexOf( "." );
-                if( dotCharIndex >= 0 ){
-                    itemsKey = items.substring(0, dotCharIndex);
-                    collectionPropertyName = items.substring( dotCharIndex + 1 );
-                }else{
-                    itemsKey = items;
-                    collectionPropertyName = null;
-                }
-            }else{
-                log.error("items attribute should start from " + configuration.getStartExpressionToken() + " and end " +
-                        "with " + configuration.getEndExpressionToken());
-            }
-        }else{
-            log.error( "Collection key is null" );
-        }
-    }
-
-
 
     public ResultTransformation process(SheetTransformer sheetTransformer) {
         if( log.isDebugEnabled() ){
@@ -148,10 +125,10 @@ public class ForEachTag extends BaseTag {
             return processOneRowTag(sheetTransformer);
         }
         int shiftNumber = 0;
-        tagContext.getSheetTransformationController().removeBorders(body);
-        shiftNumber += -2; // due to the borders
-        ResultTransformation shift = new ResultTransformation(0);
-        if( itemsCollection != null ){
+        if( itemsCollection!=null && !itemsCollection.isEmpty()){
+            tagContext.getSheetTransformationController().removeBorders(body);
+            shiftNumber += -2; // due to the borders
+            ResultTransformation shift = new ResultTransformation(0);
             Map beans = tagContext.getBeans();
             int k = 0;
             if( groupBy == null || groupBy.length() == 0 ){
@@ -199,12 +176,16 @@ public class ForEachTag extends BaseTag {
                 } catch (InvocationTargetException e) {
                     log.error(e, new Exception("Can't group collection data by " + groupBy, e));
                 }
-            }
+                }
+            shift.add( new ResultTransformation(shiftNumber, shiftNumber));
+            return shift;
         }else{
-            log.warn(items + " collection is null!");
+            log.warn("Collection " + items + " is empty");
+            tagContext.getSheetTransformationController().removeBodyRows( body );
+            ResultTransformation shift = new ResultTransformation(0);
+            shift.add( new ResultTransformation(-1, -body.getNumberOfRows() ));
+            return shift;
         }
-        shift.add( new ResultTransformation(shiftNumber, shiftNumber));
-        return shift;
     }
 
     private ResultTransformation processOneRowTag(SheetTransformer sheetTransformer) {

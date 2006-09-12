@@ -1,21 +1,20 @@
 package net.sf.jxls;
 
 import junit.framework.TestCase;
+import net.sf.jxls.bean.*;
+import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.transformer.Configuration;
+import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.Region;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import net.sf.jxls.bean.*;
-import net.sf.jxls.transformer.XLSTransformer;
-import net.sf.jxls.transformer.Configuration;
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.CellsChecker;
 
 import java.io.*;
-import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author Leonid Vysochyn
@@ -1433,9 +1432,17 @@ public class XLSTransformerTest extends TestCase {
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(forGroupByXLS));
-
         is.close();
         saveWorkbook(resultWorkbook, forGroupByDestXLS);
+        // testing empty collection used with jx:forEach grouping 
+//        Collection emptyDepartments = new ArrayList();
+        ((Department)departments.get(0)).getStaff().clear();
+//        beans.clear();
+//        beans.put( "departments", emptyDepartments );
+        is = new BufferedInputStream(getClass().getResourceAsStream(forGroupByXLS));
+        resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+
     }
 
     private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
