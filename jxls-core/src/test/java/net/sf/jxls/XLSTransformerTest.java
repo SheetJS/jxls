@@ -333,6 +333,8 @@ public class XLSTransformerTest extends TestCase {
         checker.checkFormulaCell( sourceSheet, 19, resultSheet, 37, (short)3, "B38*(1+C38)");
         checker.checkFormulaCell( sourceSheet, 19, resultSheet, 39, (short)3, "B40*(1+C40)");
 
+        checker.checkFormulaCell( sourceSheet, 24, resultSheet, 43, (short)1, "Sheet 2!B55");
+
         sourceSheet = sourceWorkbook.getSheetAt( 1 );
         resultSheet = resultWorkbook.getSheetAt( 1 );
         checker.checkFormulaCell( sourceSheet, 0, resultSheet, 0, (short)1, "SUM(Sheet1!B4:B6)");

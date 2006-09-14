@@ -69,6 +69,9 @@ public class Sheet {
             HSSFSheet sheet = hssfWorkbook.getSheetAt( i );
             if( sheet == hssfSheet ){
                 sheetName = hssfWorkbook.getSheetName( i );
+                if( sheetName.indexOf(' ') >=0 ){
+                    sheetName = "'" + sheetName + "'";
+                }
             }
         }
     }
