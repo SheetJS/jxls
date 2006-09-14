@@ -233,11 +233,11 @@ public class CellsChecker extends Assert {
             value = cell.getDateCellValue();
         } else if (obj instanceof Boolean){
             if( cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN ){
-                value = new Boolean(cell.getBooleanCellValue());
+                value = (cell.getBooleanCellValue()) ? Boolean.TRUE : Boolean.FALSE;
             }else if( cell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
                 value = Boolean.valueOf( cell.getStringCellValue() );
             }else{
-                value = new Boolean(false);
+                value = Boolean.FALSE;
             }
         }
         return value;

@@ -191,9 +191,9 @@ public class CellRef {
     /**
      * Ref cell in a formula string is replaced with result cell enclosed with replacement markers to be able not to replace
      * already replaced cells
-     * @param formulaPart
-     * @param refCell
-     * @param newCell
+     * @param formulaPart   - Part of the formula to replace
+     * @param refCell       - Cell name to replace
+     * @param newCell       - New cell name after replacement
      * @return updated formula string
      */
     public static String replaceFormulaPart(String formulaPart, String refCell, String newCell) {

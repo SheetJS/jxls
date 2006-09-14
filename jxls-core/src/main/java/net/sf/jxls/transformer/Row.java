@@ -100,7 +100,7 @@ public class Row {
 
     /**
      * Founds {@link RowCollection} with given collection name in this row
-     * @param collectionName
+     * @param collectionName - Collection name used to seek required RowCollection
      * @return {@link RowCollection} in this row having collection with required name
      */
     public RowCollection getRowCollectionByCollectionName(String collectionName){
@@ -125,7 +125,7 @@ public class Row {
     /**
      * Returns {@link RowCollection} corresponding to a collectionProperty.
      * Creates a new one if there is not any
-     * @param collectionProperty
+     * @param collectionProperty - Collection property name corresponding RowCollection to find
      * @return {@link RowCollection} corresponding to the collectionProperty
      */
     private RowCollection getRowCollection(Property collectionProperty, int dependentRowNumber){

@@ -17,7 +17,7 @@ public class ReportingSample {
     private static String templateFileName = "examples/templates/report.xls";
     private static String destFileName = "build/report_output.xls";
 
-    public static void main(String[] args) throws Exception, ParsePropertyException, ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws Exception,  ClassNotFoundException, SQLException {
         if (args.length >= 2) {
             templateFileName = args[0];
             destFileName = args[1];

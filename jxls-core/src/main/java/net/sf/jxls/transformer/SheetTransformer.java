@@ -97,13 +97,13 @@ public class SheetTransformer {
 
 
     /**
-     * Processes given rows in a template sheet using map of beans as parameter
-     * @param stc
+     * Processes rows in a template sheet using map of beans as parameter
+     * @param stc - {@link SheetTransformationController} corresponding to the sheet containing given rows
      * @param sheet {@link net.sf.jxls.transformer.Sheet} object
      * @param startRow Row to start processing
      * @param endRow   Last row to be processed
      * @param beans    Beans for substitution
-     * @param parentRow
+     * @param parentRow - {@link Row} object representing original template row linked to rows to process
      * @return A number of rows to be shifted
      * @throws ParsePropertyException
      */
@@ -136,21 +136,6 @@ public class SheetTransformer {
 
     }
 
-    ResultTransformation processCells(Sheet sheet, int startRow, short startCell, int endRow, short endCell, Map beans){
-        if( startRow!=endRow ){
-            log.warn("Currently we can process cells block only in one row");
-        }else{
-            HSSFRow hssfRow = sheet.getHssfSheet().getRow( startRow );
-            List rowTransformers = parseCells(sheet, hssfRow, startCell, endCell, beans);
-            if( rowTransformers.size()>0 ){
-                RowTransformer rowTransformer = (RowTransformer) rowTransformers.get( 0 );
-                ResultTransformation processResult = rowTransformer.transform(null, this, beans );
-            }
-
-        }
-        return null;
-    }
-
     private List parseCells(Sheet sheet, HSSFRow hssfRow, short startCell, short endCell, Map beans) {
         List transformers = new ArrayList();
         RowTransformer rowTransformer = null;
@@ -158,7 +143,6 @@ public class SheetTransformer {
         SimpleRowTransformer simpleRowTransformer = new SimpleRowTransformer(row, cellProcessors, configuration);
 //        transformations.add( simpleRowTransformer );
         boolean hasCollections = false;
-        boolean hasTags = false;
         for (short j = startCell; j <= endCell; j++) {
             HSSFCell hssfCell = hssfRow.getCell(j);
             CellParser cellParser = new CellParser(hssfCell, row, configuration);
@@ -244,10 +228,10 @@ public class SheetTransformer {
 
     /**
      * Adds new {@link net.sf.jxls.formula.ListRange} to the map of ranges and updates formulas if there is range with the same name already
-     *
-     * @param rangeName The name of {@link ListRange} to add
-     * @param range     actual {@link ListRange} to add
-     * @return true if a range with such name already exists or false if not
+     * @param sheet     - {@link Sheet} to add List Range
+     * @param rangeName - The name of {@link ListRange} to add
+     * @param range     - actual {@link ListRange} to add
+     * @return true     - if a range with such name already exists or false if not
      */
     private boolean addListRange(Sheet sheet, String rangeName, ListRange range) {
         if (sheet.getListRanges().containsKey(rangeName)) {
@@ -262,7 +246,7 @@ public class SheetTransformer {
 
     /**
      * Applies all registered RowProcessors to a row
-     *
+     * @param sheet - {@link Sheet} containing given {@link Row} object
      * @param row - {@link net.sf.jxls.transformer.Row} object with row information
      */
     private void applyRowProcessors(Sheet sheet, Row row) {
@@ -274,6 +258,7 @@ public class SheetTransformer {
 
     /**
      * Outlines all required collections in a sheet
+     * @param sheet - {@link Sheet} where to outline collections
      */
     void groupRows(Sheet sheet) {
         for (Iterator iterator = groupedCollections.iterator(); iterator.hasNext();) {

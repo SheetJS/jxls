@@ -15,7 +15,7 @@ public class ResultSetExport {
     private static String templateFileName = "examples/templates/employees.xls";
     private static String destFileName = "build/resultset_output.xls";
 
-    public static void main(String[] args) throws Exception, ParsePropertyException, ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws Exception,  ClassNotFoundException, SQLException {
         if (args.length >= 2) {
             templateFileName = args[0];
             destFileName = args[1];

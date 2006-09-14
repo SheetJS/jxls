@@ -45,8 +45,7 @@ public class XLSTransformer {
     /**
      * Registers Property Preprocessor that will be applied before main template transformation
      * it is possible to have many Property Preprocessors
-     *
-     * @param propPreprocessor
+     * @param propPreprocessor - {@link PropertyPreprocessor} interface implementation
      */
     public void registerPropertyPreprocessor(PropertyPreprocessor propPreprocessor) {
         if (propPreprocessor != null) {
@@ -77,8 +76,7 @@ public class XLSTransformer {
     /**
      * Mark a collection as static collection.
      * All static collection rows are presented in Excel template and will not be expanded
-     *
-     * @param collectionName
+     * @param collectionName - Collection name to mark as fixed size collection
      */
     public void markAsFixedSizeCollection(String collectionName) {
         fixedSizeCollections.add(collectionName);
@@ -172,8 +170,7 @@ public class XLSTransformer {
 
     /**
      * Set this collection to be grouped (outlined).
-     *
-     * @param collectionName
+     * @param collectionName - Collection name to use for grouping
      */
     public void groupCollection(String collectionName) {
         groupedCollections.add(collectionName);
@@ -250,6 +247,7 @@ public class XLSTransformer {
      * @param beanParams - Common bean map containing all other objects to be used in the workbook
      * @param startSheetNum - Worksheet number (zero based) of the worksheet that needs to be used to create multiple worksheets
      * @return new {@link HSSFWorkbook} object containing the result of transformation
+     * @throws net.sf.jxls.exception.ParsePropertyException - {@link ParsePropertyException} is thrown when some property can't be parsed
      */
     public HSSFWorkbook transformMultipleSheetsList(InputStream is, List objects, List newSheetNames, String beanName, Map beanParams, int startSheetNum) throws ParsePropertyException {
         HSSFWorkbook hssfWorkbook = null;
@@ -386,8 +384,7 @@ public class XLSTransformer {
 
     /**
      * Set column width = 0 for column if any it cell value contains any of {@link this#columnPropertyNamesToHide} string.
-     *
-     * @param workbook
+     * @param workbook - {@link HSSFWorkbook} to hide columns in
      */
     private void hideColumnsByPropertyName(HSSFWorkbook workbook) {
         if (columnPropertyNamesToHide == null) return;
@@ -449,7 +446,7 @@ public class XLSTransformer {
 
     /**
      * Set spreadsheets with given names to be hidden
-     * @param names
+     * @param names - Names of the worksheets to hide
      */
     public void setSpreadsheetsToHide(String[] names) {
         spreadsheetsToHide.clear();

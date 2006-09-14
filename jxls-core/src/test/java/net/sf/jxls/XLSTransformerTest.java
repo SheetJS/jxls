@@ -1248,9 +1248,9 @@ public class XLSTransformerTest extends TestCase {
                 srcCol = 4;
             }
             checker.checkCells(sourceSheet, resultSheet, 2, (short)2, 1, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 2, (short)srcCol, 1, (short)(i*2 + 2));
+            checker.checkCells(sourceSheet, resultSheet, 2, srcCol, 1, (short)(i*2 + 2));
             checker.checkCells(sourceSheet, resultSheet, 3, (short)2, 2, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 3, (short)srcCol, 2, (short)(i*2 + 2));
+            checker.checkCells(sourceSheet, resultSheet, 3, srcCol, 2, (short)(i*2 + 2));
         }
 
         for(int i = 0; i < hrEmployeeNames.length; i++){
@@ -1262,9 +1262,9 @@ public class XLSTransformerTest extends TestCase {
                 srcCol = 4;
             }
             checker.checkCells(sourceSheet, resultSheet, 2, (short)2, 4, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 2, (short)srcCol, 4, (short)(i*2 + 2));
+            checker.checkCells(sourceSheet, resultSheet, 2, srcCol, 4, (short)(i*2 + 2));
             checker.checkCells(sourceSheet, resultSheet, 3, (short)2, 5, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 3, (short)srcCol, 5, (short)(i*2 + 2));
+            checker.checkCells(sourceSheet, resultSheet, 3, srcCol, 5, (short)(i*2 + 2));
         }
 
         for(int i = 0; i < baEmployeeNames.length; i++){
@@ -1276,9 +1276,9 @@ public class XLSTransformerTest extends TestCase {
                 srcCol = 4;
             }
             checker.checkCells(sourceSheet, resultSheet, 2, (short)2, 7, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 2, (short)srcCol, 7, (short)(i*2 + 2));
+            checker.checkCells(sourceSheet, resultSheet, 2, srcCol, 7, (short)(i*2 + 2));
             checker.checkCells(sourceSheet, resultSheet, 3, (short)2, 8, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 3, (short)srcCol, 8, (short)(i*2 + 2));
+            checker.checkCells(sourceSheet, resultSheet, 3, srcCol, 8, (short)(i*2 + 2));
         }
 
         is.close();
@@ -1391,7 +1391,7 @@ public class XLSTransformerTest extends TestCase {
         Map props = new HashMap();
         props.put("${obj.name}", obj.getName() );
         props.put("${\"Hello, World\"}","Hello, World");
-        props.put("${obj.flag == true}", Boolean.valueOf(obj.getFlag() == true));
+        props.put("${obj.flag == true}", Boolean.valueOf(obj.getFlag()));
         props.put("${obj.name == null}", Boolean.valueOf(obj.getName() == null));
 //        props.put("${empty(obj.collection)}", Boolean.valueOf(obj.getCollection().isEmpty()));
 //        props.put("${obj.collection.size()}", new Integer(((String)obj.getCollection().get(0)).length()));

@@ -18,9 +18,8 @@ public class EmptyCellPreprocessor implements PropertyPreprocessor {
     }
 
     /**
-     * if the property is private we return empty string to indicate it should not be visible
-     *
-     * @param propertyTemplateName
+     * If the property is private we return empty string to indicate it should not be visible
+     * @param propertyTemplateName - The name of the property as it is in template file
      * @return replacement value for given property
      */
     public String processProperty(String propertyTemplateName) {

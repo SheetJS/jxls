@@ -160,10 +160,9 @@ public class Block {
         if (endRowNum != block.endRowNum) return false;
         if (startCellNum != block.startCellNum) return false;
         if (startRowNum != block.startRowNum) return false;
-        if (sheet != null ? !sheet.equals(block.sheet) : block.sheet != null) return false;
+        return !(sheet != null ? !sheet.equals(block.sheet) : block.sheet != null);
 
-        return true;
-    }
+        }
 
     public int hashCode() {
         int result;

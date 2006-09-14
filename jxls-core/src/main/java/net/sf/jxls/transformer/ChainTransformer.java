@@ -68,7 +68,7 @@ public class ChainTransformer{
 
     /**
      * Applies all registered RowProcessors to a row
-     *
+     * @param sheet - {@link Sheet} object containing the row 
      * @param row - {@link net.sf.jxls.transformer.Row} object with row information
      */
     private void applyRowProcessors(Sheet sheet, Row row) {

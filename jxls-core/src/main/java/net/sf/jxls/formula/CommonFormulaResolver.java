@@ -25,7 +25,7 @@ public class CommonFormulaResolver extends BaseFormulaResolver {
      * @return Adjusted formula string
      */
     public String resolve(Formula sourceFormula, WorkbookCellFinder cellFinder) {
-        String resolvedFormula = sourceFormula.getFormula();
+        String resolvedFormula;
         if( sourceFormula.containsListRanges() ){
             resolvedFormula = replaceListRanges( sourceFormula );
         }

@@ -61,7 +61,6 @@ public class IfTag extends BaseTag {
             return processOneRowTag(sheetTransformer);
         }
         int shiftNumber = 0;
-        int numberOfRows = body.getNumberOfRows();
 
         ResultTransformation shift = new ResultTransformation(0);
         if( testResult != null ){
@@ -85,7 +84,6 @@ public class IfTag extends BaseTag {
 
     private ResultTransformation processOneRowTag(SheetTransformer sheetTransformer) {
         Block body = tagContext.getTagBody();
-        TagBodyHelper helper = new TagBodyHelper();
         int shiftNumber = 0;
         SheetTransformationController stc = new SheetTransformationControllerImpl( tagContext.getSheet() );
         stc.removeLeftRightBorders(body);

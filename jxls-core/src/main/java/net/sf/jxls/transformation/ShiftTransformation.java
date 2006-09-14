@@ -14,9 +14,10 @@ import java.util.List;
  */
 public class ShiftTransformation extends BlockTransformation {
     int rowShift, colShift;
-    int rowNum, colNum;
-    CellReference cellReference;
-    List cells = new ArrayList();
+    int rowNum;
+    int colNum;
+    private CellReference cellReference;
+    private List cells = new ArrayList();
 
     public ShiftTransformation(Block block, int rowShift, int colShift) {
         super(block);

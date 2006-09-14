@@ -47,13 +47,7 @@ public class Property {
         context.setVars(beans);
         ExpressionCollectionParser parser = new ExpressionCollectionParser(context, this.property + ";", config.isJexlInnerCollectionsAccess());
         if (parser.getCollection() == null) {
-            try {
-//                org.apache.commons.jexl.Expression expr = ExpressionFactory.createExpression(this.property + ";");
-//                propertyValue = expr.evaluate(context);
-            } catch (Exception e) {
-                throw new RuntimeException("Expression could not be evaluated.", e);
-            }
-            propertyValue = null; // evaluate
+            propertyValue = null; 
         } else {
             collectionName = parser.getCollectionExpression();
             collection = parser.getCollection();

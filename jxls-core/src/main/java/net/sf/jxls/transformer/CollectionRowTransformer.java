@@ -81,10 +81,10 @@ public class CollectionRowTransformer extends BaseRowTransformer {
 
     /**
      * Processes a row containing collection properties
-     *
-     * @param sheetTransformationController
+     * @param sheetTransformationController - {@link SheetTransformationController} for given sheet
      * @param row  Information about row
      * @param beans Beans to apply
+     * @param sheetTransformer - {@link SheetTransformer} to use when processing Row Collections
      * @return number to SHIFT all other rows in template
      * @throws net.sf.jxls.exception.ParsePropertyException
      */
@@ -170,8 +170,7 @@ public class CollectionRowTransformer extends BaseRowTransformer {
 
     /**
      * Generates a new bean key for the items in given collection
-     *
-     * @param collectionName
+     * @param collectionName - Collection name to use as a base name for generation
      * @param keys - Existing keys
      * @return unique bean key to be put in the current bean map
      */

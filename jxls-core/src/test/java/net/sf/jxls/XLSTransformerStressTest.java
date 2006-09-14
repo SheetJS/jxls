@@ -87,7 +87,6 @@ public class XLSTransformerStressTest extends TestCase {
         int k = 1;
         int n = 1;
         Random r = new Random( System.currentTimeMillis() );
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
         for (int i = 0; i < depNum; i++) {
             String depName = generateDepartmentName(r, depNum);
             insertDep.setString(1, depName);

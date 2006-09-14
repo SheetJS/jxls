@@ -25,7 +25,4 @@ public class FormulaTest extends TestCase {
         assertTrue( refCells.contains("B90" ) );
     }
 
-    public void testAdjust(){
-
-    }
 }

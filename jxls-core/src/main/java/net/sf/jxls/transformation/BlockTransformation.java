@@ -55,6 +55,7 @@ public abstract class BlockTransformation {
 
     /**
      * Transforms given spreadsheet cell
+     * @param sheetName - indicates sheet containing cell to transform
      * @param cellRef - {@link CellRef} object representing spreadsheet cell to transform
      * @return {@link List} of cell names which are result of source cell transformation
      */

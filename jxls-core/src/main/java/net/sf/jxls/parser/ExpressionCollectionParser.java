@@ -66,7 +66,7 @@ public class ExpressionCollectionParser {
     
     private void findCollection(JexlContext jexlContext, List references) {
         
-        Node node = null;
+        Node node;
         
         for (Iterator itr = references.iterator(); itr.hasNext();) {
             node = (Node) itr.next();
@@ -83,7 +83,7 @@ public class ExpressionCollectionParser {
     private String findCollectionProperties(JexlContext jexlContext, Node node) {
         
         int childCount = node.jjtGetNumChildren();
-        Node child = null;
+        Node child  ;
         String subExpr = null;
         
         for (int i = 0; i < childCount; i++) {

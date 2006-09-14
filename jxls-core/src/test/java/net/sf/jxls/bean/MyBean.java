@@ -15,7 +15,7 @@ public class MyBean {
     private String[] myArray = new String[2];
     private Date date = new Date();
 
-    List innerCollection = new ArrayList();
+    private List innerCollection = new ArrayList();
 
     public MyBean() {
         myArray[0] = "first";

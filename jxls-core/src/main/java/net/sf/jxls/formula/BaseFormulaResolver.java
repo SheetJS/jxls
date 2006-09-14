@@ -107,6 +107,8 @@ public abstract class BaseFormulaResolver implements FormulaResolver{
     }
 
     /**
+     * Method to replace coded list ranges (like @department.staff.payment@) with excel range string like B10:B20
+     * @param formula - {@link Formula} object to replace list ranges in
      * @return Formula string that should be set into Excel cell using POI
      */
     String replaceListRanges(Formula formula) {

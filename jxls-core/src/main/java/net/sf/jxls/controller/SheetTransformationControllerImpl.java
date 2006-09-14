@@ -19,7 +19,7 @@ import java.util.*;
 
 /**
  * This class controls and saves all transforming operations on spreadsheet cells.
- * It implements {@link net.sf.jxls.controller.SheetTransformationController} interface using special {@link TransformationMatrix}
+ * It implements {@link net.sf.jxls.controller.SheetTransformationController} interface
  * to track all cells transformations
  * @author Leonid Vysochyn
  */
@@ -35,7 +35,6 @@ public class SheetTransformationControllerImpl implements SheetTransformationCon
         this.sheet = sheet;
         helper = new TagBodyHelper();
         formulaController = sheet.getWorkbook().getFormulaController();
-//        formulaController = new FormulaControllerImpl( sheet.getWorkbook() );
     }
 
     public int duplicateDown( Block block, int n ){

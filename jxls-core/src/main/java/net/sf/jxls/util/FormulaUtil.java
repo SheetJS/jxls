@@ -35,35 +35,6 @@ public class FormulaUtil {
             }
         }
     }
-    /**
-     * This method updates formula cells
-     *
-     * @param sheet            Sheet to update
-     * @param ignoreUnresolved Flag indicating should unresolved formulas be removed or just ignored
-     */
-    static void updateFormulas(HSSFSheet sheet, List formulas, Map listRanges, Map namedCells, List transformers, boolean ignoreUnresolved) {
-//        for (int i = 0; i < formulas.size(); i++) {
-//            Formula formula = (Formula) formulas.get(i);
-//            SheetCellFinder cellFinder = new SheetCellFinderImpl( transformers );
-//            formula.adjust( cellFinder );
-//
-//            String formulaString = formula.getAppliedFormula( listRanges, namedCells );
-//            HSSFRow hssfRow = sheet.getRow(formula.getRowNum().intValue());
-//            HSSFCell hssfCell = hssfRow.getCell(formula.getCellNum().shortValue());
-//            if (formulaString != null) {
-//                hssfCell.setCellFormula(formulaString);
-//            } else {
-//                if (!ignoreUnresolved) {
-//                    hssfCell.setCellValue("");
-//                    formulas.remove(i--);
-//                }
-//            }
-//        }
-    }
-
-    private static void adjustFormula(HSSFSheet sheet, Formula formula, Map listRanges, Map namedCells, boolean ignoreUnresolved) {
-
-    }
 
     /**
      * @param formulas {@link List} of {@link Formula} objects
