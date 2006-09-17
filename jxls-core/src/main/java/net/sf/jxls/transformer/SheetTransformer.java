@@ -87,7 +87,13 @@ public class SheetTransformer {
                         applyRowProcessors(sheet, row );
                         ResultTransformation processResult = rowTransformer.transform(stc, this, beans);
                         transformers.add( rowTransformer );
-                        i += processResult.getNextRowShift();
+                        if( !processResult.isTagProcessResult() ){
+                            i += processResult.getNextRowShift();
+                        }else{
+                            if( processResult.getLastProcessedRow() >=0 ){
+                                i = processResult.getLastProcessedRow();
+                            }
+                        }
                     }
                 }
             }
@@ -110,17 +116,33 @@ public class SheetTransformer {
     public ResultTransformation processRows(SheetTransformationController stc, Sheet sheet, int startRow, int endRow, Map beans, Row parentRow) throws ParsePropertyException {
         int origEndRow = endRow;
         int nextRowShiftNumber = 0;
+        boolean hasTagProcessing = false;
+        int lastProcessedRow = -1;
         for (int i = startRow; i <= endRow; i++) {
             HSSFRow hssfRow = sheet.getHssfSheet().getRow(i);
+            lastProcessedRow = i;
             if( hssfRow!=null ){
                 ResultTransformation processResult = processRow(stc, sheet, hssfRow, beans, parentRow );
-                int shiftNumber = processResult.getNextRowShift();
-                nextRowShiftNumber += shiftNumber;
-                endRow += processResult.getLastRowShift();
-                i += shiftNumber;
+                if( !processResult.isTagProcessResult() ){
+                    int shiftNumber = processResult.getNextRowShift();
+                    nextRowShiftNumber += shiftNumber;
+                    endRow += processResult.getLastRowShift();
+                    i += shiftNumber;
+                }else{
+                    hasTagProcessing = true;
+                    if( processResult.getLastProcessedRow() >= 0 ){
+                        i = processResult.getLastProcessedRow();
+                    }else{
+                        i--;
+                    }
+                    endRow += processResult.getLastRowShift();
+                }
             }
         }
-        return new ResultTransformation(nextRowShiftNumber, endRow - origEndRow);
+        ResultTransformation r = new ResultTransformation(nextRowShiftNumber, endRow - origEndRow);
+        r.setTagProcessResult( hasTagProcessing );
+        r.setLastProcessedRow( lastProcessedRow );
+        return r;
     }
 
     ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, HSSFRow hssfRow, Map beans, Row parentRow){

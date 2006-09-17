@@ -79,6 +79,9 @@ public class XLSTransformerTest extends TestCase {
     public static final String forifTag2XLS = "/templates/foriftag2.xls";
     public static final String forifTag2DestXLS = "target/foriftag2_output.xls";
 
+    public static final String forifTag3XLS = "/templates/foriftag3.xls";
+    public static final String forifTag3DestXLS = "target/foriftag3_output.xls";
+
     public static final String forifTagMergeXLS = "/templates/foriftagmerge.xls";
     public static final String forifTagMergeDestXLS = "target/foriftagmerge_output.xls";
 
@@ -1138,6 +1141,32 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook( resultWorkbook, forifTag2DestXLS);
     }
 
+    public void testForIfTag3() throws IOException, ParsePropertyException {
+        Map beans = new HashMap();
+        beans.put( "departments", departments );
+        beans.put("depUrl", "http://www.somesite.com");
+
+        Configuration config = new Configuration();
+        config.setMetaInfoToken("\\\\");
+
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTag3XLS));
+        XLSTransformer transformer = new XLSTransformer( config );
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        is = new BufferedInputStream(getClass().getResourceAsStream(forifTag3XLS));
+        POIFSFileSystem fs = new POIFSFileSystem(is);
+        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+
+        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
+//        assertEquals("Last Row Number is incorrect", 11, resultSheet.getLastRowNum());
+
+
+        is.close();
+        saveWorkbook( resultWorkbook, forifTag3DestXLS);
+    }
+
     public void testEmptyBeansExport() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
 
@@ -1454,6 +1483,7 @@ public class XLSTransformerTest extends TestCase {
             resultWorkbook.write(os);
             os.flush();
             os.close();
+            log.info("Output Excel saved to " + fileName);
         }
     }
 

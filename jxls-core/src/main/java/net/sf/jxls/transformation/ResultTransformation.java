@@ -12,6 +12,9 @@ public class ResultTransformation extends BaseTransformation {
     int nextRowShift;
     short nextCellShift;
     short lastCellShift;
+    int lastProcessedRow = -1;
+
+    boolean isTagProcessResult;
 
     public ResultTransformation() {
     }
@@ -30,11 +33,36 @@ public class ResultTransformation extends BaseTransformation {
         this.lastRowShift = lastRowShift;
     }
 
+
+    public boolean isTagProcessResult() {
+        return isTagProcessResult;
+    }
+
+    public void setTagProcessResult(boolean tagProcessResult) {
+        isTagProcessResult = tagProcessResult;
+    }
+
+    public int getLastProcessedRow() {
+        return lastProcessedRow;
+    }
+
+    public void setLastProcessedRow(int lastProcessedRow) {
+        this.lastProcessedRow = lastProcessedRow;
+    }
+
     public ResultTransformation add(ResultTransformation transformation){
         lastRowShift += transformation.getLastRowShift();
         nextRowShift += transformation.getNextRowShift();
+//        if( nextRowShift < - 1){
+//            // next row shift can't be less than 1 because we must not process already processed rows
+//            nextRowShift = -1;
+//        }
         lastCellShift += transformation.getLastCellShift();
         nextCellShift += transformation.getNextCellShift();
+        if( transformation.getLastProcessedRow() >= 0 ){
+            this.lastProcessedRow = Math.max( this.lastProcessedRow, transformation.getLastProcessedRow() );
+        }
+        this.isTagProcessResult = isTagProcessResult || transformation.isTagProcessResult();
         return this;
     }
 
@@ -48,6 +76,9 @@ public class ResultTransformation extends BaseTransformation {
 
     public ResultTransformation addNextRowShift( int shift ){
         nextRowShift += shift;
+//        if( nextRowShift < -1 ){
+//            nextRowShift = -1;
+//        }
         return this;
     }
 

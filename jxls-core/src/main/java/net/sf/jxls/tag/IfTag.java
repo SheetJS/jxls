@@ -63,6 +63,7 @@ public class IfTag extends BaseTag {
         int shiftNumber = 0;
 
         ResultTransformation shift = new ResultTransformation(0);
+        shift.setLastProcessedRow( -1 );
         if( testResult != null ){
             if(testResult.booleanValue() ){
                 tagContext.getSheetTransformationController().removeBorders(body);
@@ -70,6 +71,7 @@ public class IfTag extends BaseTag {
                 try {
                     ResultTransformation processResult = sheetTransformer.processRows(tagContext.getSheetTransformationController(), tagContext.getSheet(), body.getStartRowNum(), body.getEndRowNum(), tagContext.getBeans(), null );
                     shift.add( processResult );
+//                    lastProcessedRow = processResult.getLastProcessedRow();
                 } catch (ParsePropertyException e) {
                     log.error("Can't parse property ", e);
                 }
@@ -78,7 +80,7 @@ public class IfTag extends BaseTag {
                 shift.add( new ResultTransformation(-1, -body.getNumberOfRows() ));
             }
         }
-
+        shift.setTagProcessResult( true );
         return shift.add( new ResultTransformation(0, shiftNumber) );
     }
 
@@ -90,6 +92,7 @@ public class IfTag extends BaseTag {
         shiftNumber += -2;
         Map beans = tagContext.getBeans();
         ResultTransformation shift = new ResultTransformation();
+        shift.setLastProcessedRow( -1 );
         shift.addRightShift( (short) shiftNumber );
         if( testResult!=null ){
             if( testResult.booleanValue() ){
@@ -104,6 +107,7 @@ public class IfTag extends BaseTag {
                 shift.add( new ResultTransformation((short)-body.getNumberOfColumns(), (short)(-body.getNumberOfColumns() )));
             }
         }
+        shift.setTagProcessResult( true );
 //        Util.writeToFile("ifTagFinished.xls", tagContext.getSheet().getHssfWorkbook());
         return shift;
     }

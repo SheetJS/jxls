@@ -131,15 +131,18 @@ public class ForEachTag extends BaseTag {
             ResultTransformation shift = new ResultTransformation(0);
             Map beans = tagContext.getBeans();
             int k = 0;
+            ResultTransformation processResult;
+            int startRowNum, endRowNum;
+//            shift.setLastProcessedRow(body.getStartRowNum() + body.getNumberOfRows() * itemsCollection.size());
             if( groupBy == null || groupBy.length() == 0 ){
                 shiftNumber += tagContext.getSheetTransformationController().duplicateDown( body, itemsCollection.size() - 1 );
                 for (Iterator iterator = itemsCollection.iterator(); iterator.hasNext();) {
                     Object o = iterator.next();
                     beans.put( var, o );
                     try {
-                        int startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
-                        int endRowNum = startRowNum + body.getNumberOfRows() - 1;
-                        ResultTransformation processResult = sheetTransformer.processRows(tagContext.getSheetTransformationController(), tagContext.getSheet(), startRowNum, endRowNum, beans, null);
+                        startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
+                        endRowNum = startRowNum + body.getNumberOfRows() - 1;
+                        processResult = sheetTransformer.processRows(tagContext.getSheetTransformationController(), tagContext.getSheet(), startRowNum, endRowNum, beans, null);
                         shift.add( processResult );
                     } catch (ParsePropertyException e) {
                         log.error("Can't parse property ", e);
@@ -157,9 +160,9 @@ public class ForEachTag extends BaseTag {
                         GroupData groupData = (GroupData) iterator.next();
                         beans.put(GROUP_DATA_KEY, groupData );
                         try {
-                            int startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
-                            int endRowNum = startRowNum + body.getNumberOfRows() - 1;
-                            ResultTransformation processResult = sheetTransformer.processRows(tagContext.getSheetTransformationController(), tagContext.getSheet(), startRowNum, endRowNum, beans, null);
+                            startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
+                            endRowNum = startRowNum + body.getNumberOfRows() - 1;
+                            processResult = sheetTransformer.processRows(tagContext.getSheetTransformationController(), tagContext.getSheet(), startRowNum, endRowNum, beans, null);
                             shift.add( processResult );
                         } catch (ParsePropertyException e) {
                             log.error("Can't parse property ", e);
@@ -176,14 +179,18 @@ public class ForEachTag extends BaseTag {
                 } catch (InvocationTargetException e) {
                     log.error(e, new Exception("Can't group collection data by " + groupBy, e));
                 }
-                }
+            }
             shift.add( new ResultTransformation(shiftNumber, shiftNumber));
+//            shift.setLastProcessedRow( processResult.getLastProcessedRow() );
+            shift.setTagProcessResult( true );
             return shift;
         }else{
             log.warn("Collection " + items + " is empty");
             tagContext.getSheetTransformationController().removeBodyRows( body );
             ResultTransformation shift = new ResultTransformation(0);
             shift.add( new ResultTransformation(-1, -body.getNumberOfRows() ));
+            shift.setLastProcessedRow( -1 );
+            shift.setTagProcessResult( true );
             return shift;
         }
     }
@@ -197,6 +204,7 @@ public class ForEachTag extends BaseTag {
         int k = 0;
         Map beans = tagContext.getBeans();
         ResultTransformation shift = new ResultTransformation();
+        shift.setLastProcessedRow( -1 );
         for (Iterator iterator = itemsCollection.iterator(); iterator.hasNext();) {
             Object o = iterator.next();
             beans.put( var, o );
@@ -212,7 +220,7 @@ public class ForEachTag extends BaseTag {
             }
         }
         shift.addRightShift( (short) shiftNumber );
-
+        shift.setTagProcessResult( true );
         return shift;
     }
 
