@@ -5,7 +5,6 @@
     </properties>
     <body>
         <section id="compatibilityBetween0.9And0.9.1" name="Changes in version 0.9.1">
-            <p>Changes: </p>
             <ul>
                 <li>Major issue with inner forEach/if tags fixed</li>
                 <li>java.util.Calendar type support added</li>
@@ -13,7 +12,6 @@
             <p>Note the package modification feature. You have to update jxls package names in your existing code to be able to use jxls-0.9.</p>
         </section>
         <section id="compatibilityBetween0.8.9And0.9" name="Changes in version 0.9">
-            <p>Changes: </p>
             <ul>
                 <li>Root packages were changed to net.sf.jxls to correspond current project domain</li>
                 <li>Due to formula processing re-engineering to enhance overall performance old-style formulas notation like
@@ -24,7 +22,6 @@
             <p>Note the package modification feature. You have to update jxls package names in your existing code to be able to use jxls-0.9.</p>
         </section>
         <section id="compatibilityBetween0.8.8And0.8.9" name="Changes in version 0.8.9">
-            <p>Changes: </p>
             <ul>
                 <li>This release simplifies using quotes inside tag attributes. See <a href="sqlreporting.html#parameterizedquerieswithquotes">SQL Reporting</a> section for an example</li>
                 <li>Fixed issue with merged cells and last column width when using dynamic sheets feature</li>
@@ -32,7 +29,6 @@
             </ul>
         </section>
         <section id="compatibilityBetween0.8.7And0.8.8" name="Changes in version 0.8.8">
-            <p>This version changes: </p>
             <ul>
                 <li>SQL queries in XLS templates. See <a href="sqlreporting.html">SQL Reporting</a> section.</li>
                 <li>Grouping data on-the-fly support. See <a href="tags.html#foreachGroup">Grouping data with jx:forEach tag</a> section.</li>
@@ -45,7 +41,6 @@
             </p>
         </section>
         <section id="compatibilityBetween0.8.6And0.8.7" name="Changes in version 0.8.7">
-            <p>This version features: </p>
             <ul>
                 <li>Extended JEXL expressions support! See <a href="expressions.html#fullJEXLSupport">JEXL Expressions Support</a> section.</li>
                 <li>New jx:group tag. </li>
@@ -60,7 +55,6 @@
             </p>
         </section>
         <section id="compatibilityBetween0.8.5And0.8.6" name="Changes in version 0.8.6">
-            <p>This version features: </p>
             <p>Flow-control <a href="tags.html">jx tags</a> support.</p>
             <p>New <a href="formulas.html">formula cell references</a> support. Also cross-sheet cell references are allowed.</p>
             <p> <a href="dynamicsheets.html">Dynamic worksheets</a> support.</p>
