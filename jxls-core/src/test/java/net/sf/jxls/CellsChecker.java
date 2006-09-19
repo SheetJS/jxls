@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Calendar;
 
 /**
  * @author Leonid Vysochyn
@@ -231,6 +232,10 @@ public class CellsChecker extends Assert {
             value = new Float(cell.getNumericCellValue());
         } else if (obj instanceof Date) {
             value = cell.getDateCellValue();
+        } else if (obj instanceof Calendar) {
+            Calendar c = Calendar.getInstance();
+            c.setTime( cell.getDateCellValue() );
+            value = c;
         } else if (obj instanceof Boolean){
             if( cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN ){
                 value = (cell.getBooleanCellValue()) ? Boolean.TRUE : Boolean.FALSE;

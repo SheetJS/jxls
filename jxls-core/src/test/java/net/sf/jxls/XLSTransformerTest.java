@@ -227,6 +227,9 @@ public class XLSTransformerTest extends TestCase {
     public void testSimpleBeanExport() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
         beans.put("bean", simpleBean1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2006, 8, 19);
+        beans.put("calendar", calendar);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
         XLSTransformer transformer = new XLSTransformer();
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
@@ -240,7 +243,8 @@ public class XLSTransformerTest extends TestCase {
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Numbers differ in source and result sheets", sourceSheet.getLastRowNum(), resultSheet.getLastRowNum());
         CellsChecker checker = new CellsChecker(propertyMap);
-        checker.checkRows(sourceSheet, resultSheet, sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum(), sourceSheet.getLastRowNum() - sourceSheet.getFirstRowNum());
+        propertyMap.put("${calendar}", calendar);
+        checker.checkRows(sourceSheet, resultSheet, 0, 0, 6);
 
         is.close();
         saveWorkbook(resultWorkbook, simpeBeanDestXLS);

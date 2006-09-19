@@ -9,6 +9,7 @@ import net.sf.jxls.formula.Formula;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Cell transformation class
@@ -48,6 +49,8 @@ public class CellTransformer {
                                     cell.getHssfCell().setCellValue(((BigDecimal) value).doubleValue());
                                 } else if (value instanceof Date) {
                                     cell.getHssfCell().setCellValue((Date) value);
+                                }else if (value instanceof Calendar) {
+                                    cell.getHssfCell().setCellValue((Calendar) value);
                                 } else if (value instanceof Integer) {
                                     cell.getHssfCell().setCellValue(((Integer) value).intValue());
                                 }else if (value instanceof Long) {
