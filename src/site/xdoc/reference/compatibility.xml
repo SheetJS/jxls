@@ -4,6 +4,14 @@
       <title>Version Compatibility</title>
     </properties>
     <body>
+        <section id="compatibilityBetween0.9And0.9.1" name="Changes in version 0.9.1">
+            <p>Changes: </p>
+            <ul>
+                <li>Major issue with inner forEach/if tags fixed</li>
+                <li>java.util.Calendar type support added</li>
+            </ul>
+            <p>Note the package modification feature. You have to update jxls package names in your existing code to be able to use jxls-0.9.</p>
+        </section>
         <section id="compatibilityBetween0.8.9And0.9" name="Changes in version 0.9">
             <p>Changes: </p>
             <ul>
