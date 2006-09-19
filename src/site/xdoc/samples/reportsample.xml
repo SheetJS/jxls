@@ -15,9 +15,8 @@
                 We use the same template to demonstrate several ways of using SQL queries to get required data.
                 The template can be found in here <a href="../xls/report.xls">report.xls</a>.
                 And the result is here <a href="../xls/report_output.xls">report_output.xls</a>.
-                Screenshot of XLS template file
             </p>
-            <img src="../images/reportTemplateXLS.gif" alt="Screenshot of simple query results output"/>
+            <!--<img src="../images/reportTemplateXLS.gif" alt="Screenshot of simple query results output"/>-->
             <section id="simplequery" name="Simple Query">
 				<p>This is an example of rather a simple query which joins <code>employee</code> and <code>department</code>
                     tables to list all employees and their corresponding departments
