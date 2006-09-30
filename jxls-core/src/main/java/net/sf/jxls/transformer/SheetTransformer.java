@@ -92,6 +92,8 @@ public class SheetTransformer {
                         }else{
                             if( processResult.getLastProcessedRow() >=0 ){
                                 i = processResult.getLastProcessedRow();
+                            }else{
+                                i--;
                             }
                         }
                     }
@@ -120,7 +122,6 @@ public class SheetTransformer {
         int lastProcessedRow = -1;
         for (int i = startRow; i <= endRow; i++) {
             HSSFRow hssfRow = sheet.getHssfSheet().getRow(i);
-            lastProcessedRow = i;
             if( hssfRow!=null ){
                 ResultTransformation processResult = processRow(stc, sheet, hssfRow, beans, parentRow );
                 if( !processResult.isTagProcessResult() ){
@@ -128,10 +129,12 @@ public class SheetTransformer {
                     nextRowShiftNumber += shiftNumber;
                     endRow += processResult.getLastRowShift();
                     i += shiftNumber;
+                    lastProcessedRow = i;
                 }else{
                     hasTagProcessing = true;
                     if( processResult.getLastProcessedRow() >= 0 ){
                         i = processResult.getLastProcessedRow();
+                        lastProcessedRow = i;
                     }else{
                         i--;
                     }

@@ -1149,6 +1149,12 @@ public class XLSTransformerTest extends TestCase {
         Map beans = new HashMap();
         beans.put( "departments", departments );
         beans.put("depUrl", "http://www.somesite.com");
+        List deps = new ArrayList();
+        Department testDep = new Department("Test");
+        deps.add( testDep );
+        beans.put( "deps", deps );
+        List employees = new ArrayList();
+        beans.put("employees", employees);
 
         Configuration config = new Configuration();
         config.setMetaInfoToken("\\\\");
@@ -1235,8 +1241,13 @@ public class XLSTransformerTest extends TestCase {
         checker.checkListCells( sourceSheet, 29, resultSheet, 51, (short)1, baPayments);
         checker.checkListCells( sourceSheet, 29, resultSheet, 51, (short)2, baBonuses);
         checker.checkRows(sourceSheet, resultSheet, 31, 30, 1);
-
+        sourceSheet = sourceWorkbook.getSheetAt( 1 );
+        resultSheet = resultWorkbook.getSheetAt( 1 );
+        assertEquals("Number of rows on Sheet 2 is not correct", 1, resultSheet.getLastRowNum() + 1);
+        checker.setIgnoreFirstLastCellNums( true );
+        checker.checkRows( sourceSheet, resultSheet, 11, 0, 1);
         is.close();
+
         saveWorkbook( resultWorkbook, forifTag3DestXLS);
     }
 

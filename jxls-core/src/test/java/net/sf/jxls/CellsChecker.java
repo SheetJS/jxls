@@ -23,6 +23,7 @@ public class CellsChecker extends Assert {
     }
 
     boolean ignoreStyle = false;
+    boolean ignoreFirstLastCellNums = false;
 
     public CellsChecker(Map propertyMap) {
         this.propertyMap = propertyMap;
@@ -31,6 +32,15 @@ public class CellsChecker extends Assert {
     public CellsChecker(Map propertyMap, boolean ignoreStyle) {
         this.propertyMap = propertyMap;
         this.ignoreStyle = ignoreStyle;
+    }
+
+
+    public boolean isIgnoreFirstLastCellNums() {
+        return ignoreFirstLastCellNums;
+    }
+
+    public void setIgnoreFirstLastCellNums(boolean ignoreFirstLastCellNums) {
+        this.ignoreFirstLastCellNums = ignoreFirstLastCellNums;
     }
 
     void checkSection(HSSFSheet srcSheet, HSSFSheet destSheet, int srcRowNum, int destRowNum, short fromCellNum, short toCellNum, int numberOfRows, boolean ignoreHeight, boolean ignoreNullRows){
@@ -123,7 +133,9 @@ public class CellsChecker extends Assert {
             HSSFRow destRow = destSheet.getRow(destRowNum + i);
             assertTrue("Null Row problem found", (sourceRow != null && destRow != null) || (sourceRow == null && destRow == null));
             if (sourceRow != null && destRow != null) {
-                assertEquals("First Cell Numbers differ in source and result row", sourceRow.getFirstCellNum(), destRow.getFirstCellNum());
+                if( !ignoreFirstLastCellNums ){
+                    assertEquals("First Cell Numbers differ in source and result row", sourceRow.getFirstCellNum(), destRow.getFirstCellNum());
+                }
 //                assertEquals("Last Cell Numbers differ in source and result row", sourceRow.getLastCellNum(), destRow.getLastCellNum());
                 assertEquals("Physical Number Of Cells differ in source and result row", sourceRow.getPhysicalNumberOfCells(), destRow.getPhysicalNumberOfCells());
                 assertEquals("Row height is not the same", sourceRow.getHeight(), destRow.getHeight());
