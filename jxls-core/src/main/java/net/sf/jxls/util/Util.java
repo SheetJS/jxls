@@ -432,6 +432,7 @@ public final class Util {
                 newCell.setCellErrorValue(oldCell.getErrorCellValue());
                 break;
             case HSSFCell.CELL_TYPE_FORMULA:
+                newCell.setCellFormula( oldCell.getCellFormula() );
                 break;
             default:
                 break;
