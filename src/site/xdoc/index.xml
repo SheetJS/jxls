@@ -5,11 +5,11 @@
   </properties>
     <body>
         <section name="News">
-            <p><strong>jXLS v.0.9.1 released</strong></p>
-            <p>This is a maintenance release. Changes:  </p>
+            <p><strong>jXLS v.0.9.2 released</strong></p>
+            <p>This release fixes a couple tag related issues and adds some new features:  </p>
             <ul>
-                <li>Major issue with inner forEach/if tag processing fixed</li>
-                <li>Support for java.util.Calendar type added</li>
+                <li>New attribute <code>groupOrder</code> added to jx:forEach tag</li>
+                <li>Some jx tag issues fixed</li>
             </ul>
         </section>
         <section name="Overview">

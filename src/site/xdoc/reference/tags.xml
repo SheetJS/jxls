@@ -24,7 +24,8 @@
             <p>See also <a href="../samples/tagsample.html">Basic Tags sample</a></p>
             <section id="forEachTagGrouping" name="Grouping data with jx:forEach tag">
                 <p><code>jx:forEach</code> tag allows you to perform grouping of collection data by one of the underlying bean properties.
-                This can be done with <code>groupBy</code> attribute which specifies which property should be used for grouping data.
+                This can be done with <code>groupBy</code> and <code>groupOrder</code> attributes which specify which property should be used for grouping data
+                and how groups should be ordered.
                 For example </p>
                 <source>
                     &lt;jx:forEach items="${employees}" groupBy="age">
@@ -48,6 +49,11 @@
                     ${employee.name} | ${employee.payment} | ${employee.bonus}
                     &lt;/jx:forEach>
                 </source>
+                <p>
+                    By default if there is no <code>groupOrder</code> attribute group order will be preserved "as is" so that groups will be
+                    in the same order as they were found in the original <code>items</code> collection. If you need to sort groups in
+                    ascending or descending order you can set <code>groupOrder</code> attribute to <code>asc</code> or <code>desc</code> value accordingly.
+                </p>
                 <p>In case of using <code>groupBy</code> attribute the <code>var</code> attribute of <code>jx:forEach</code>
                    tag is ignored.
                 </p>

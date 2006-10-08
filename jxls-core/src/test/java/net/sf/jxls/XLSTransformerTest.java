@@ -134,7 +134,7 @@ public class XLSTransformerTest extends TestCase {
     Double[] itBonuses = new Double[] {new Double(0.15), new Double(0.25), new Double(0.00), new Double(0.15), new Double(0.20)};
     Double[] hrBonuses = new Double[] {new Double(0.20), new Double(0.10), new Double(0.15), new Double(0.15)};
     Double[] baBonuses = new Double[] {new Double(0.20), new Double(0.15), new Double(0.10)};
-    Integer[] itAges = new Integer[] {new Integer(25), new Integer(30), new Integer(34), new Integer(25), new Integer(35)};
+    Integer[] itAges = new Integer[] {new Integer(34), new Integer(30), new Integer(25), new Integer(25), new Integer(35)};
     Integer[] hrAges = new Integer[] {new Integer(26), new Integer(28), new Integer(26), new Integer(26)};
     Integer[] baAges = new Integer[] {new Integer(30), new Integer(30), new Integer(30)};
     List departments = new ArrayList();
@@ -1556,6 +1556,7 @@ public class XLSTransformerTest extends TestCase {
 //        beans.put( "departments", emptyDepartments );
         is = new BufferedInputStream(getClass().getResourceAsStream(forGroupByXLS));
         resultWorkbook = transformer.transformXLS(is, beans);
+        saveWorkbook( resultWorkbook, forGroupByDestXLS );
         is.close();
 
     }

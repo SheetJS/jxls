@@ -38,7 +38,18 @@ public class ForEachTag extends BaseTag {
     private String collectionPropertyName;
     private String groupBy;
 
+    private String groupOrder;
+
     private Collection itemsCollection;
+
+
+    public String getGroupOrder() {
+        return groupOrder;
+    }
+
+    public void setGroupOrder(String groupOrder) {
+        this.groupOrder = groupOrder;
+    }
 
     public String getItems() {
         return items;
@@ -96,14 +107,6 @@ public class ForEachTag extends BaseTag {
                 } catch (Exception e) {
                     throw new RuntimeException("Can't parse an expression " + items, e);
                 }
-//                int dotCharIndex = items.indexOf( "." );
-//                if( dotCharIndex >= 0 ){
-//                    itemsKey = items.substring(0, dotCharIndex);
-//                    collectionPropertyName = items.substring( dotCharIndex + 1 );
-//                }else{
-//                    itemsKey = items;
-//                    collectionPropertyName = null;
-//                }
             }else{
                 log.error("items attribute should start from " + configuration.getStartExpressionToken() + " and end " +
                         "with " + configuration.getEndExpressionToken());
@@ -150,7 +153,7 @@ public class ForEachTag extends BaseTag {
                 }
             }else{
                 try {
-                    Collection groupedData = ReportUtil.groupCollectionData( itemsCollection, groupBy );
+                    Collection groupedData = ReportUtil.groupCollectionData( itemsCollection, groupBy, groupOrder );
                     shiftNumber += tagContext.getSheetTransformationController().duplicateDown( body, groupedData.size() - 1 );
                     Object savedGroupData = null;
                     if( beans.containsKey( GROUP_DATA_KEY ) ){
