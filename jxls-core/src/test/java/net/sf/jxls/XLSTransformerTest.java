@@ -253,6 +253,7 @@ public class XLSTransformerTest extends TestCase {
     public void testBeanWithListExport() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
         beans.put("listBean", beanWithList);
+        beans.put("beans", beanWithList.getBeans());
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(beanWithListXLS));
         XLSTransformer transformer = new XLSTransformer();
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
@@ -539,8 +540,7 @@ public class XLSTransformerTest extends TestCase {
 
     /**
      * This test is not ready
-     *
-     * @throws IOException
+     * @throws java.io.IOException
      * @throws ParsePropertyException
      */
     public void testMergeCellsList() throws IOException, ParsePropertyException {

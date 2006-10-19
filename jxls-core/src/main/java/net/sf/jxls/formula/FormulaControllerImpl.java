@@ -85,6 +85,10 @@ public class FormulaControllerImpl implements FormulaController {
                 }
             }
         }
+//        if( log.isDebugEnabled() ){
+//            writeFormulas( new CommonFormulaResolver() );
+//            net.sf.jxls.util.Util.writeToFile("test.xls", transformation.getBlock().getSheet().getHssfWorkbook());
+//        }
     }
 
     public Map getSheetFormulasMap() {

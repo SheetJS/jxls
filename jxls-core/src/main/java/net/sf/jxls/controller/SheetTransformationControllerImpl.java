@@ -8,6 +8,7 @@ import net.sf.jxls.formula.*;
 import net.sf.jxls.transformation.DuplicateTransformation;
 import net.sf.jxls.transformation.RemoveTransformation;
 import net.sf.jxls.transformation.ShiftTransformation;
+import net.sf.jxls.transformation.DuplicateTransformationByColumns;
 import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.tag.Point;
@@ -56,6 +57,16 @@ public class SheetTransformationControllerImpl implements SheetTransformationCon
 
     public int duplicateRight(Block block, int n) {
         if( n > 0 ){
+            ShiftTransformation shiftTransformation = new ShiftTransformation(new Block(sheet, block.getStartRowNum(),
+                    (short)(block.getEndCellNum() + 1), block.getEndRowNum(),  Short.MAX_VALUE), 0, (short) (block.getNumberOfColumns()*n));
+            transformations.add( shiftTransformation );
+            if( block.getSheet() == null ){
+                block.setSheet( sheet );
+            }
+            DuplicateTransformationByColumns duplicateTransformation = new DuplicateTransformationByColumns( block, n);
+            transformations.add( duplicateTransformation );
+            formulaController.updateWorkbookFormulas( shiftTransformation );
+            formulaController.updateWorkbookFormulas( duplicateTransformation );
             return TagBodyHelper.duplicateRight( sheet.getHssfSheet(), block, n) ;
         }else{
             return 0;
@@ -76,10 +87,25 @@ public class SheetTransformationControllerImpl implements SheetTransformationCon
     }
 
     public void removeLeftRightBorders(Block block) {
+        transformations.add( new RemoveTransformation( new Block( sheet, block.getStartRowNum(), block.getStartCellNum(), block.getEndRowNum(), block.getStartCellNum()) ));
+        ShiftTransformation shiftTransformation1 = new ShiftTransformation( new Block(sheet, block.getStartRowNum(), (short) (block.getStartCellNum() + 1), block.getEndRowNum(), Short.MAX_VALUE ), 0, -1);
+        transformations.add( shiftTransformation1 );
+        transformations.add( new RemoveTransformation( new Block(sheet, block.getStartRowNum(), (short)(block.getEndCellNum() - 1), block.getEndRowNum(), (short)(block.getEndCellNum() - 1)) ));
+        ShiftTransformation shiftTransformation2 = new ShiftTransformation( new Block( sheet, block.getStartRowNum(), block.getEndCellNum(), block.getEndRowNum(), Short.MAX_VALUE), 0, -1);
+        transformations.add( shiftTransformation2 );
+        formulaController.updateWorkbookFormulas( shiftTransformation1 );
+        formulaController.updateWorkbookFormulas( shiftTransformation2 );
         TagBodyHelper.removeLeftRightBorders( sheet.getHssfSheet(), block);
+//        formulaController.writeFormulas(new CommonFormulaResolver());
+//        Util.writeToFile("afterRemoveLeftRightBorders.xls", sheet.getHssfWorkbook());
     }
 
     public void removeRowCells(HSSFRow row, short startCellNum, short endCellNum) {
+        transformations.add( new RemoveTransformation( new Block(sheet, row.getRowNum(), startCellNum, row.getRowNum(), endCellNum)) );
+        ShiftTransformation shiftTransformation = new ShiftTransformation(new Block(sheet, row.getRowNum(), (short) (endCellNum + 1), row.getRowNum(), Short.MAX_VALUE), 0, endCellNum - startCellNum + 1);
+        transformations.add( shiftTransformation );
+        transformations.add( new RemoveTransformation( new Block(sheet, row.getRowNum(), (short) (row.getLastCellNum() - (endCellNum - startCellNum)), row.getRowNum(), row.getLastCellNum())));
+        formulaController.updateWorkbookFormulas( shiftTransformation );
         TagBodyHelper.removeRowCells( sheet.getHssfSheet(), row, startCellNum, endCellNum );
     }
 

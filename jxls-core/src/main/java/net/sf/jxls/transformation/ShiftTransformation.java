@@ -31,8 +31,12 @@ public class ShiftTransformation extends BlockTransformation {
 
     public List transformCell(Point p) {
         cells.clear();
-        if( block.contains( p ) || block.isAbove( p )){
-            cells.add( p.shift( rowShift, colShift ) );
+        if( block.contains( p ) || (block.isAbove( p ) && rowShift != 0) || (block.isToLeft( p ) && colShift != 0)){
+            Point newPoint = p.shift( rowShift, colShift );
+//            if( newPoint.getCol() < 0 ){
+//                newPoint.setCol((short) 0);
+//            }
+            cells.add( newPoint );
         }else{
             cells.add( p );
         }
@@ -43,9 +47,13 @@ public class ShiftTransformation extends BlockTransformation {
         cells.clear();
         String refSheetName = cellRef.getSheetName();
         if( block.getSheet().getSheetName().equalsIgnoreCase( refSheetName ) || (cellRef.getSheetName() == null && block.getSheet().getSheetName().equalsIgnoreCase( sheetName ))){
-            if( block.contains( cellRef.getRowNum(), cellRef.getColNum() ) || block.getEndRowNum() < cellRef.getRowNum() ){
+            if( block.contains( cellRef.getRowNum(), cellRef.getColNum() ) || (block.getEndRowNum() < cellRef.getRowNum() && rowShift != 0)
+                    || (block.getEndCellNum() < cellRef.getColNum() && colShift != 0)){
                 rowNum = cellRef.getRowNum() + rowShift;
                 colNum = cellRef.getColNum() + colShift;
+                if( colNum < 0 ){
+                    colNum = 0;
+                }
                 cellReference = new CellReference( rowNum, colNum );
                 if( cellRef.getSheetName() != null ){
                     cells.add( cellRef.getSheetName() + "!" + cellReference.toString());

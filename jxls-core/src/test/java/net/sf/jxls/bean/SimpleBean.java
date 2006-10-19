@@ -12,6 +12,8 @@ public class SimpleBean {
     private Date dateValue;
     private SimpleBean other;
 
+
+
     public SimpleBean(String name, Double doubleValue, Integer intValue, Date dateValue) {
         this.name = name;
         this.doubleValue = doubleValue;
@@ -23,6 +25,10 @@ public class SimpleBean {
         this.name = name;
         this.doubleValue = doubleValue;
         this.intValue = intValue;
+    }
+
+    public String getBeansProp(){
+        return "beans_for_" + name;
     }
 
 

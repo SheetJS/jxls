@@ -37,6 +37,14 @@ public class Block {
         this.endCellNum = endCellNum;
     }
 
+    public Block(Sheet sheet, int startRowNum, short startCellNum, int endRowNum, short endCellNum) {
+        this.sheet = sheet;
+        this.startRowNum = startRowNum;
+        this.startCellNum = startCellNum;
+        this.endRowNum = endRowNum;
+        this.endCellNum = endCellNum;
+    }
+
     public void addAffectedColumn(short col){
         affectedColumns.add( new Short(col) );
     }
@@ -124,6 +132,10 @@ public class Block {
 
     public boolean isAbove(Point p){
         return (endRowNum < p.getRow());
+    }
+
+    public boolean isToLeft(Point p){
+        return (endCellNum < p.getCol());
     }
 
     public boolean isAbove(int rowNum){
