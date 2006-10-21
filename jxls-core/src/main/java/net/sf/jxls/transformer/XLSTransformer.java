@@ -2,6 +2,7 @@ package net.sf.jxls.transformer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.digester.Digester;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import net.sf.jxls.util.Util;
@@ -13,11 +14,11 @@ import net.sf.jxls.processor.CellProcessor;
 import net.sf.jxls.processor.RowProcessor;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.exception.TaglibRegistrationException;
-import net.sf.jxls.formula.Formula;
 import net.sf.jxls.formula.CommonFormulaResolver;
 import net.sf.jxls.formula.FormulaResolver;
 import net.sf.jxls.formula.FormulaController;
 import net.sf.jxls.tag.Taglib;
+import net.sf.jxls.tag.TaglibXMLParser;
 
 import java.io.*;
 import java.util.*;
@@ -40,6 +41,8 @@ public class XLSTransformer {
     private List cellProcessors = new ArrayList();
 
     private Map taglibs = new HashMap();
+
+    private final String TAGLIB_DEFINITION_FILE = "jxls-core-taglib.xml";
 
 
     /**
@@ -129,7 +132,7 @@ public class XLSTransformer {
     }
 
     public XLSTransformer() {
-        configuration = new Configuration();
+        this(new Configuration());
     }
 
     public XLSTransformer(Configuration configuration) {
@@ -138,6 +141,13 @@ public class XLSTransformer {
         }else{
             this.configuration = new Configuration();
         }
+        //todo
+//        registerTaglib( TAGLIB_DEFINITION_FILE );
+    }
+
+    public void registerTaglib(String taglibFileName){
+        TaglibXMLParser parser = new TaglibXMLParser();
+        Taglib taglib = parser.parseTaglibXMLFile( taglibFileName );
     }
 
     private WorkbookTransformationController workbookTransformationController;

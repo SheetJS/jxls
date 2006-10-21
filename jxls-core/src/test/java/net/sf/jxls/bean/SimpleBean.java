@@ -11,7 +11,7 @@ public class SimpleBean {
     private Integer intValue;
     private Date dateValue;
     private SimpleBean other;
-
+    int amount;
 
 
     public SimpleBean(String name, Double doubleValue, Integer intValue, Date dateValue) {
@@ -25,6 +25,20 @@ public class SimpleBean {
         this.name = name;
         this.doubleValue = doubleValue;
         this.intValue = intValue;
+    }
+
+
+    public SimpleBean(int amount) {
+        this.amount = amount;
+    }
+
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public String getBeansProp(){

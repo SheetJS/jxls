@@ -113,9 +113,11 @@ public class SheetTransformationControllerImpl implements SheetTransformationCon
         if( block.getSheet() == null ){
             block.setSheet( sheet );
         }
-        transformations.add( new RemoveTransformation( block ) );
+        RemoveTransformation removeTransformation = new RemoveTransformation(block);
+        transformations.add(removeTransformation);
         ShiftTransformation shiftTransformation = new ShiftTransformation(new Block(sheet, block.getEndRowNum() + 1, Integer.MAX_VALUE), -block.getNumberOfRows(), 0);
         transformations.add( shiftTransformation );
+        formulaController.updateWorkbookFormulas( removeTransformation );
         formulaController.updateWorkbookFormulas( shiftTransformation );
         TagBodyHelper.removeBodyRows( sheet.getHssfSheet(), block );
     }

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * This class contains many utility methods used by jXLS framework
@@ -131,9 +132,14 @@ public final class Util {
     private static void prepareCollectionPropertyInCellForDuplication(HSSFCell cell, String collectionName, String collectionItemName) {
         if( cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
             String cellValue = cell.getStringCellValue();
-            String newValue = cellValue.replaceAll(collectionName, collectionItemName);
+            String newValue = replaceCollectionProperty( cellValue, collectionName, collectionItemName );
+//            String newValue = cellValue.replaceFirst(collectionName, collectionItemName);
             cell.setCellValue(newValue);
         }
+    }
+
+    private static String replaceCollectionProperty(String property, String collectionName, String newValue){
+        return property.replaceAll(collectionName, newValue);
     }
 
     public static void prepareCollectionPropertyInRowForContentDuplication(RowCollection rowCollection) {

@@ -33,9 +33,6 @@ public class ShiftTransformation extends BlockTransformation {
         cells.clear();
         if( block.contains( p ) || (block.isAbove( p ) && rowShift != 0) || (block.isToLeft( p ) && colShift != 0)){
             Point newPoint = p.shift( rowShift, colShift );
-//            if( newPoint.getCol() < 0 ){
-//                newPoint.setCol((short) 0);
-//            }
             cells.add( newPoint );
         }else{
             cells.add( p );
@@ -51,6 +48,7 @@ public class ShiftTransformation extends BlockTransformation {
                     || (block.getEndCellNum() < cellRef.getColNum() && colShift != 0)){
                 rowNum = cellRef.getRowNum() + rowShift;
                 colNum = cellRef.getColNum() + colShift;
+                // todo: remove this check
                 if( colNum < 0 ){
                     colNum = 0;
                 }

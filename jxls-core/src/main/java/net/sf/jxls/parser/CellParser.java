@@ -278,10 +278,10 @@ public class CellParser {
         digester.setRuleNamespaceURI( Configuration.NAMESPACE_URI );
 
         digester.setValidating( false );
-        Set tagKeys = Taglib.getTags().keySet();
+        Set tagKeys = Taglib.getTagMap().keySet();
         for (Iterator iterator = tagKeys.iterator(); iterator.hasNext();) {
             String tagKey = (String) iterator.next();
-            digester.addObjectCreate( Configuration.JXLS_ROOT_TAG + "/" + tagKey, (String) Taglib.getTags().get( tagKey ) );
+            digester.addObjectCreate( Configuration.JXLS_ROOT_TAG + "/" + tagKey, (String) Taglib.getTagMap().get( tagKey ) );
             digester.addSetProperties( Configuration.JXLS_ROOT_TAG + "/" + tagKey );
         }
         try {

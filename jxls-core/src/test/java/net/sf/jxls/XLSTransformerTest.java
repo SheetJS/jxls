@@ -139,6 +139,9 @@ public class XLSTransformerTest extends TestCase {
     Integer[] baAges = new Integer[] {new Integer(30), new Integer(30), new Integer(30)};
     List departments = new ArrayList();
 
+    int[] amounts = {1, 2, 4, 6, 7, 8, 9, 10, 11, 13, 15, 18, 20, 21, 22};
+    List amountBeans = new ArrayList();
+
     public XLSTransformerTest() {
     }
 
@@ -209,6 +212,11 @@ public class XLSTransformerTest extends TestCase {
 
         propertyMap.put("${listBean.name}", beanWithList.getName());
 //        propertyMap.put("${listBean.beans.name}", beanWithList.getBeans());
+
+        for (int i = 0; i < amounts.length; i++) {
+            int amount = amounts[i];
+            amountBeans.add( new SimpleBean( amount ) );
+        }
 
     }
 
@@ -284,6 +292,7 @@ public class XLSTransformerTest extends TestCase {
         Map beans = new HashMap();
         beans.put("listBean", beanWithList);
         beans.put("departments", departments);
+        beans.put( "t1", amountBeans );
         //todo comment this line to work on #VALUE! formula cell problem
 //        simpleBean3.setOther( simpleBean1 );
 
@@ -354,6 +363,7 @@ public class XLSTransformerTest extends TestCase {
         checker.checkFormulaCell( sourceSheet, 15, resultSheet, 24, (short)1, "SUM(B10,B13,B16,B19,B22)");
         checker.checkFormulaCell( sourceSheet, 15, resultSheet, 40, (short)1, "SUM(B29,B32,B35,B38)");
         checker.checkFormulaCell( sourceSheet, 15, resultSheet, 53, (short)1, "SUM(B45,B48,B51)");
+        // todo Create checks for "Sheet 3"
 
         is.close();
         saveWorkbook(resultWorkbook, formulasDestXLS);

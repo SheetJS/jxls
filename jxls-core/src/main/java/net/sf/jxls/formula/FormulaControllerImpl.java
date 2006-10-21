@@ -36,24 +36,36 @@ public class FormulaControllerImpl implements FormulaController {
         List resultCells;
         String newCell;
         Point p, point, newPoint;
+        Set cellRefsToRemove = new HashSet();
+        Set formulasToRemove = new HashSet();
         for (Iterator iterator = sheetNames.iterator(); iterator.hasNext();) {
             String sheetName =  (String) iterator.next();
             List formulas = (List) sheetFormulasMap.get( sheetName );
+            formulasToRemove.clear();
             for (int i = 0, size = formulas.size(); i < size; i++) {
                 formula = (Formula) formulas.get(i);
                 cellRefs = formula.getCellRefs();
+                cellRefsToRemove.clear();
                 for (Iterator iter = cellRefs.iterator(); iter.hasNext();) {
                     cellRef = (CellRef) iter.next();
                     if( !(transformation instanceof DuplicateTransformation && transformation.getBlock().contains(cellRef) &&
                             transformation.getBlock().contains( formula.getRowNum().intValue(), formula.getCellNum().intValue())) ){
                         resultCells = transformation.transformCell( sheetName, cellRef );
-                        if( resultCells.size() == 1 ){
-                            newCell = (String) resultCells.get(0);
-                            cellRef.update( newCell );
-                        }else if( resultCells.size() > 1 ){
-                            cellRef.update( resultCells );
+                        if( resultCells != null ){
+                            if( resultCells.size() == 1 ){
+                                newCell = (String) resultCells.get(0);
+                                cellRef.update( newCell );
+                            }else if( resultCells.size() > 1 ){
+                                cellRef.update( resultCells );
+                            }
+                        }else {
+                            cellRefsToRemove.add( cellRef );
                         }
                     }
+                }
+//                cellRefs.removeAll( cellRefsToRemove );
+                if( !cellRefsToRemove.isEmpty() ){
+                    formula.removeCellRefs( cellRefsToRemove );
                 }
                 formula.updateReplacedRefCellsCollection();
                 if( formula.getSheet().getSheetName().equals( transformation.getBlock().getSheet().getSheetName() ) ){
@@ -81,9 +93,15 @@ public class FormulaControllerImpl implements FormulaController {
                                 sheetFormulas.add( newFormula );
                             }
                         }
+                    }else{
+                        if( points == null ){
+                            // remove formula
+                            formulasToRemove.add( formula );
+                        }
                     }
                 }
             }
+            formulas.removeAll( formulasToRemove );
         }
 //        if( log.isDebugEnabled() ){
 //            writeFormulas( new CommonFormulaResolver() );

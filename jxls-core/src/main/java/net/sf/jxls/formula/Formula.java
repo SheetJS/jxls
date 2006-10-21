@@ -212,6 +212,40 @@ public class Formula {
         }
     }
 
+    public void removeCellRefs( Set cellRefsToRemove ){
+        List formulaPartIndexesToRemove = new ArrayList();
+        Object prevFormulaPart = null;
+        Object nextFormulaPart = null;
+        for (int i = 0; i < formulaParts.size(); i++) {
+            Object formulaPart = formulaParts.get(i);
+            if( cellRefsToRemove.contains( formulaPart ) ){
+                formulaPartIndexesToRemove.add( new Integer( i ) );
+                if( i > 0 ){
+                    prevFormulaPart = formulaParts.get( i - 1 );
+                }
+                if( i < formulaParts.size() - 1 ){
+                    nextFormulaPart = formulaParts.get( i + 1 );
+                }else{
+                    nextFormulaPart = null;
+                }
+                if( prevFormulaPart != null ){
+                    if( prevFormulaPart.toString().equals(",") ){
+                        formulaPartIndexesToRemove.add( new Integer(i - 1) );
+                    }else if( nextFormulaPart != null && nextFormulaPart.toString().equals( "," )){
+                        formulaPartIndexesToRemove.add( new Integer(i + 1) );
+                    }
+                }
+            }
+        }
+        int shift = 0;
+        for (int i = 0; i < formulaPartIndexesToRemove.size(); i++) {
+            int index =  ((Integer) formulaPartIndexesToRemove.get(i)).intValue() ;
+            formulaParts.remove( index - shift );
+            shift++;
+        }
+        cellRefs.removeAll( cellRefsToRemove );
+    }
+
     private void replaceCellRefs(CellRef cellRef, List rangeFormulaParts) {
         cellRefsToRemove.add( cellRef );
         for (int i = 0; i < rangeFormulaParts.size(); i++) {
