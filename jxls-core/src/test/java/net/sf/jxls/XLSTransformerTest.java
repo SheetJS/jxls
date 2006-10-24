@@ -128,16 +128,22 @@ public class XLSTransformerTest extends TestCase {
     String[] itEmployeeNames = new String[] {"Elsa", "Oleg", "Neil", "Maria", "John"};
     String[] hrEmployeeNames = new String[] {"Olga", "Helen", "Keith", "Cat"};
     String[] baEmployeeNames = new String[] {"Denise", "LeAnn", "Natali"};
+    String[] mgrEmployeeNames = new String[] {"Sean", "John", "Joerg"};
+
     Double[] itPayments = new Double[] {new Double(1500), new Double(2300), new Double(2500), new Double(1700), new Double(2800)};
     Double[] hrPayments = new Double[] {new Double(1400), new Double(2100), new Double(1800), new Double(1900)};
     Double[] baPayments = new Double[] {new Double(2400), new Double(2200), new Double(2600)};
+    Double[] mgrPayments = new Double[] {null, new Double(6000), null};
     Double[] itBonuses = new Double[] {new Double(0.15), new Double(0.25), new Double(0.00), new Double(0.15), new Double(0.20)};
     Double[] hrBonuses = new Double[] {new Double(0.20), new Double(0.10), new Double(0.15), new Double(0.15)};
     Double[] baBonuses = new Double[] {new Double(0.20), new Double(0.15), new Double(0.10)};
+    Double[] mgrBonuses = new Double[] {new Double(0.20), null, new Double(0.20)};
     Integer[] itAges = new Integer[] {new Integer(34), new Integer(30), new Integer(25), new Integer(25), new Integer(35)};
     Integer[] hrAges = new Integer[] {new Integer(26), new Integer(28), new Integer(26), new Integer(26)};
     Integer[] baAges = new Integer[] {new Integer(30), new Integer(30), new Integer(30)};
+    Integer[] mgrAges = new Integer[] {null, new Integer(35), null};
     List departments = new ArrayList();
+    Department mgrDepartment;
 
     int[] amounts = {1, 2, 4, 6, 7, 8, 9, 10, 11, 13, 15, 18, 20, 21, 22};
     List amountBeans = new ArrayList();
@@ -197,6 +203,11 @@ public class XLSTransformerTest extends TestCase {
         }
         departments.add( department );
 
+        department = new Department("MGR");
+        for(int i = 0; i < mgrEmployeeNames.length; i++){
+            department.addEmployee( new Employee(mgrEmployeeNames[i], mgrAges[i], mgrPayments[i], mgrBonuses[i]) );
+        }
+        mgrDepartment = department;
 
 
         beanWithList.setBeans(beans);
@@ -1550,7 +1561,10 @@ public class XLSTransformerTest extends TestCase {
 
     public void testForGroupBy() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
-        beans.put( "departments", departments );
+        List deps = new ArrayList( departments );
+        // adding department with null values to check grouping with null values
+        deps.add(mgrDepartment);
+        beans.put( "departments", deps );
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forGroupByXLS));
         XLSTransformer transformer = new XLSTransformer();

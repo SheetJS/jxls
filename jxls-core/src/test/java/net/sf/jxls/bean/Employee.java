@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Employee {
     private String name;
-    private int age;
+    private Integer age;
     private Double payment;
     private Double bonus;
     private Date birthDate;
@@ -26,14 +26,14 @@ public class Employee {
 
     public Employee(String name, Integer age, Double payment, Double bonus) {
         this.name = name;
-        this.age = age.intValue();
+        this.age = age;
         this.payment = payment;
         this.bonus = bonus;
     }
 
     public Employee(String name, int age, double payment, double bonus, Date birthDate) {
         this.name = name;
-        this.age = age;
+        this.age = new Integer(age);
         this.payment = new Double(payment);
         this.bonus = new Double(bonus);
         this.birthDate = birthDate;
@@ -47,7 +47,7 @@ public class Employee {
 
     public Employee(String name, int age, double payment, double bonus) {
         this.name = name;
-        this.age = age;
+        this.age = new Integer(age);
         this.payment = new Double(payment);
         this.bonus = new Double(bonus);
     }
@@ -60,11 +60,11 @@ public class Employee {
         this.name = name;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

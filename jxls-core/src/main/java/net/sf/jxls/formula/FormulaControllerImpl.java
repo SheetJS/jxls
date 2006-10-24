@@ -87,7 +87,7 @@ public class FormulaControllerImpl implements FormulaController {
                                 for (Iterator iterator1 = newCellRefs.iterator(); iterator1.hasNext();) {
                                     newCellRef =  (CellRef) iterator1.next();
                                     if( transformation.getBlock().contains( newCellRef ) && transformation.getBlock().contains( p ) ){
-                                        newCellRef.update(((DuplicateTransformation)transformation).getDuplicatedCellRef( sheetName, newCellRef.toString(), j));
+                                        newCellRef.update(transformation.getDuplicatedCellRef( sheetName, newCellRef.toString(), j));
                                     }
                                 }
                                 sheetFormulas.add( newFormula );

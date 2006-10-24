@@ -61,6 +61,10 @@ public abstract class BlockTransformation {
      */
     public abstract List transformCell(String sheetName, CellRef cellRef);
 
+    public String getDuplicatedCellRef(String sheetName, String cell, int duplicateBlock){
+        throw new UnsupportedOperationException();
+    }
+
     public boolean equals(Object obj) {
         if( obj != null && obj instanceof BlockTransformation ){
             BlockTransformation bt = (BlockTransformation) obj;
