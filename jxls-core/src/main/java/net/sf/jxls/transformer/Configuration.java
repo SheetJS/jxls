@@ -17,6 +17,8 @@ public class Configuration {
     String forTagVar = "var";
     boolean isUTF16 = false;
 
+    private String excludeSheetProcessingMark = "#Exclude";
+
     public Configuration() {
     }
 
@@ -119,5 +121,13 @@ public class Configuration {
 
     public void setEndFormulaToken(String endFormulaToken) {
         this.endFormulaToken = endFormulaToken;
+    }
+
+    public String getExcludeSheetProcessingMark() {
+        return excludeSheetProcessingMark;
+    }
+
+    public void setExcludeSheetProcessingMark(String excludeSheetProcessingMark) {
+        this.excludeSheetProcessingMark = excludeSheetProcessingMark;
     }
 }

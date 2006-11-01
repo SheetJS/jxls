@@ -7,6 +7,11 @@ public class AttributeInfo {
     String name;
     String required;
     String rtexpvalue;
+    String type;
+
+
+    public AttributeInfo() {
+    }
 
     public String getName() {
         return name;
@@ -30,5 +35,14 @@ public class AttributeInfo {
 
     public void setRtexpvalue(String rtexpvalue) {
         this.rtexpvalue = rtexpvalue;
+    }
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

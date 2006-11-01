@@ -227,18 +227,18 @@ public class XLSTransformer {
             SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
             for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
                 final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
-                if (!isSpreadsheetToHide(spreadsheetName)) {
-                    if (isSpreadsheetToRename(spreadsheetName)) {
-                        hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
+                if( spreadsheetName == null || !spreadsheetName.startsWith( configuration.getExcludeSheetProcessingMark() ))
+                    if (!isSpreadsheetToHide(spreadsheetName)) {
+                        if (isSpreadsheetToRename(spreadsheetName)) {
+                            hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
+                        }
+                        Sheet sheet = workbook.getSheetAt( sheetNo );
+                        sheetTransformer.transformSheet( workbookTransformationController, sheet, beanParams );
+                    } else {
+                        // let's remove spreadsheet
+                        hssfWorkbook.removeSheetAt(sheetNo);
+                        sheetNo--;
                     }
-                    Sheet sheet = workbook.getSheetAt( sheetNo );
-                    sheetTransformer.transformSheet( workbookTransformationController, sheet, beanParams );
-
-                } else {
-                    // let's remove spreadsheet
-                    hssfWorkbook.removeSheetAt(sheetNo);
-                    sheetNo--;
-                }
             }
             updateFormulas();
         } catch (IOException e) {
@@ -291,7 +291,7 @@ public class XLSTransformer {
                     if( startSheetNum == sheetNo && objects != null && !objects.isEmpty()){
                         Object firstBean = objects.get(0);
                         beanParams.put( beanName, firstBean );
-                        hssfWorkbook.setSheetName( sheetNo, (String) newSheetNames.get(0) );
+                        hssfWorkbook.setSheetName( sheetNo, (String) newSheetNames.get(0), HSSFWorkbook.ENCODING_UTF_16);
                         HSSFSheet templateSheet = hssfWorkbook.createSheet(templateSheetName );
                         Util.copySheets( templateSheet, hssfSheet );
                         Sheet sheet = workbook.getSheetAt( sheetNo );

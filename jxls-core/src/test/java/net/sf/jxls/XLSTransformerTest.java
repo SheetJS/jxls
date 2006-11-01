@@ -1437,10 +1437,12 @@ public class XLSTransformerTest extends TestCase {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetListXLS));
         XLSTransformer transformer = new XLSTransformer();
         List sheetNames = new ArrayList();
+        sheetNames.add("Русский Лист");
         for(int i = 0; i < departments.size(); i++){
             Department department = (Department) departments.get( i );
             sheetNames.add( department.getName() );
         }
+
         HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, departments, sheetNames, "department", new HashMap(), 0);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetListXLS));

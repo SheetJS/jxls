@@ -36,7 +36,7 @@ public class Taglib {
      * Taglib description
      */
     String description;
-    String displayName;
+    String name;
     String version;
     String shortName;
     List tags;
