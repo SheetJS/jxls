@@ -8,8 +8,9 @@
             <p><strong>jXLS v.0.9.2 released</strong></p>
             <p>This release fixes a couple tag related issues and adds some new features:  </p>
             <ul>
-                <li>New attribute <code>groupOrder</code> added to jx:forEach tag</li>
-                <li>Some jx tag issues fixed</li>
+                <li>Added select keyword to forEach tag (i.e. &gt;jx:forEach items="..."  select="${condition}">. See <a href="reference/tags.html">Using tags</a> section for details.</li>
+                <li>Added aggregate functions to the ${...} syntax (i.e. ${sum(field):collection}. See <a href="reference/expressions.html">Using Expressions</a> for details</li>
+                <li>Some tag issues fixed</li>
             </ul>
         </section>
         <section name="Overview">

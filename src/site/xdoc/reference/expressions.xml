@@ -114,5 +114,28 @@
                 Instead you should use <a href="tags.html#foreach">jx:forEachTag</a> to iterate inner collections.
             </note>
         </section>
+        <section id="aggregateFunctions" name="Using aggregate functions">
+            <p>You can use aggregate functions to operate on collections. The syntax is like this</p>
+            <source>
+                ${Function_Name(field):collection}
+            </source>
+            <p>Here <code>Function_Name</code> is the name of the aggregate function to apply to the <code>field</code>
+                property for all the <code>collection</code> items.
+            </p>
+            <p>Currently the next aggregate functions are supported:</p>
+            <ul>
+                <li>sum</li>
+                <li>min</li>
+                <li>max</li>
+                <li>avg</li>
+                <li>count</li>
+            </ul>
+            <p>For example if we need to count the number of employees for a department we should use following syntax</p>
+            <source>${count(name):department.staff}</source>
+            <p>In the same way we can calculate the maximum employee payment: </p>
+            <source>
+                ${max(payment):department.staff}
+            </source>
+        </section>
     </body>
 </document>

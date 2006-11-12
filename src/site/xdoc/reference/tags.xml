@@ -58,6 +58,15 @@
                    tag is ignored.
                 </p>
             </section>
+            <section id="forEachTagSelect" name="Filtering collection items">
+                <p>You can use 'select' attribute of jx:forEach tag to control which items get included in the loop. For example if we want to include only  employees
+                with payments more than 2000 we can use next syntax</p>
+                <source>
+                    &lt;jx:forEach items="${employees}" var="employee" select="${employee.payment > 2000}">
+                    ${employee.name} | ${employee.payment} | ${employee.bonus}
+                    &lt;/jx:forEach>
+                </source>
+            </section>
         </section>
         <section id="ifTag" name="jx:if Tag">
             <p>Typical usage of <code>&lt;jx:if></code> tag is as follows</p>

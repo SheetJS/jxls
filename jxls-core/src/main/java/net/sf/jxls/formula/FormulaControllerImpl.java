@@ -35,7 +35,7 @@ public class FormulaControllerImpl implements FormulaController {
         CellRef cellRef, newCellRef;
         List resultCells;
         String newCell;
-        Point p, point, newPoint;
+        Point point, newPoint;
         Set cellRefsToRemove = new HashSet();
         Set formulasToRemove = new HashSet();
         for (Iterator iterator = sheetNames.iterator(); iterator.hasNext();) {
@@ -44,6 +44,15 @@ public class FormulaControllerImpl implements FormulaController {
             formulasToRemove.clear();
             for (int i = 0, size = formulas.size(); i < size; i++) {
                 formula = (Formula) formulas.get(i);
+                List formulaPoints = null;
+                Point formulaPoint = null;
+                boolean transformFormula = false;
+                if( formula.getSheet().getSheetName().equals( transformation.getBlock().getSheet().getSheetName() ) ){
+                    transformFormula = true;
+                    formulaPoint = new Point( formula.getRowNum().intValue(), formula.getCellNum().shortValue() );
+                    formulaPoints = transformation.transformCell( formulaPoint );
+                }
+                if( !transformFormula || (formulaPoints != null && !formulaPoints.isEmpty())){
                 cellRefs = formula.getCellRefs();
                 cellRefsToRemove.clear();
                 for (Iterator iter = cellRefs.iterator(); iter.hasNext();) {
@@ -68,36 +77,33 @@ public class FormulaControllerImpl implements FormulaController {
                     formula.removeCellRefs( cellRefsToRemove );
                 }
                 formula.updateReplacedRefCellsCollection();
-                if( formula.getSheet().getSheetName().equals( transformation.getBlock().getSheet().getSheetName() ) ){
-                    p = new Point( formula.getRowNum().intValue(), formula.getCellNum().shortValue() );
-                    List points = transformation.transformCell( p );
-                    if( points!=null && !points.isEmpty()){
-                        if(points.size() == 1){
-                            newPoint = (Point) points.get(0);
+                    if(formulaPoints != null && !formulaPoints.isEmpty()){
+                        if(formulaPoints.size() == 1){
+                            newPoint = (Point) formulaPoints.get(0);
                             formula.setRowNum( new Integer( newPoint.getRow() ));
                             formula.setCellNum( new Integer( newPoint.getCol() ));
                         }else{
                             List sheetFormulas = (List) sheetFormulasMap.get( formula.getSheet().getSheetName() );
-                            for (int j = 1, num = points.size(); j < num; j++) {
-                                point = (Point) points.get(j);
+                            for (int j = 1, num = formulaPoints.size(); j < num; j++) {
+                                point = (Point) formulaPoints.get(j);
                                 newFormula = new Formula( formula );
                                 newFormula.setRowNum( new Integer(point.getRow()) );
                                 newFormula.setCellNum( new Integer(point.getCol() ) );
                                 newCellRefs = newFormula.getCellRefs();
                                 for (Iterator iterator1 = newCellRefs.iterator(); iterator1.hasNext();) {
                                     newCellRef =  (CellRef) iterator1.next();
-                                    if( transformation.getBlock().contains( newCellRef ) && transformation.getBlock().contains( p ) ){
+                                    if( transformation.getBlock().contains( newCellRef ) && transformation.getBlock().contains( formulaPoint ) ){
                                         newCellRef.update(transformation.getDuplicatedCellRef( sheetName, newCellRef.toString(), j));
                                     }
                                 }
                                 sheetFormulas.add( newFormula );
                             }
                         }
-                    }else{
-                        if( points == null ){
-                            // remove formula
-                            formulasToRemove.add( formula );
-                        }
+                    }
+                }else{
+                    if( formulaPoints == null ){
+                        // remove formula
+                        formulasToRemove.add( formula );
                     }
                 }
             }
@@ -131,6 +137,7 @@ public class FormulaControllerImpl implements FormulaController {
                         hssfCell.setCellFormula(formulaString);
                     } catch (RuntimeException e) {
                         log.error("Can't set formula: " + formulaString, e);
+//                        hssfCell.setCellType( HSSFCell.CELL_TYPE_BLANK );
                         throw new RuntimeException("Can't set formula: " + formulaString, e );
                     }
                 }

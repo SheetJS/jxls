@@ -18,6 +18,7 @@ public class ShiftTransformation extends BlockTransformation {
     int colNum;
     private CellReference cellReference;
     private List cells = new ArrayList();
+    private List points = new ArrayList();
 
     public ShiftTransformation(Block block, int rowShift, int colShift) {
         super(block);
@@ -30,14 +31,14 @@ public class ShiftTransformation extends BlockTransformation {
     }
 
     public List transformCell(Point p) {
-        cells.clear();
+        points.clear();
         if( block.contains( p ) || (block.isAbove( p ) && rowShift != 0) || (block.isToLeft( p ) && colShift != 0)){
             Point newPoint = p.shift( rowShift, colShift );
-            cells.add( newPoint );
+            points.add( newPoint );
         }else{
-            cells.add( p );
+            points.add( p );
         }
-        return cells;
+        return points;
     }
 
     public List transformCell(String sheetName, CellRef cellRef) {
