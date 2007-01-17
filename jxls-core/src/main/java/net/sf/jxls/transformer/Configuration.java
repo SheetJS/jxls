@@ -1,5 +1,14 @@
 package net.sf.jxls.transformer;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.commons.digester.Digester;
+
+import net.sf.jxls.tag.JxTaglib;
+import net.sf.jxls.tag.TagLib;
+
 /**
  * Defines configuration properties for XLS transformation
  * @author Leonid Vysochyn
@@ -16,10 +25,15 @@ public class Configuration {
     String forTagItems = "items";
     String forTagVar = "var";
     boolean isUTF16 = false;
+    private HashMap tagLibs = new HashMap();
+    private Digester digester;
+    private String jxlsRoot;
+    private boolean encodeXMLAttributes = true;
 
     private String excludeSheetProcessingMark = "#Exclude";
 
     public Configuration() {
+        registerTagLib(new JxTaglib(), "jx");
     }
 
     public Configuration(String startExpressionToken, String endExpressionToken, String startFormulaToken, String endFormulaToken, String metaInfoToken) {
@@ -28,6 +42,7 @@ public class Configuration {
         this.startFormulaToken = startFormulaToken;
         this.endFormulaToken = endFormulaToken;
         this.metaInfoToken = metaInfoToken;
+        registerTagLib(new JxTaglib(), "jx");
     }
 
     public Configuration(String startExpressionToken, String endExpressionToken, String startFormulaToken, String endFormulaToken, String metaInfoToken, boolean isUTF16) {
@@ -37,6 +52,7 @@ public class Configuration {
         this.endFormulaToken = endFormulaToken;
         this.metaInfoToken = metaInfoToken;
         this.isUTF16 = isUTF16;
+        registerTagLib(new JxTaglib(), "jx");
     }
 
     public static final String NAMESPACE_URI = "http://jxls.sourceforge.net/jxls";
@@ -129,5 +145,91 @@ public class Configuration {
 
     public void setExcludeSheetProcessingMark(String excludeSheetProcessingMark) {
         this.excludeSheetProcessingMark = excludeSheetProcessingMark;
+    }
+    
+    public void registerTagLib(TagLib tagLib, String namespace) {
+        
+        if (this.tagLibs.containsKey(namespace)) {
+            throw new RuntimeException("Duplicate tag-lib namespace: " + namespace);
+        }
+        
+        this.tagLibs.put(namespace, tagLib);
+    }
+    
+    public Digester getDigester() {
+        
+        synchronized (this) {
+            if (digester == null) {
+                initDigester();
+            }
+        }
+        
+        return digester;
+    }
+    
+    private void initDigester() {
+        digester = new Digester();
+        digester.setNamespaceAware(true);
+        digester.setValidating(false);
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append("<jxls ");
+        boolean firstTime = true;
+        
+        Map.Entry entry = null;
+        
+        for (Iterator itr = tagLibs.entrySet().iterator(); itr.hasNext();) {
+            
+            entry = (Map.Entry) itr.next();
+            
+            String namespace = (String) entry.getKey();
+            String namespaceURI = Configuration.NAMESPACE_URI + "/" + namespace;
+            digester.setRuleNamespaceURI(namespaceURI);
+
+            if (firstTime) {
+                firstTime = false;
+            } else {
+                sb.append(" ");
+            }
+            sb.append("xmlns:");
+            sb.append(namespace);
+            sb.append("=\"");
+            sb.append(namespaceURI);
+            sb.append("\"");
+            
+            TagLib tagLib = (TagLib) entry.getValue();
+            Map.Entry tagEntry = null;
+            for (Iterator itr2 = tagLib.getTags().entrySet().iterator(); itr2.hasNext();) {
+                tagEntry = (Map.Entry) itr2.next();
+                digester.addObjectCreate(Configuration.JXLS_ROOT_TAG + "/" + tagEntry.getKey(), (String) tagEntry.getValue());
+                digester.addSetProperties(Configuration.JXLS_ROOT_TAG + "/" + tagEntry.getKey());                    
+            }
+        }
+        
+        sb.append(">");
+        this.jxlsRoot = sb.toString();
+    }
+    
+    public String getJXLSRoot() {
+        
+        synchronized(this) {
+            if (jxlsRoot == null) {
+                initDigester();
+            }
+        }
+        
+        return jxlsRoot;
+    }
+    
+    public String getJXLSRootEnd() {
+        return "</jxls>";
+    }
+
+    public boolean getEncodeXMLAttributes() {
+        return encodeXMLAttributes;
+    }
+
+    public void setEncodeXMLAttributes(boolean encodeXMLAttributes) {
+        this.encodeXMLAttributes = encodeXMLAttributes;
     }
 }
