@@ -5,12 +5,10 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.digester.Digester;
 import org.xml.sax.SAXException;
 import net.sf.jxls.util.Util;
 import net.sf.jxls.tag.Tag;
 import net.sf.jxls.tag.TagContext;
-import net.sf.jxls.tag.Taglib;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.formula.Formula;
 import net.sf.jxls.exception.ParsePropertyException;
@@ -18,8 +16,6 @@ import net.sf.jxls.transformer.Configuration;
 import net.sf.jxls.transformer.Row;
 
 import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
 import java.io.StringReader;
 import java.io.IOException;
 
@@ -179,21 +175,27 @@ public class CellParser {
 //                String tagName = cell.getHssfCellValue().split("(?<=<" + configuration.getTagPrefix() + ")\\w+", 2)[0];
                 String tagName = getTagName( cell.getHssfCellValue() );
                 if( tagName!=null ){
-                    HSSFCell hssfCell = findMatchingPairInRow( cell.getRow().getHssfRow(), tagName );
-                    if( hssfCell!=null ){
-                        // closing tag is in the same row
+                    if (cell.getHssfCellValue().endsWith("/>")) {
                         Block tagBody = new Block(cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getCellNum(),
-                                cell.getRow().getHssfRow().getRowNum(), hssfCell.getCellNum());
-                        parseTag( tagName, tagBody, beans);
-                    }else{
-                        HSSFRow hssfRow = findMatchingPair( tagName );
-                        if( hssfRow!=null ){
-                            // closing tag is in hssfRow
-                            int lastTagBodyRowNum = hssfRow.getRowNum() ;
-                            Block tagBody = new Block(null, cell.getRow().getHssfRow().getRowNum(), lastTagBodyRowNum);
-                            parseTag( tagName, tagBody, beans );
+                                cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getCellNum());
+                        parseTag( tagName, tagBody, beans, false);
+                    } else {
+                        HSSFCell hssfCell = findMatchingPairInRow( cell.getRow().getHssfRow(), tagName );
+                        if( hssfCell!=null ){
+                            // closing tag is in the same row
+                            Block tagBody = new Block(cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getCellNum(),
+                                    cell.getRow().getHssfRow().getRowNum(), hssfCell.getCellNum());
+                            parseTag( tagName, tagBody, beans, true);
                         }else{
-                            log.warn("Can't find matching tag pair for " + cell.getHssfCellValue());
+                            HSSFRow hssfRow = findMatchingPair( tagName );
+                            if( hssfRow!=null ){
+                                // closing tag is in hssfRow
+                                int lastTagBodyRowNum = hssfRow.getRowNum() ;
+                                Block tagBody = new Block(null, cell.getRow().getHssfRow().getRowNum(), lastTagBodyRowNum);
+                                parseTag( tagName, tagBody, beans , true);
+                            }else{
+                                log.warn("Can't find matching tag pair for " + cell.getHssfCellValue());
+                            }
                         }
                     }
                 }
@@ -272,30 +274,30 @@ public class CellParser {
         return null;
     }
 
-    private void parseTag(String tagName, Block tagBody, Map beans){
-        Digester digester = new Digester();
-        digester.setNamespaceAware(true);
-        digester.setRuleNamespaceURI( Configuration.NAMESPACE_URI );
-
-        digester.setValidating( false );
-        Set tagKeys = Taglib.getTagMap().keySet();
-        for (Iterator iterator = tagKeys.iterator(); iterator.hasNext();) {
-            String tagKey = (String) iterator.next();
-            digester.addObjectCreate( Configuration.JXLS_ROOT_TAG + "/" + tagKey, (String) Taglib.getTagMap().get( tagKey ) );
-            digester.addSetProperties( Configuration.JXLS_ROOT_TAG + "/" + tagKey );
-        }
+    private void parseTag(String tagName, Block tagBody, Map beans, boolean appendCloseTag){
+        
+        String xml = null;
+        
         try {
-            String xml = Configuration.JXLS_ROOT_START + cell.getHssfCellValue() + "</" +
-                    configuration.getTagPrefix() + tagName + ">" + Configuration.JXLS_ROOT_END;
-            String escapedXml = Util.escapeAttributes( xml );
-            Tag tag = (Tag) digester.parse(new StringReader( escapedXml ) );
+            if (appendCloseTag) {
+                xml = configuration.getJXLSRoot() + cell.getHssfCellValue() + "</" + configuration.getTagPrefix() + tagName + ">" + configuration.getJXLSRootEnd();
+            } else {
+                xml = configuration.getJXLSRoot() + cell.getHssfCellValue() + configuration.getJXLSRootEnd();
+            }
+            if (configuration.getEncodeXMLAttributes()) {
+                xml = Util.escapeAttributes( xml );
+            }
+            Tag tag = (Tag) configuration.getDigester().parse(new StringReader( xml ) );
+            if (tag == null) {
+                throw new RuntimeException("Invalid tag: " + tagName);
+            }
             cell.setTag( tag );
             TagContext tagContext = new TagContext( cell.getRow().getSheet(), tagBody, beans );
             tag.init( tagContext );
         } catch (IOException e) {
-            log.warn( "Can't parse cell tag " + cell.getHssfCellValue(), e);
+            log.warn( "Can't parse cell tag " + cell.getHssfCellValue() + ": fullXML: " + xml, e);
         } catch (SAXException e) {
-            log.warn( "Can't parse cell tag " + cell.getHssfCellValue(), e);
+            log.warn( "Can't parse cell tag " + cell.getHssfCellValue() + ": fullXML: " + xml, e);
         }
     }
 
