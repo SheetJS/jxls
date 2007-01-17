@@ -81,6 +81,9 @@ public class XLSTransformerTest extends TestCase {
 
     public static final String forifTag3XLS = "/templates/foriftag3.xls";
     public static final String forifTag3DestXLS = "target/foriftag3_output.xls";
+    
+    public static final String forifTag3OutTagXLS = "/templates/foriftag3OutTag.xls";
+    public static final String forifTag3OutTagDestXLS = "target/foriftag3OutTag_output.xls";
 
     public static final String forifTagMergeXLS = "/templates/foriftagmerge.xls";
     public static final String forifTagMergeDestXLS = "target/foriftagmerge_output.xls";
@@ -1270,6 +1273,112 @@ public class XLSTransformerTest extends TestCase {
         is.close();
 
         saveWorkbook( resultWorkbook, forifTag3DestXLS);
+    }
+    
+    public void testForIfTag3OutTag() throws IOException, ParsePropertyException {
+        Map beans = new HashMap();
+        beans.put( "departments", departments );
+        beans.put("depUrl", "http://www.somesite.com");
+        List deps = new ArrayList();
+        Department testDep = new Department("Test");
+        deps.add( testDep );
+        beans.put( "deps", deps );
+        List employees = new ArrayList();
+        beans.put("employees", employees);
+
+        Configuration config = new Configuration();
+        config.setMetaInfoToken("\\\\");
+
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTag3OutTagXLS));
+        XLSTransformer transformer = new XLSTransformer( config );
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        is = new BufferedInputStream(getClass().getResourceAsStream(forifTag3OutTagXLS));
+        POIFSFileSystem fs = new POIFSFileSystem(is);
+        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+
+        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
+        assertEquals("Last Row Number is incorrect", 54, resultSheet.getLastRowNum());
+
+        // check 1st forEach loop output
+        Map props = new HashMap();
+        CellsChecker checker = new CellsChecker(props);
+        props.put("${department.name}", "IT");
+        checker.checkRows(sourceSheet, resultSheet, 1, 0, 3);
+        props.put("${department.name}", "HR");
+        checker.checkRows(sourceSheet, resultSheet, 1, 4, 3);
+        props.put("${department.name}", "BA");
+        checker.checkRows(sourceSheet, resultSheet, 1, 8, 3);
+        checker.checkRows(sourceSheet, resultSheet, 11, 3, 1);
+        checker.checkRows(sourceSheet, resultSheet, 11, 7, 1);
+        checker.checkRows(sourceSheet, resultSheet, 11, 11, 1);
+        // check 2nd forEach loop output
+        props.put("${department.name}", "IT");
+        checker.checkRows(sourceSheet, resultSheet, 1, 12, 3);
+        checker.checkListCells( sourceSheet, 19, resultSheet, 15, (short)0, new String[]{"Oleg", "Neil", "John"});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 15, (short)1, new Double[]{new Double(2300), new Double(2500), new Double(2800)});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 15, (short)2, new Double[]{new Double(0.25), new Double(0.00), new Double(0.20)});
+        checker.checkRows(sourceSheet, resultSheet, 11, 18, 1);
+        props.put("${department.name}", "HR");
+        checker.checkRows(sourceSheet, resultSheet, 1, 19, 3);
+        checker.checkListCells( sourceSheet, 19, resultSheet, 22, (short)0, new String[]{"Helen"});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 22, (short)1, new Double[]{new Double(2100)});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 22, (short)2, new Double[]{new Double(0.10)});
+        checker.checkRows(sourceSheet, resultSheet, 11, 23, 1);
+        props.put("${department.name}", "BA");
+        checker.checkRows(sourceSheet, resultSheet, 1, 24, 3);
+        checker.checkListCells( sourceSheet, 19, resultSheet, 27, (short)0, new String[]{"Denise", "LeAnn", "Natali"});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 27, (short)1, new Double[]{new Double(2400), new Double(2200), new Double(2600)});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 27, (short)2, new Double[]{new Double(0.20),new Double(0.15),new Double(0.10)});
+        checker.checkRows(sourceSheet, resultSheet, 11, 30, 1);
+        // check 3rd forEach loop output
+        props.put("${department.name}", "IT");
+        checker.checkRows(sourceSheet, resultSheet, 14, 12, 3);
+        checker.checkListCells( sourceSheet, 19, resultSheet, 15, (short)0, new String[]{"Oleg", "Neil", "John"});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 15, (short)1, new Double[]{new Double(2300), new Double(2500), new Double(2800)});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 15, (short)2, new Double[]{new Double(0.25), new Double(0.00), new Double(0.20)});
+        checker.checkRows(sourceSheet, resultSheet, 22, 18, 1);
+        props.put("${department.name}", "HR");
+        checker.checkRows(sourceSheet, resultSheet, 14, 19, 3);
+        checker.checkListCells( sourceSheet, 19, resultSheet, 22, (short)0, new String[]{"Helen"});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 22, (short)1, new Double[]{new Double(2100)});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 22, (short)2, new Double[]{new Double(0.10)});
+        checker.checkRows(sourceSheet, resultSheet, 22, 23, 1);
+        props.put("${department.name}", "BA");
+        checker.checkRows(sourceSheet, resultSheet, 14, 24, 3);
+        checker.checkListCells( sourceSheet, 19, resultSheet, 27, (short)0, new String[]{"Denise", "LeAnn", "Natali"});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 27, (short)1, new Double[]{new Double(2400), new Double(2200), new Double(2600)});
+        checker.checkListCells( sourceSheet, 19, resultSheet, 27, (short)2, new Double[]{new Double(0.20),new Double(0.15),new Double(0.10)});
+        checker.checkRows(sourceSheet, resultSheet, 22, 30, 1);
+        // check 3rd forEach loop output
+        props.put("${department.name}", "IT");
+        checker.checkRows(sourceSheet, resultSheet, 25, 31, 3);
+        checker.checkListCells( sourceSheet, 29, resultSheet, 34, (short)0, itEmployeeNames);
+        checker.checkListCells( sourceSheet, 29, resultSheet, 34, (short)1, itPayments);
+        checker.checkListCells( sourceSheet, 29, resultSheet, 34, (short)2, itBonuses);
+        checker.checkRows(sourceSheet, resultSheet, 31, 18, 1);
+        props.put("${department.name}", "HR");
+        checker.checkRows(sourceSheet, resultSheet, 25, 40, 3);
+        checker.checkListCells( sourceSheet, 29, resultSheet, 43, (short)0, hrEmployeeNames);
+        checker.checkListCells( sourceSheet, 29, resultSheet, 43, (short)1, hrPayments);
+        checker.checkListCells( sourceSheet, 29, resultSheet, 43, (short)2, hrBonuses);
+        checker.checkRows(sourceSheet, resultSheet, 31, 23, 1);
+        props.put("${department.name}", "BA");
+        checker.checkRows(sourceSheet, resultSheet, 25, 48, 3);
+        checker.checkListCells( sourceSheet, 29, resultSheet, 51, (short)0, baEmployeeNames);
+        checker.checkListCells( sourceSheet, 29, resultSheet, 51, (short)1, baPayments);
+        checker.checkListCells( sourceSheet, 29, resultSheet, 51, (short)2, baBonuses);
+        checker.checkRows(sourceSheet, resultSheet, 31, 30, 1);
+        sourceSheet = sourceWorkbook.getSheetAt( 1 );
+        resultSheet = resultWorkbook.getSheetAt( 1 );
+        assertEquals("Number of rows on Sheet 2 is not correct", 1, resultSheet.getLastRowNum() + 1);
+        checker.setIgnoreFirstLastCellNums( true );
+        checker.checkRows( sourceSheet, resultSheet, 11, 0, 1);
+        is.close();
+
+        saveWorkbook( resultWorkbook, forifTag3OutTagDestXLS);
     }
 
     public void testEmptyBeansExport() throws IOException, ParsePropertyException {
