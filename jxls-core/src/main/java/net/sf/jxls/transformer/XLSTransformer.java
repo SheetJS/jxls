@@ -17,7 +17,7 @@ import net.sf.jxls.exception.TaglibRegistrationException;
 import net.sf.jxls.formula.CommonFormulaResolver;
 import net.sf.jxls.formula.FormulaResolver;
 import net.sf.jxls.formula.FormulaController;
-import net.sf.jxls.tag.Taglib;
+//import net.sf.jxls.tag.Taglib;
 import net.sf.jxls.tag.TaglibXMLParser;
 
 import java.io.*;
@@ -40,7 +40,7 @@ public class XLSTransformer {
 
     private List cellProcessors = new ArrayList();
 
-    private Map taglibs = new HashMap();
+//    private Map taglibs = new HashMap();
 
     private final String TAGLIB_DEFINITION_FILE = "jxls-core-taglib.xml";
 
@@ -85,13 +85,13 @@ public class XLSTransformer {
         fixedSizeCollections.add(collectionName);
     }
 
-    public void registerTaglib(String prefix, Taglib taglib){
-        if( taglibs.containsKey( prefix ) ){
-            throw new TaglibRegistrationException( "Tag library with prefix '" + prefix + "' already registered");
-        }else{
-            taglibs.put( prefix, taglib );
-        }
-    }
+//    public void registerTaglib(String prefix, Taglib taglib){
+//        if( taglibs.containsKey( prefix ) ){
+//            throw new TaglibRegistrationException( "Tag library with prefix '" + prefix + "' already registered");
+//        }else{
+//            taglibs.put( prefix, taglib );
+//        }
+//    }
 
     /**
      * Column numbers to hide
@@ -145,10 +145,10 @@ public class XLSTransformer {
 //        registerTaglib( TAGLIB_DEFINITION_FILE );
     }
 
-    public void registerTaglib(String taglibFileName){
-        TaglibXMLParser parser = new TaglibXMLParser();
-        Taglib taglib = parser.parseTaglibXMLFile( taglibFileName );
-    }
+//    public void registerTaglib(String taglibFileName){
+//        TaglibXMLParser parser = new TaglibXMLParser();
+//        Taglib taglib = parser.parseTaglibXMLFile( taglibFileName );
+//    }
 
     private WorkbookTransformationController workbookTransformationController;
 
