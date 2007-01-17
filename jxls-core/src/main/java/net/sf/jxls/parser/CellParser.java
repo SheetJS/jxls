@@ -296,8 +296,10 @@ public class CellParser {
             tag.init( tagContext );
         } catch (IOException e) {
             log.warn( "Can't parse cell tag " + cell.getHssfCellValue() + ": fullXML: " + xml, e);
+            throw new RuntimeException("Can't parse cell tag " + cell.getHssfCellValue() + ": fullXML: " + xml, e);
         } catch (SAXException e) {
             log.warn( "Can't parse cell tag " + cell.getHssfCellValue() + ": fullXML: " + xml, e);
+            throw new RuntimeException("Can't parse cell tag " + cell.getHssfCellValue() + ": fullXML: " + xml, e);
         }
     }
 

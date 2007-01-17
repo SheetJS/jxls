@@ -46,6 +46,7 @@ public class IfTag extends BaseTag {
             testResult = (Boolean) testExpr.evaluate();
         } catch (Exception e) {
             log.error("Can't evaluate test expression: " + test, e);
+            throw new RuntimeException("Can't evaluate test expression: " + test, e);
         }
 
     }

@@ -182,6 +182,7 @@ public class ForEachTag extends BaseTag {
                             shift.add(processResult);
                         } catch (ParsePropertyException e) {
                             log.error("Can't parse property ", e);
+                            throw new RuntimeException("Can't parse property", e);
                         }
                     }
                 }
