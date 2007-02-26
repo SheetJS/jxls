@@ -6,9 +6,9 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sf.jxls</groupId>
-  <artifactId>jxls-core</artifactId>
+  <artifactId>jxls-reader</artifactId>
   <packaging>jar</packaging>
-  <name>jxls-core</name>
+  <name>jxls-reader</name>
   <url>http://jxls.sf.net</url>
   <description>
     jXLS is a small and easy-to-use Java library for generating Excel files using XLS templates

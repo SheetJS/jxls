@@ -9,6 +9,7 @@
   <modules>
 	<module>jxls-examples</module>
 	<module>jxls-core</module>
+	<module>jxls-reader</module>
   </modules>
   <description>
     jXLS is a small and easy-to-use Java library for generating Excel files using XLS templates

@@ -16,6 +16,10 @@ public class Employee {
     private Employee superior;
     private List notes;
 
+
+    public Employee() {
+    }
+
     public List getNotes() {
         return notes;
     }
