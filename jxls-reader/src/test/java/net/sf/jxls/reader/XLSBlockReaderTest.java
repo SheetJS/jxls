@@ -37,13 +37,15 @@ public class XLSBlockReaderTest extends TestCase {
         beans.put("chief", chief);
 
         mappings.add( new BeanCellMapping(0, (short) 1, "department.name") );
-        mappings.add( new BeanCellMapping(3, (short) 0, "chief.name"));
-        mappings.add( new BeanCellMapping(3, (short) 1, "chief.age"));
-        mappings.add( new BeanCellMapping(3, (short) 3, "chief.payment"));
-        mappings.add( new BeanCellMapping(3, (short) 4, "chief.bonus"));
+        mappings.add( new BeanCellMapping("A4", "chief.name"));
+        mappings.add( new BeanCellMapping("B4", "chief.age"));
+        mappings.add( new BeanCellMapping("C4", "chief.birthDate"));
+        mappings.add( new BeanCellMapping("D4", "chief.payment"));
+        mappings.add( new BeanCellMapping("E4", "chief.bonus"));
 
         XLSBlockReader reader = new XLSBlockReaderImpl(0, 6, mappings);
         XLSRowCursor cursor = new XLSRowCursorImpl( sheet );
+        cursor.setSheetName( hssfInputWorkbook.getSheetName(0));
         reader.read( cursor, beans );
         assertEquals( "IT", departmentBean.getName() );
         assertEquals( "Maxim", chief.getName() );

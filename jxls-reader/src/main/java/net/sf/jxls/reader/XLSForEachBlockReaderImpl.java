@@ -121,4 +121,8 @@ public class XLSForEachBlockReaderImpl implements XLSBlockReader {
     public void addMapping(BeanCellMapping mapping) {
         throw new UnsupportedOperationException("Can't add BeanCellMapping to Loop Section");
     }
+
+    public List getMappings() {
+        return null;  
+    }
 }

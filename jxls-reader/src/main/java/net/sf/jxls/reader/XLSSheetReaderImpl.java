@@ -15,7 +15,7 @@ public class XLSSheetReaderImpl implements XLSSheetReader {
     String sheetName;
 
     public void read(HSSFSheet sheet, Map beans) {
-        XLSRowCursor cursor = new XLSRowCursorImpl( sheet );
+        XLSRowCursor cursor = new XLSRowCursorImpl( sheetName, sheet );
         for (int i = 0; i < blockReaders.size(); i++) {
             XLSBlockReader blockReader = (XLSBlockReader) blockReaders.get(i);
             blockReader.read( cursor, beans );

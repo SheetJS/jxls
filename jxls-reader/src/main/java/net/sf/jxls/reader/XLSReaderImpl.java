@@ -31,6 +31,7 @@ public class XLSReaderImpl implements XLSReader {
             }
             if( sheetReaders.containsKey( sheetName ) ){
                 XLSSheetReader sheetReader = (XLSSheetReader) sheetReaders.get( sheetName );
+                sheetReader.setSheetName( sheetName );
                 sheetReader.read( sheet, beans );
             }
         }

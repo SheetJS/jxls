@@ -11,6 +11,8 @@ public interface XLSRowCursor {
     HSSFRow getCurrentRow();
     HSSFSheet getSheet();
     void setSheet(HSSFSheet sheet);
+    String getSheetName();
+    void setSheetName(String sheetName);
     HSSFRow next();
     boolean hasNext();
     void reset();

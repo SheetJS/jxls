@@ -18,4 +18,5 @@ public interface XLSBlockReader {
     int getEndRow();
     void setEndRow(int endRow);
     public void addMapping(BeanCellMapping mapping);
+    List getMappings();
 }

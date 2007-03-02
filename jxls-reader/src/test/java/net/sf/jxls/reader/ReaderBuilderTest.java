@@ -28,6 +28,14 @@ public class ReaderBuilderTest extends TestCase {
         assertEquals( 3, reader.getSheetReaders().size() );
         XLSSheetReader sheetReader1 = (XLSSheetReader) reader.getSheetReaders().get("Sheet1");
         assertEquals( 2, sheetReader1.getBlockReaders().size() );
+        XLSBlockReader blockReader1 = (XLSBlockReader) sheetReader1.getBlockReaders().get(0);
+        assertEquals( 5, blockReader1.getMappings().size() );
+        BeanCellMapping mapping1 = (BeanCellMapping) blockReader1.getMappings().get(0);
+        assertEquals( "department.name", mapping1.getFullPropertyName() );
+        assertEquals( "B1", mapping1.getCellName() );
+        BeanCellMapping mapping2 = (BeanCellMapping) blockReader1.getMappings().get(1);
+        assertEquals( "department.chief.name", mapping2.getFullPropertyName() );
+        assertEquals( "A4", mapping2.getCellName() );
         XLSSheetReader sheetReader2 = (XLSSheetReader) reader.getSheetReaders().get("Sheet2");
         assertEquals( 3, sheetReader2.getBlockReaders().size() );
         XLSSheetReader sheetReader3 = (XLSSheetReader) reader.getSheetReaders().get("Sheet3");
@@ -75,6 +83,8 @@ public class ReaderBuilderTest extends TestCase {
         employee = (Employee) hrDepartment.getStaff().get(3);
         checkEmployee( employee, "Cat", new Integer(34), new Double(1900.0), new Double(0.15) );
     }
+
+    
 
     private void checkEmployee(Employee employee, String name, Integer age, Double payment, Double bonus){
         assertNotNull( employee );

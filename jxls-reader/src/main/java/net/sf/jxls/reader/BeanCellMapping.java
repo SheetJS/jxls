@@ -17,8 +17,8 @@ public class BeanCellMapping {
     int row;
     short col;
     String propertyName;
-    Class propertyType;
     String beanKey;
+    String cell;
 
     public BeanCellMapping(int rowNum, short cellNum, String fullPropertyName) {
         this.row = rowNum;
@@ -26,6 +26,14 @@ public class BeanCellMapping {
         this.beanKey = extractBeanName( fullPropertyName );
         this.propertyName = extractPropertyName( fullPropertyName );
     }
+
+    public BeanCellMapping(String cell, String fullPropertyName) {
+        setCell( cell );
+        this.beanKey = extractBeanName( fullPropertyName );
+        this.propertyName = extractPropertyName( fullPropertyName );
+    }
+
+
 
 
     public String getBeanKey() {
@@ -95,6 +103,18 @@ public class BeanCellMapping {
         this.col = col;
     }
 
+
+    public String getCell() {
+        return cell;
+    }
+
+    public void setCell(String cell) {
+        this.cell = cell;
+        CellReference cellRef = new CellReference(cell);
+        row = cellRef.getRow();
+        col = cellRef.getCol();
+    }
+
     public String getPropertyName() {
         return propertyName;
     }
@@ -113,6 +133,15 @@ public class BeanCellMapping {
                 log.warn("Can't find bean under the key=" + beanKey);
             }
         }
+    }
+
+    public Class getPropertyType(Map beans) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        Object bean;
+        if( beans.containsKey( beanKey ) ){
+            bean = beans.get( beanKey );
+            return PropertyUtils.getPropertyType(bean, propertyName);
+        }
+        return Object.class;
     }
 
     public String getCellName(){
