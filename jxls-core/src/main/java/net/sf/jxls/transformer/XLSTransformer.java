@@ -1,24 +1,22 @@
 package net.sf.jxls.transformer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.digester.Digester;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import net.sf.jxls.util.Util;
-import net.sf.jxls.transformer.SheetTransformer;
 import net.sf.jxls.controller.WorkbookTransformationController;
 import net.sf.jxls.controller.WorkbookTransformationControllerImpl;
-import net.sf.jxls.processor.PropertyPreprocessor;
-import net.sf.jxls.processor.CellProcessor;
-import net.sf.jxls.processor.RowProcessor;
 import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.exception.TaglibRegistrationException;
 import net.sf.jxls.formula.CommonFormulaResolver;
-import net.sf.jxls.formula.FormulaResolver;
 import net.sf.jxls.formula.FormulaController;
-//import net.sf.jxls.tag.Taglib;
-import net.sf.jxls.tag.TaglibXMLParser;
+import net.sf.jxls.formula.FormulaResolver;
+import net.sf.jxls.processor.CellProcessor;
+import net.sf.jxls.processor.PropertyPreprocessor;
+import net.sf.jxls.processor.RowProcessor;
+import net.sf.jxls.util.Util;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import java.io.*;
 import java.util.*;
@@ -273,6 +271,7 @@ public class XLSTransformer {
             }
             POIFSFileSystem fs = new POIFSFileSystem(is);
             hssfWorkbook = new HSSFWorkbook(fs);
+
             preprocess(hssfWorkbook);
 
             Workbook workbook = createWorkbook( hssfWorkbook );
@@ -326,12 +325,87 @@ public class XLSTransformer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for(int i = 0;i < hssfWorkbook.getNumberOfSheets();i++)
-        {
-            Util.setPrintArea(hssfWorkbook,i);
+        if( hssfWorkbook != null ){
+            for(int i = 0;i < hssfWorkbook.getNumberOfSheets();i++)
+            {
+                Util.setPrintArea(hssfWorkbook,i);
+            }
         }
-
         return hssfWorkbook;
+    }
+
+    /**
+     * Multiple sheet template multiple transform.
+     * It can be used to generate a workbook with N (N=N1+N2+...+Nn) sheets based on :
+     * - N1 transformations of the sheet template T1
+     * - N2 transformations of the sheet template T2
+     * ...
+     * - Nn transformations of the sheet template Tn
+     * @param is  the {@link InputStream} of the workbook template containing the n template sheets
+     * @param templateSheetNameList  the ordered list of the template sheet name used in the transformation.
+     * @param sheetNameList  the ordered list of the resulting sheet name after transformation
+     * @param beanParamsList  the ordered list of beanParams used in the transformation
+     * @return - {@link HSSFWorkbook} representing transformation result
+     * @throws ParsePropertyException  in case property parsing failure
+     */
+    public HSSFWorkbook transformXLS(InputStream is, List
+            templateSheetNameList, List sheetNameList, List beanParamsList)
+            throws ParsePropertyException {
+        HSSFWorkbook hssfWorkbook = null;
+        try {
+            POIFSFileSystem fs = new POIFSFileSystem(is);
+            hssfWorkbook = new HSSFWorkbook(fs);
+            int numberOfSheets = hssfWorkbook.getNumberOfSheets();
+            for (int templateSheetIndex = 0; templateSheetIndex < templateSheetNameList.size(); templateSheetIndex++) {
+                String templateSheetName = (String)templateSheetNameList.get(templateSheetIndex);
+                String sheetName = (String)sheetNameList.get(templateSheetIndex);
+                for(int workbookSheetIndex = 0; workbookSheetIndex < numberOfSheets; workbookSheetIndex++) {
+                    if (templateSheetName.equals(hssfWorkbook.getSheetName(workbookSheetIndex))) {
+                        cloneSheet(hssfWorkbook, workbookSheetIndex, sheetName);
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < numberOfSheets; i++) {
+                hssfWorkbook.removeSheetAt(0);
+            }
+            Workbook workbook = createWorkbook(hssfWorkbook);
+            workbookTransformationController = new WorkbookTransformationControllerImpl(workbook);
+            preprocess(hssfWorkbook);
+            SheetTransformer sheetTransformer = new SheetTransformer(fixedSizeCollections, groupedCollections,
+                    rowProcessors, cellProcessors, configuration);
+            for (int sheetNo = 0; sheetNo < workbook.getNumberOfSheets(); sheetNo++) {
+                final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
+                if (!isSpreadsheetToHide(spreadsheetName)) {
+                    if (isSpreadsheetToRename(spreadsheetName)) {
+                        hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
+                    }
+                    Sheet sheet = workbook.getSheetAt(sheetNo);
+
+                    Map beanParams = (Map) beanParamsList.get(sheetNo);
+                    beanParams.put("index", String.valueOf(sheetNo));
+                    sheetTransformer.transformSheet(workbookTransformationController, sheet, beanParams);
+                } else {
+                    // let's remove spreadsheet
+                    hssfWorkbook.removeSheetAt(sheetNo);
+                    sheetNo--;
+                }
+            }
+            updateFormulas();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return hssfWorkbook;
+    }
+
+    private void cloneSheet(HSSFWorkbook hssfWorkbook, int index, String name) {
+        HSSFSheet hssfSheet = hssfWorkbook.cloneSheet(index);
+        for (int i = 0; i < hssfWorkbook.getNumberOfSheets(); i++) {
+            if(hssfSheet.equals(hssfWorkbook.getSheetAt(i))) {
+                hssfWorkbook.setSheetName(i, name);
+                break;
+            }
+        }
     }
 
     private Workbook createWorkbook(HSSFWorkbook hssfWorkbook) {

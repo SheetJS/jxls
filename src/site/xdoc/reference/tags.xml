@@ -93,6 +93,14 @@
                 meaning grouped rows will be collapsed (or hidden).
             </p>
         </section>
-
+        <section id="outTag" name="jx:out Tag">
+            <p>jx:out tag looks like this</p>
+            <source>
+                &lt;jx:out expr="expression" />
+            </source>
+            <p>
+                This tag can be used anywhere that an expression would be used normally and simply takes a JEXL expression as an attribute value.
+            </p>
+        </section>
     </body>
 </document>

@@ -6,15 +6,18 @@
     <body>
         <section name="News">
             <p><strong>jXLS v.0.9.2 released</strong></p>
-            <p>This release fixes a couple tag related issues and adds some new features:  </p>
+            <p>Updates in this release:  </p>
             <ul>
-                <li>Added select keyword to forEach tag (i.e. &gt;jx:forEach items="..."  select="${condition}">. See <a href="reference/tags.html">Using tags</a> section for details.</li>
-                <li>Added aggregate functions to the ${...} syntax (i.e. ${sum(field):collection}. See <a href="reference/expressions.html">Using Expressions</a> for details</li>
-                <li>Some tag issues fixed</li>
+                <li>New module for reading XLS files and populating Java beans according to XML configuration. See <a href="reference/reader.html">XLS Reader</a> section</li>
+                <li>Select keyword to forEach tag (i.e. &gt;jx:forEach items="..."  select="${condition}">. See <a href="reference/tags.html#forEachTagSelect">Using tags</a> section for details.</li>
+                <li>Aggregate functions to the ${...} syntax (i.e. ${sum(field):collection}. See <a href="reference/expressions.html#aggregateFunctions">Using Expressions</a> for details</li>
+                <li>Many improvements and optimizations in jx:tags processing mechanism. New jx:out tag.</li>
+                <li>Various bug fixes</li>
             </ul>
         </section>
         <section name="Overview">
-            <p>jXLS is small and easy-to-use Java library for generating Excel files using XLS templates.</p>
+            <p>jXLS is small and easy-to-use Java library for generating Excel files using XLS templates. Also jXLS can be used to read XLS files and populate Java beans
+            with spreadsheet data according to XML configuration file</p>
         </section>
         <section name="Introduction">
             <p>Excel generation is required in many Java applications that have some kind of reporting functionality.
@@ -50,6 +53,7 @@
                 <li>JDBC ResultSet export</li>
                 <li>Merged Cells support</li>
                 <li>Multiple bean properties in a single cell</li>
+                <li>Reading XLS files</li>
             </ul>
             <note>In your XLS template you can use any Excel features which are preserved by
                 <a href="http://jakarta.apache.org/poi/">Jakarta POI</a> when reading and writing XLS files. Particularly it means you can use Charts and Macros in your XLS template and many other features

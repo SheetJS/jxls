@@ -30,6 +30,7 @@
       <item name="Spreadsheet Operations" href="reference/sheetoperations.html"/>
       <item name="Custom Processor" href="reference/customprocessor.html"/>
       <item name="JDBC ResultSet" href="reference/resultset.html"/>
+      <item name="XLS Reader" href="reference/reader.html"/>
       <item name="Version Compatibility" href="reference/compatibility.html"/>
     </menu>
     <menu name="Samples">

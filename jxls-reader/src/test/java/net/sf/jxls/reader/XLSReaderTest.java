@@ -16,23 +16,23 @@ import java.util.Map;
  * @author Leonid Vysochyn
  */
 public class XLSReaderTest extends TestCase {
-    public static final String dataXLS = "/templates/departmentData.xls";
+    public static final String dataXLS = "/templates/departmentdata.xls";
 
     public void testRead() throws IOException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));
 
-        Department department = new Department();
+        Department itDepartment = new Department();
         Department hrDepartment = new Department();
         Map beans = new HashMap();
-        beans.put("department", department);
+        beans.put("itDepartment", itDepartment);
         beans.put("hrDepartment", hrDepartment);
         // Create Sheet1 Reader
         List chiefMappings = new ArrayList();
-        chiefMappings.add( new BeanCellMapping(0, (short) 1, "department", "name") );
-        chiefMappings.add( new BeanCellMapping(3, (short) 0, "department", "chief.name") );
-        chiefMappings.add( new BeanCellMapping(3, (short) 1, "department", "chief.age") );
-        chiefMappings.add( new BeanCellMapping(3, (short) 3, "department", "chief.payment") );
-        chiefMappings.add( new BeanCellMapping(3, (short) 4, "department", "chief.bonus") );
+        chiefMappings.add( new BeanCellMapping(0, (short) 1, "itDepartment", "name") );
+        chiefMappings.add( new BeanCellMapping(3, (short) 0, "itDepartment", "chief.name") );
+        chiefMappings.add( new BeanCellMapping(3, (short) 1, "itDepartment", "chief.age") );
+        chiefMappings.add( new BeanCellMapping(3, (short) 3, "itDepartment", "chief.payment") );
+        chiefMappings.add( new BeanCellMapping("E4", "itDepartment", "chief.bonus") );
         XLSBlockReader chiefReader = new XLSBlockReaderImpl(0, 6, chiefMappings);
         List employeeMappings = new ArrayList();
         employeeMappings.add( new BeanCellMapping(7, (short) 0, "employee", "name") );
@@ -40,7 +40,7 @@ public class XLSReaderTest extends TestCase {
         employeeMappings.add( new BeanCellMapping(7, (short) 3, "employee", "payment") );
         employeeMappings.add( new BeanCellMapping(7, (short) 4, "employee", "bonus") );
         XLSBlockReader employeeReader = new XLSBlockReaderImpl(7, 7, employeeMappings);
-        XLSBlockReader employeesReader = new XLSForEachBlockReaderImpl(7, 7, "department.staff", "employee", Employee.class);
+        XLSBlockReader employeesReader = new XLSForEachBlockReaderImpl(7, 7, "itDepartment.staff", "employee", Employee.class);
         employeesReader.addBlockReader( employeeReader );
         SectionCheck loopBreakCheck = getLoopBreakCheck();
         employeesReader.setLoopBreakCondition( loopBreakCheck );
@@ -74,19 +74,19 @@ public class XLSReaderTest extends TestCase {
         mainReader.read( inputXLS, beans);
         inputXLS.close();
         // check sheet1 data
-        assertEquals( "IT", department.getName() );
-        assertEquals( "Maxim", department.getChief().getName() );
-        assertEquals( new Integer(30), department.getChief().getAge() );
-        assertEquals( new Double( 3000.0), department.getChief().getPayment() );
-        assertEquals( new Double(0.25), department.getChief().getBonus() );
-        assertEquals( 4, department.getStaff().size() );
-        Employee employee = (Employee) department.getStaff().get(0);
+        assertEquals( "IT", itDepartment.getName() );
+        assertEquals( "Maxim", itDepartment.getChief().getName() );
+        assertEquals( new Integer(30), itDepartment.getChief().getAge() );
+        assertEquals( new Double( 3000.0), itDepartment.getChief().getPayment() );
+        assertEquals( new Double(0.25), itDepartment.getChief().getBonus() );
+        assertEquals( 4, itDepartment.getStaff().size() );
+        Employee employee = (Employee) itDepartment.getStaff().get(0);
         checkEmployee( employee, "Oleg", new Integer(32), new Double(2000.0), new Double(0.20) );
-        employee = (Employee) department.getStaff().get(1);
+        employee = (Employee) itDepartment.getStaff().get(1);
         checkEmployee( employee, "Yuri", new Integer(29), new Double(1800.0), new Double(0.15) );
-        employee = (Employee) department.getStaff().get(2);
+        employee = (Employee) itDepartment.getStaff().get(2);
         checkEmployee( employee, "Leonid", new Integer(30), new Double(1700.0), new Double(0.20) );
-        employee = (Employee) department.getStaff().get(3);
+        employee = (Employee) itDepartment.getStaff().get(3);
         checkEmployee( employee, "Alex", new Integer(28), new Double(1600.0), new Double(0.20) );
         // check sheet2 data
         checkEmployee( hrDepartment.getChief(), "Betsy", new Integer(37), new Double(2200.0), new Double(0.3) );

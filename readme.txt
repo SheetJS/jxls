@@ -8,7 +8,20 @@ You can download the latest jXLS release from here:
 
     http://sourceforge.net/project/showfiles.php?group_id=141729
 
-Put jxls-core-VERSION.jar into classpath of your application
+To use jXLS engine you have to put  jxls-core   jar in your classpath.
+
+And if you are planning to use jXLS to read XLS files you have to add jxls-reader jar file to your classpath.
+
+If you use Maven 2 to build your application you can specify required jXLS modules in your pom.xml as dependencies to allow them to be downloaded from Maven repository
+
+The following Jakarta libraries are also required to be on your classpath.
+
+    * POI 2.5.1 or higher
+    * Commons BeanUtils
+    * Commons Collections
+    * Commons JEXL
+    * Commons Logging
+    * Commons Digester
 
 Dependencies
 ------------
@@ -46,6 +59,6 @@ Download jXLS distribution from
 Download and install Maven 2 framework
         http://maven.apache.org/
 
-Go to src/jxls-core folder and execute
+Execute from source code folder
         mvn clean install 
 

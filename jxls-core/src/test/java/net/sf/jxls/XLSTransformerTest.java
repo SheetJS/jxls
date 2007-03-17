@@ -98,6 +98,9 @@ public class XLSTransformerTest extends TestCase {
     public static final String multipleSheetListXLS = "/templates/multipleSheetList.xls";
     public static final String multipleSheetListDestXLS = "target/multipleSheetList_output.xls";
 
+    public static final String multipleSheetList2XLS = "/templates/multipleSheetList2.xls";
+    public static final String multipleSheetList2DestXLS = "target/multipleSheetList2_output.xls";
+
     public static final String groupTagXLS = "/templates/groupTag.xls";
     public static final String groupTagDestXLS = "target/groupTag_output.xls";
 
@@ -562,11 +565,6 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, grouping1DestXLS);
     }
 
-    /**
-     * This test is not ready
-     * @throws java.io.IOException
-     * @throws ParsePropertyException
-     */
     public void testMergeCellsList() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
         beans.put("listBean", beanWithList);
@@ -1546,7 +1544,7 @@ public class XLSTransformerTest extends TestCase {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetListXLS));
         XLSTransformer transformer = new XLSTransformer();
         List sheetNames = new ArrayList();
-        sheetNames.add("Русский Лист");
+        sheetNames.add("New Sheet");
         for(int i = 0; i < departments.size(); i++){
             Department department = (Department) departments.get( i );
             sheetNames.add( department.getName() );
@@ -1579,6 +1577,35 @@ public class XLSTransformerTest extends TestCase {
 //        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 7, (short)3, "B8*(1+C8)");
         is.close();
         saveWorkbook(resultWorkbook, multipleSheetListDestXLS);
+    }
+    // todo complete this test
+    public void atestMultipleSheetList2() throws IOException, ParsePropertyException {
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetList2XLS));
+        XLSTransformer transformer = new XLSTransformer();
+        List sheetNames = new ArrayList();
+        sheetNames.add("Sheet 1");
+        for(int i = 0; i < departments.size(); i++){
+            Department department = (Department) departments.get( i );
+            sheetNames.add( department.getName() );
+        }
+        List templateSheetList = new ArrayList();
+        templateSheetList.add("Template Sheet 1");
+        templateSheetList.add("Template Sheet 2");
+        List sheetNameList = new ArrayList();
+        List beanParamList = new ArrayList();
+
+        HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, departments, sheetNames, "department", new HashMap(), 0);
+        transformer.transformXLS(is, templateSheetList, sheetNameList, beanParamList );
+        is.close();
+        is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetList2XLS));
+        POIFSFileSystem fs = new POIFSFileSystem(is);
+        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+
+        assertEquals( "Number of result worksheets is incorrect ", sourceWorkbook.getNumberOfSheets() + departments.size() - 1, resultWorkbook.getNumberOfSheets());
+        for (int sheetNo = 0; sheetNo < resultWorkbook.getNumberOfSheets() && sheetNo < sheetNames.size(); sheetNo++) {
+        }
+        is.close();
+        saveWorkbook(resultWorkbook, multipleSheetList2DestXLS);
     }
 
     public void testGroupTag() throws IOException, ParsePropertyException {

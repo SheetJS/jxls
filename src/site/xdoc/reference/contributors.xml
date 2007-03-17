@@ -8,9 +8,9 @@
             <p>Following people participated in jXLS evolution and making jXLS more mature and useful.
             </p>
             <ul>
-                <li>Leonid Vysochyn         - The founder of the project. Core jXLS engine, jx tags  implementation</li>
+                <li>Leonid Vysochyn         - The founder of the project. Core jXLS engine, jx tags  implementation. jXLS-Reader module.</li>
+                <li>Michael Zarillo         - Full JEXL support implementation. Many jx tags improvements and code optimizations.</li>
                 <li>Curtis Stanford         - Added aggregate functions support to ${...} syntax and introduced 'select' keyword to forEach tag</li>
-                <li>Michael Zarillo         - Full JEXL support implementation</li>
                 <li>Rafael Borges           - Started Maven 2 migration</li>
                 <li>Balachandar Nageswaran  - Reported many jXLS issues</li>
             </ul>

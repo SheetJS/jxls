@@ -33,6 +33,22 @@ public class BeanCellMapping {
         this.propertyName = extractPropertyName( fullPropertyName );
     }
 
+    public BeanCellMapping(int rowNum, short cellNum, String beanKey, String propertyName) {
+        this.row = rowNum;
+        this.col = cellNum;
+        this.beanKey = beanKey;
+        this.propertyName = propertyName;
+    }
+
+    public BeanCellMapping(String cell, String beanKey, String propertyName) {
+        setCell( cell );
+        this.beanKey = beanKey;
+        this.propertyName = propertyName;
+    }
+
+    public BeanCellMapping() {
+    }
+
 
 
 
@@ -75,16 +91,6 @@ public class BeanCellMapping {
         }else{
             return fullPropertyName.substring(0, dotIndex);
         }
-    }
-
-    public BeanCellMapping(int rowNum, short cellNum, String beanKey, String propertyName) {
-        this.row = rowNum;
-        this.col = cellNum;
-        this.beanKey = beanKey;
-        this.propertyName = propertyName;
-    }
-
-    public BeanCellMapping() {
     }
 
     public int getRow() {

@@ -15,7 +15,14 @@
 					<code>jxls-core</code>
 				</strong> jar in your classpath.
             </p>
-			<p>The following
+            <p>And if you are planning to use jXLS to read XLS files you have to add <strong><code>jxls-reader</code></strong>
+                jar file to your classpath.
+            </p>
+            <p>
+                If you use Maven to build your application you can specify required jXLS modules in your pom.xml as dependencies
+                to allow them to be downloaded from Maven repository
+            </p>
+            <p>The following
                 <a href="ext:jakarta">Jakarta</a> libraries are also required to be on your classpath.
             </p>
 			<ul>
