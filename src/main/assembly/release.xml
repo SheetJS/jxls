@@ -21,6 +21,22 @@
           </excludes>
       </binaries>
     </moduleSet>
+    <moduleSet>
+      <includes>
+        <include>net.sf.jxls:jxls-reader</include>
+      </includes>
+      <binaries>
+        <unpack>false</unpack>
+        <includes>
+            <include>*.jar</include>
+        </includes>
+          <excludes>
+              <exclude>src/site</exclude>
+              <exclude>jxls-reader.iml</exclude>
+              <exclude>jxls-reader/jxls-reader.iml</exclude>
+          </excludes>
+      </binaries>
+    </moduleSet>
   </moduleSets>
     <fileSets>
         <fileSet>
@@ -29,6 +45,9 @@
                 <include>jxls-core/pom.xml</include>
                 <include>jxls-core/src/main/**</include>
                 <include>jxls-core/src/test/**</include>
+                <include>jxls-reader/pom.xml</include>
+                <include>jxls-reader/src/main/**</include>
+                <include>jxls-reader/src/test/**</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -45,7 +64,19 @@
         </fileSet>
         <fileSet>
             <directory>jxls-core/target/javadoc</directory>
-            <outputDirectory>doc/apidocs</outputDirectory>
+            <outputDirectory>doc/javadoc/jxls-core</outputDirectory>
+            <includes>
+                <include>**</include>
+            </includes>
+            <excludes>
+                <exclude>options</exclude>
+                <exclude>files</exclude>
+                <exclude>packagelist</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>jxls-reader/target/javadoc</directory>
+            <outputDirectory>doc/javadoc/jxls-reader</outputDirectory>
             <includes>
                 <include>**</include>
             </includes>
