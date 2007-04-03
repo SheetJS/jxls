@@ -1,13 +1,13 @@
 package net.sf.jxls.util;
 
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.transformer.Row;
+import net.sf.jxls.transformer.RowCollection;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.Region;
-import net.sf.jxls.transformer.RowCollection;
-import net.sf.jxls.parser.Cell;
-import net.sf.jxls.transformer.Row;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * This class contains many utility methods used by jXLS framework
@@ -595,19 +594,23 @@ public final class Util {
 
     public static void shiftCellsLeft(HSSFSheet sheet, int startRow, short startCol, int endRow, short endCol, short shiftNumber){
         for(int i = startRow; i <= endRow; i++){
+            boolean doSetWidth = true;
             HSSFRow row = sheet.getRow( i );
             if( row!=null ){
                 for(short j = startCol; j<=endCol; j++){
                     HSSFCell cell = row.getCell( j );
                     if( cell==null ){
                         cell = row.createCell( j );
+                        doSetWidth = false;
                     }
                     HSSFCell destCell = row.getCell( (short) (j - shiftNumber) );
                     if( destCell == null ){
                         destCell = row.createCell( (short) (j - shiftNumber) );
                     }
                     copyCell( cell, destCell, true );
-                    sheet.setColumnWidth( destCell.getCellNum(), sheet.getColumnWidth(cell.getCellNum()));
+                    if( doSetWidth ){
+                        sheet.setColumnWidth( destCell.getCellNum(), sheet.getColumnWidth(cell.getCellNum()));
+                    }
                 }
             }
         }

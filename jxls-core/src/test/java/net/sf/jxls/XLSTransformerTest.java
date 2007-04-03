@@ -95,6 +95,9 @@ public class XLSTransformerTest extends TestCase {
     public static final String forifTagOneRowXLS = "/templates/foriftagOneRow.xls";
     public static final String forifTagOneRowDestXLS = "target/foriftagOneRow_output.xls";
 
+    public static final String forifTagOneRow2XLS = "/templates/foriftagOneRow2.xls";
+    public static final String forifTagOneRowDest2XLS = "target/foriftagOneRow2_output.xls";
+
     public static final String multipleSheetListXLS = "/templates/multipleSheetList.xls";
     public static final String multipleSheetListDestXLS = "target/multipleSheetList_output.xls";
 
@@ -149,7 +152,7 @@ public class XLSTransformerTest extends TestCase {
     Integer[] baAges = new Integer[] {new Integer(30), new Integer(30), new Integer(30)};
     Integer[] mgrAges = new Integer[] {null, new Integer(35), null};
     List departments = new ArrayList();
-    Department mgrDepartment;
+    Department mgrDepartment, itDepartment;
 
     int[] amounts = {1, 2, 4, 6, 7, 8, 9, 10, 11, 13, 15, 18, 20, 21, 22};
     List amountBeans = new ArrayList();
@@ -197,6 +200,7 @@ public class XLSTransformerTest extends TestCase {
             department.addEmployee( employee );
             itEmployees.add( employee );
         }
+        itDepartment = department;
         departments.add( department );
         department = new Department("HR");
         for(int i = 0; i < hrEmployeeNames.length; i++){
@@ -1526,6 +1530,28 @@ public class XLSTransformerTest extends TestCase {
 
         is.close();
         saveWorkbook( resultWorkbook, forifTagOneRowDestXLS);
+    }
+
+    public void testForIfTagOneRowExport2() throws IOException, ParsePropertyException {
+        Map beans = new HashMap();
+        List items = new ArrayList();
+        items.add(new Item("Item 1"));
+//        items.add(new Item("Item 2"));
+        beans.put("items", items);
+
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTagOneRow2XLS));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        //todo: complete test
+//        is = new BufferedInputStream(getClass().getResourceAsStream(forifTagOneRow2XLS));
+//        POIFSFileSystem fs = new POIFSFileSystem(is);
+//        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+//        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
+//        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+
+//        is.close();
+        saveWorkbook( resultWorkbook, forifTagOneRowDest2XLS);
     }
 
     public void testHiddenSheetsExport() throws IOException, ParsePropertyException {

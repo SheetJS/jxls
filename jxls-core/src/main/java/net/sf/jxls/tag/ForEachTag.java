@@ -12,10 +12,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.ArrayList;
 
 /**
  * jx:forEach tag implementation
@@ -173,7 +173,7 @@ public class ForEachTag extends BaseTag {
                 for (Iterator iterator = c2.iterator(); iterator.hasNext();) {
                     Object o = iterator.next();
                     beans.put(var, o);
-                    if (ReportUtil.shouldSelectCollectionData(beans, select, configuration)) {
+//                    if (ReportUtil.shouldSelectCollectionData(beans, select, configuration)) {
 
                         try {
                             startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
@@ -184,7 +184,7 @@ public class ForEachTag extends BaseTag {
                             log.error("Can't parse property ", e);
                             throw new RuntimeException("Can't parse property", e);
                         }
-                    }
+//                    }
                 }
             } else {
                 try {
