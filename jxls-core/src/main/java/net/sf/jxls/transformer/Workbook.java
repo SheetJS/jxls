@@ -1,17 +1,14 @@
 package net.sf.jxls.transformer;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import net.sf.jxls.transformer.Sheet;
-import net.sf.jxls.util.SheetHelper;
 import net.sf.jxls.formula.FormulaController;
 import net.sf.jxls.formula.FormulaControllerImpl;
+import net.sf.jxls.util.SheetHelper;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents excel workbook
@@ -115,6 +112,11 @@ public class Workbook {
 
     public Sheet getSheetAt(int sheetNo){
         return (Sheet) sheets.get( sheetNo );
+    }
+
+    public void removeSheetAt(int sheetNo){
+        hssfWorkbook.removeSheetAt(sheetNo);
+        sheets.remove( sheetNo );
     }
 
 }

@@ -113,6 +113,7 @@ public class XLSTransformerTest extends TestCase {
     public static final String forGroupByXLS = "/templates/forgroup.xls";
     public static final String forGroupByDestXLS = "target/forgroup_output.xls";
 
+
     SimpleBean simpleBean1;
     SimpleBean simpleBean2;
     SimpleBean simpleBean3;
@@ -1563,6 +1564,12 @@ public class XLSTransformerTest extends TestCase {
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
         assertEquals("Number of sheets in result workbook is incorrect", 1, resultWorkbook.getNumberOfSheets() );
         is.close();
+        is = new BufferedInputStream(getClass().getResourceAsStream(hideSheetsXLS));
+        transformer.setSpreadsheetsToHide(new String[]{"Sheet 2"});
+        resultWorkbook = transformer.transformXLS(is, beans);
+        assertEquals("Number of sheets in result workbook is incorrect", 2, resultWorkbook.getNumberOfSheets() );
+        is.close();
+
         saveWorkbook(resultWorkbook, hideSheetsDestXLS);
     }
 

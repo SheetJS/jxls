@@ -225,7 +225,7 @@ public class XLSTransformer {
             SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
             for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
                 final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
-                if( spreadsheetName == null || !spreadsheetName.startsWith( configuration.getExcludeSheetProcessingMark() ))
+                if( spreadsheetName != null && !spreadsheetName.startsWith( configuration.getExcludeSheetProcessingMark() )){
                     if (!isSpreadsheetToHide(spreadsheetName)) {
                         if (isSpreadsheetToRename(spreadsheetName)) {
                             hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
@@ -234,9 +234,10 @@ public class XLSTransformer {
                         sheetTransformer.transformSheet( workbookTransformationController, sheet, beanParams );
                     } else {
                         // let's remove spreadsheet
-                        hssfWorkbook.removeSheetAt(sheetNo);
+                        workbook.removeSheetAt( sheetNo );
                         sheetNo--;
                     }
+                }
             }
             updateFormulas();
         } catch (IOException e) {
@@ -316,8 +317,7 @@ public class XLSTransformer {
                     }
                 } else {
                     // let's remove spreadsheet
-                    hssfWorkbook.removeSheetAt(sheetNo);
-                    workbook.getSheets().remove( sheetNo );
+                    workbook.removeSheetAt( sheetNo );
                     sheetNo--;
                 }
             }
@@ -387,7 +387,7 @@ public class XLSTransformer {
                     sheetTransformer.transformSheet(workbookTransformationController, sheet, beanParams);
                 } else {
                     // let's remove spreadsheet
-                    hssfWorkbook.removeSheetAt(sheetNo);
+                    workbook.removeSheetAt( sheetNo );
                     sheetNo--;
                 }
             }
