@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * @author Leonid Vysochyn
  */
-public class XLSForEachBlockReaderImpl implements XLSBlockReader {
+public class XLSForEachBlockReaderImpl implements XLSLoopBlockReader {
     protected final Log log = LogFactory.getLog(getClass());
 
     int startRow;

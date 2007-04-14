@@ -10,7 +10,15 @@ import java.io.*;
  */
 public class ReaderBuilder {
 
-    XLSReader buildFromXML(InputStream xmlStream) throws IOException, SAXException {
+    XLSReader reader = new XLSReaderImpl();
+    XLSSheetReader currentSheetReader;
+    SimpleBlockReader currentSimpleBlockReader;
+    XLSLoopBlockReader currentLoopBlockReader;
+    boolean lastSheetReader = false;
+    SectionCheck currentSectionCheck;
+    OffsetRowCheck currentRowCheck;
+
+    public static XLSReader buildFromXML(InputStream xmlStream) throws IOException, SAXException {
         Digester digester = new Digester();
         digester.setValidating( false );
         digester.addObjectCreate("workbook", "net.sf.jxls.reader.XLSReaderImpl");
@@ -21,7 +29,7 @@ public class ReaderBuilder {
         digester.addObjectCreate("*/loop", "net.sf.jxls.reader.XLSForEachBlockReaderImpl");
         digester.addSetProperties("*/loop");
         digester.addSetNext("*/loop", "addBlockReader");
-        digester.addObjectCreate("*/section", "net.sf.jxls.reader.XLSBlockReaderImpl");
+        digester.addObjectCreate("*/section", "net.sf.jxls.reader.SimpleBlockReaderImpl");
         digester.addSetProperties("*/section");
         digester.addSetNext("*/section", "addBlockReader");
         digester.addObjectCreate("*/mapping", "net.sf.jxls.reader.BeanCellMapping");
@@ -42,10 +50,78 @@ public class ReaderBuilder {
         return (XLSReader) digester.parse( xmlStream );
     }
 
-    XLSReader buildFromXML(File xmlFile) throws IOException, SAXException {
+    public static XLSReader buildFromXML(File xmlFile) throws IOException, SAXException {
         InputStream xmlStream = new BufferedInputStream( new FileInputStream(xmlFile) );
         XLSReader reader = buildFromXML( xmlStream );
         xmlStream.close();
         return reader;
+    }
+
+    public ReaderBuilder addSheetReader(String sheetName) {
+        XLSSheetReader sheetReader = new XLSSheetReaderImpl();
+        reader.addSheetReader( sheetName, sheetReader );
+        currentSheetReader = sheetReader;
+        lastSheetReader = true;
+        return this;
+    }
+
+    public XLSReader getReader() {
+        return reader;
+    }
+
+    public ReaderBuilder addSimpleBlockReader(int startRow, int endRow) {
+        SimpleBlockReader blockReader = new SimpleBlockReaderImpl( startRow, endRow );
+        if( lastSheetReader ){
+            currentSheetReader.addBlockReader( blockReader );
+        }else{
+            currentLoopBlockReader.addBlockReader( blockReader );
+        }
+        currentSimpleBlockReader = blockReader;
+        return this;
+    }
+
+    public ReaderBuilder addMapping(String cellName, String propertyName) {
+        BeanCellMapping mapping = new BeanCellMapping( cellName, propertyName );
+        currentSimpleBlockReader.addMapping( mapping );
+        return this;
+    }
+
+    public ReaderBuilder addLoopBlockReader(int startRow, int endRow, String items, String varName, Class varType) {
+        XLSLoopBlockReader loopReader = new XLSForEachBlockReaderImpl(startRow, endRow, items, varName, varType);
+        if( lastSheetReader ){
+            currentSheetReader.addBlockReader( loopReader );
+        }else{
+            currentLoopBlockReader.addBlockReader( loopReader );
+        }
+        currentLoopBlockReader = loopReader;
+        return this;
+    }
+
+    public ReaderBuilder addLoopBreakCondition(){
+        SectionCheck condition = new SimpleSectionCheck();
+        currentLoopBlockReader.setLoopBreakCondition( condition );
+        currentSectionCheck = condition;
+        return this;
+    }
+
+    public ReaderBuilder addOffsetRowCheck(int offset){
+        OffsetRowCheck rowCheck = new OffsetRowCheckImpl( offset );
+        currentSectionCheck.addRowCheck( rowCheck );
+        currentRowCheck = rowCheck;
+        return this;
+    }
+
+    public ReaderBuilder addOffsetCellCheck(short offset, String value){
+        OffsetCellCheck cellCheck = new OffsetCellCheckImpl( offset, value );
+        currentRowCheck.addCellCheck( cellCheck );
+        return this;
+    }
+    // todo:
+    public ReaderBuilder addSimpleBlockReaderToParent(){
+        return this;
+    }
+    // todo:
+    public ReaderBuilder addLoopBlockReaderToParent(){
+        return this;
     }
 }

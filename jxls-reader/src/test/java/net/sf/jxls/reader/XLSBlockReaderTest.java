@@ -43,7 +43,7 @@ public class XLSBlockReaderTest extends TestCase {
         mappings.add( new BeanCellMapping("D4", "chief.payment"));
         mappings.add( new BeanCellMapping("E4", "chief.bonus"));
 
-        XLSBlockReader reader = new XLSBlockReaderImpl(0, 6, mappings);
+        XLSBlockReader reader = new SimpleBlockReaderImpl(0, 6, mappings);
         XLSRowCursor cursor = new XLSRowCursorImpl( sheet );
         cursor.setSheetName( hssfInputWorkbook.getSheetName(0));
         reader.read( cursor, beans );

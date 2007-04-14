@@ -33,14 +33,14 @@ public class XLSReaderTest extends TestCase {
         chiefMappings.add( new BeanCellMapping(3, (short) 1, "itDepartment", "chief.age") );
         chiefMappings.add( new BeanCellMapping(3, (short) 3, "itDepartment", "chief.payment") );
         chiefMappings.add( new BeanCellMapping("E4", "itDepartment", "chief.bonus") );
-        XLSBlockReader chiefReader = new XLSBlockReaderImpl(0, 6, chiefMappings);
+        XLSBlockReader chiefReader = new SimpleBlockReaderImpl(0, 6, chiefMappings);
         List employeeMappings = new ArrayList();
         employeeMappings.add( new BeanCellMapping(7, (short) 0, "employee", "name") );
         employeeMappings.add( new BeanCellMapping(7, (short) 1, "employee", "age") );
         employeeMappings.add( new BeanCellMapping(7, (short) 3, "employee", "payment") );
         employeeMappings.add( new BeanCellMapping(7, (short) 4, "employee", "bonus") );
-        XLSBlockReader employeeReader = new XLSBlockReaderImpl(7, 7, employeeMappings);
-        XLSBlockReader employeesReader = new XLSForEachBlockReaderImpl(7, 7, "itDepartment.staff", "employee", Employee.class);
+        XLSBlockReader employeeReader = new SimpleBlockReaderImpl(7, 7, employeeMappings);
+        XLSLoopBlockReader employeesReader = new XLSForEachBlockReaderImpl(7, 7, "itDepartment.staff", "employee", Employee.class);
         employeesReader.addBlockReader( employeeReader );
         SectionCheck loopBreakCheck = getLoopBreakCheck();
         employeesReader.setLoopBreakCondition( loopBreakCheck );
@@ -54,8 +54,8 @@ public class XLSReaderTest extends TestCase {
         employeeMappings.add( new BeanCellMapping(2, (short) 1, "employee", "age") );
         employeeMappings.add( new BeanCellMapping(2, (short) 2, "employee", "payment") );
         employeeMappings.add( new BeanCellMapping(2, (short) 3, "employee", "bonus") );
-        XLSBlockReader sheet2EmployeeReader = new XLSBlockReaderImpl(2, 2, employeeMappings);
-        XLSBlockReader sheet2EmployeesReader = new XLSForEachBlockReaderImpl(2, 2, "hrDepartment.staff", "employee", Employee.class);
+        XLSBlockReader sheet2EmployeeReader = new SimpleBlockReaderImpl(2, 2, employeeMappings);
+        XLSLoopBlockReader sheet2EmployeesReader = new XLSForEachBlockReaderImpl(2, 2, "hrDepartment.staff", "employee", Employee.class);
         sheet2EmployeesReader.addBlockReader( sheet2EmployeeReader );
         sheet2EmployeesReader.setLoopBreakCondition( getLoopBreakCheck() );
         chiefMappings = new ArrayList();
@@ -63,8 +63,8 @@ public class XLSReaderTest extends TestCase {
         chiefMappings.add( new BeanCellMapping(7, (short)1, "hrDepartment", "chief.age"));
         chiefMappings.add( new BeanCellMapping(7, (short)2, "hrDepartment", "chief.payment"));
         chiefMappings.add( new BeanCellMapping(7, (short)3, "hrDepartment", "chief.bonus"));
-        XLSBlockReader hrChiefReader = new XLSBlockReaderImpl(3, 7, chiefMappings);
-        sheet2Reader.addBlockReader( new XLSBlockReaderImpl(0, 1, new ArrayList()));
+        XLSBlockReader hrChiefReader = new SimpleBlockReaderImpl(3, 7, chiefMappings);
+        sheet2Reader.addBlockReader( new SimpleBlockReaderImpl(0, 1, new ArrayList()));
         sheet2Reader.addBlockReader( sheet2EmployeesReader );
         sheet2Reader.addBlockReader( hrChiefReader );
         // create main reader
