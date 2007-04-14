@@ -24,16 +24,20 @@ public class XLSReaderImpl implements XLSReader {
         POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
         HSSFWorkbook workbook = new HSSFWorkbook(fsInput);
         for (int sheetNo = 0; sheetNo < workbook.getNumberOfSheets(); sheetNo++) {
-            HSSFSheet sheet = workbook.getSheetAt( sheetNo );
-            String sheetName = workbook.getSheetName( sheetNo );
-            if( log.isInfoEnabled() ){
-                log.info("Processing sheet " + sheetName);
-            }
-            if( sheetReaders.containsKey( sheetName ) ){
-                XLSSheetReader sheetReader = (XLSSheetReader) sheetReaders.get( sheetName );
-                sheetReader.setSheetName( sheetName );
-                sheetReader.read( sheet, beans );
-            }
+            readSheet(workbook, sheetNo, beans);
+        }
+    }
+
+    private void readSheet(HSSFWorkbook workbook, int sheetNo, Map beans) {
+        HSSFSheet sheet = workbook.getSheetAt( sheetNo );
+        String sheetName = workbook.getSheetName( sheetNo );
+        if( log.isInfoEnabled() ){
+            log.info("Processing sheet " + sheetName);
+        }
+        if( sheetReaders.containsKey( sheetName ) ){
+            XLSSheetReader sheetReader = (XLSSheetReader) sheetReaders.get( sheetName );
+            sheetReader.setSheetName( sheetName );
+            sheetReader.read( sheet, beans );
         }
     }
 

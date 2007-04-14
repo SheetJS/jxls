@@ -13,11 +13,9 @@ import java.util.Map;
 /**
  * @author Leonid Vysochyn
  */
-public class XLSForEachBlockReaderImpl implements XLSLoopBlockReader {
+public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoopBlockReader {
     protected final Log log = LogFactory.getLog(getClass());
 
-    int startRow;
-    int endRow;
     String items;
     String var;
     Class varType;
@@ -44,18 +42,26 @@ public class XLSForEachBlockReaderImpl implements XLSLoopBlockReader {
             ExpressionCollectionParser parser = new ExpressionCollectionParser( context, items + ";", true );
             Collection itemsCollection = parser.getCollection();
             while( !loopBreakCheck.isCheckSuccessful(cursor) ){
-                Object obj = varType.newInstance();
-                itemsCollection.add(obj);
-                beans.put( var, obj );
-                for (int i = 0; i < innerBlockReaders.size(); i++) {
-                    XLSBlockReader xlsBlockReader = (XLSBlockReader) innerBlockReaders.get(i);
-                    xlsBlockReader.read( cursor, beans );
-                    cursor.moveForward();
-                }
+                createNewCollectionItem(itemsCollection, beans);
+                readInnerBlocks(cursor, beans);
             }
             cursor.moveBackward();
         }catch (Exception e) {
             throw new XLSDataReadException("Can't read XLS in ForEachBlockReader, items = " + items, e);
+        }
+    }
+
+    private void createNewCollectionItem(Collection itemsCollection, Map beans) throws InstantiationException, IllegalAccessException {
+        Object obj = varType.newInstance();
+        itemsCollection.add(obj);
+        beans.put( var, obj );
+    }
+
+    private void readInnerBlocks(XLSRowCursor cursor, Map beans) {
+        for (int i = 0; i < innerBlockReaders.size(); i++) {
+            XLSBlockReader xlsBlockReader = (XLSBlockReader) innerBlockReaders.get(i);
+            xlsBlockReader.read( cursor, beans );
+            cursor.moveForward();
         }
     }
 
@@ -102,27 +108,4 @@ public class XLSForEachBlockReaderImpl implements XLSLoopBlockReader {
         return varType;
     }
 
-    public int getStartRow() {
-        return startRow;
-    }
-
-    public void setStartRow(int startRow) {
-        this.startRow = startRow;
-    }
-
-    public int getEndRow() {
-        return endRow;
-    }
-
-    public void setEndRow(int endRow) {
-        this.endRow = endRow;
-    }
-
-    public void addMapping(BeanCellMapping mapping) {
-        throw new UnsupportedOperationException("Can't add BeanCellMapping to Loop Section");
-    }
-
-    public List getMappings() {
-        return null;  
-    }
 }

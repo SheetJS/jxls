@@ -15,11 +15,8 @@ import java.util.Map;
 /**
  * @author Leonid Vysochyn
  */
-public class SimpleBlockReaderImpl implements SimpleBlockReader {
+public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBlockReader{
     protected final Log log = LogFactory.getLog(getClass());
-
-    int startRow;
-    int endRow;
 
     List beanCellMappings = new ArrayList();
     SectionCheck sectionCheck;
@@ -40,22 +37,29 @@ public class SimpleBlockReaderImpl implements SimpleBlockReader {
     }
 
     public void read(XLSRowCursor cursor, Map beans)  {
-        int currentRowNum = cursor.getCurrentRowNum();
-        int shift = currentRowNum - startRow;
-        CellReference currentCellRef = null;
+        final int currentRowNum = cursor.getCurrentRowNum();
+        final int rowShift = currentRowNum - startRow;
+        BeanCellMapping mapping = null;
         try {
             for (Iterator iterator = beanCellMappings.iterator(); iterator.hasNext();) {
-                BeanCellMapping mapping = (BeanCellMapping) iterator.next();
-                currentCellRef = new CellReference(mapping.getRow() + shift, mapping.getCol() );
-                HSSFCell cell = getCell( cursor.getSheet(), mapping.getRow() + shift, mapping.getCol());
-                Class type = mapping.getPropertyType( beans );
-                Object value = getCellValue( cell, type );
+                mapping = (BeanCellMapping) iterator.next();
+                Object value = readCellValue(cursor.getSheet(), mapping.getRow() + rowShift, mapping.getCol(), mapping.getPropertyType( beans ));
                 mapping.populateBean( value, beans );
             }
         } catch (Exception e) {
-            throw new XLSDataReadException( currentCellRef==null?null:currentCellRef.toString(), "Can't read cell " + (currentCellRef==null?null:currentCellRef.toString()) + " on " + cursor.getSheetName() + " spreadsheet", e );
+            throw new XLSDataReadException(getCellName( mapping, rowShift ), "Can't read cell " + getCellName( mapping, rowShift ) + " on " + cursor.getSheetName() + " spreadsheet", e );
         }
-        cursor.setCurrentRowNum( endRow + shift );
+        cursor.setCurrentRowNum( endRow + rowShift );
+    }
+
+    private Object readCellValue(HSSFSheet sheet, int rowNum, short cellNum, Class type) {
+        HSSFCell cell = getCell(sheet, rowNum, cellNum);
+        return getCellValue( cell, type );
+    }
+
+    private String getCellName( BeanCellMapping mapping, int rowShift ){
+        CellReference currentCellRef = new CellReference(mapping.getRow() + rowShift, mapping.getCol());
+        return currentCellRef.toString();
     }
 
 
@@ -65,29 +69,6 @@ public class SimpleBlockReaderImpl implements SimpleBlockReader {
 
     public void setLoopBreakCondition(SectionCheck sectionCheck) {
         this.sectionCheck = sectionCheck;
-    }
-
-    public void addBlockReader(XLSLoopBlockReader reader) {
-    }
-
-    public List getBlockReaders() {
-        return null;  
-    }
-
-    public int getStartRow() {
-        return startRow;
-    }
-
-    public void setStartRow(int startRow) {
-        this.startRow = startRow;
-    }
-
-    public int getEndRow() {
-        return endRow;
-    }
-
-    public void setEndRow(int endRow) {
-        this.endRow = endRow;
     }
 
     public void addMapping(BeanCellMapping mapping) {
@@ -103,7 +84,7 @@ public class SimpleBlockReaderImpl implements SimpleBlockReader {
             return null;
         }
         Object value = null;
-        if( type.getName().indexOf("java.util.Date") >=0 ){
+        if(isDate(type)){
             value = cell.getDateCellValue();
         }else{
             switch (cell.getCellType()) {
@@ -127,6 +108,10 @@ public class SimpleBlockReaderImpl implements SimpleBlockReader {
             }
         }
         return value;
+    }
+
+    private boolean isDate(Class type) {
+        return type.getName().indexOf("java.util.Date") >=0;
     }
 
     private HSSFCell getCell(HSSFSheet sheet, int rowNum, short cellNum){
