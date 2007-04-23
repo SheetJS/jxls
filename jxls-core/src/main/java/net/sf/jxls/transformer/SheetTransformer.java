@@ -2,6 +2,7 @@ package net.sf.jxls.transformer;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFHeader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import net.sf.jxls.transformer.ChainTransformer;
@@ -75,6 +76,7 @@ public class SheetTransformer {
 
     void transformSheet(WorkbookTransformationController workbookTransformationController, Sheet sheet, Map beans) throws ParsePropertyException {
         log.info("Processing sheet: " + sheet.getSheetName());
+        exposePOIBeans(sheet, beans);
         if( !beans.isEmpty() ){
             SheetTransformationController stc = new SheetTransformationControllerImpl( sheet );
             workbookTransformationController.addSheetTransformationController( stc );
@@ -101,6 +103,10 @@ public class SheetTransformer {
             }
             groupRows(sheet);
         }
+    }
+
+    private void exposePOIBeans(Sheet sheet, Map beans) {
+        beans.put(configuration.getSheetKeyName(), sheet.getHssfSheet());
     }
 
 

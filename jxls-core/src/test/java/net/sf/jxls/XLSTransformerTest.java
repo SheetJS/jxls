@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFHeader;
 import org.apache.poi.hssf.util.Region;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
@@ -78,6 +79,9 @@ public class XLSTransformerTest extends TestCase {
 
     public static final String forifTag2XLS = "/templates/foriftag2.xls";
     public static final String forifTag2DestXLS = "target/foriftag2_output.xls";
+
+    public static final String poiobjectsXLS = "/templates/poiobjects.xls";
+    public static final String poiobjectsDestXLS = "target/poiobjects_output.xls";
 
     public static final String forifTag3XLS = "/templates/foriftag3.xls";
     public static final String forifTag3DestXLS = "target/foriftag3_output.xls";
@@ -305,7 +309,6 @@ public class XLSTransformerTest extends TestCase {
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 1, doubleValues);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 2, new Object[]{new Integer(123), new Integer(10234), null});
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 3, dateValues);
-
         is.close();
         saveWorkbook(resultWorkbook, beanWithListDestXLS);
     }
@@ -1755,6 +1758,56 @@ public class XLSTransformerTest extends TestCase {
         is.close();
 
     }
+
+    public void testPoiObjectsExpose() throws IOException, ParsePropertyException {
+        Map beans = new HashMap();
+        beans.put( "departments", departments );
+        beans.put("itDepartment", itDepartment);
+
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(poiobjectsXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        is = new BufferedInputStream(getClass().getResourceAsStream(poiobjectsXLS));
+        POIFSFileSystem fs = new POIFSFileSystem(is);
+        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+
+        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
+        assertEquals(resultSheet.getHeader().getLeft(), "Test Left Header");
+        assertEquals(resultSheet.getHeader().getCenter(), itDepartment.getName());
+        assertEquals(resultSheet.getHeader().getRight(), "Test Right Header");
+        assertEquals(resultSheet.getFooter().getRight(), "Test Right Footer");
+        assertEquals(resultSheet.getFooter().getCenter(), "Test Center Footer");
+
+        Map props = new HashMap();
+        props.put("${department.name}", "IT");
+        CellsChecker checker = new CellsChecker(props);
+        checker.checkRows(sourceSheet, resultSheet, 1, 0, 3);
+        checker.checkListCells(sourceSheet, 5, resultSheet, 3, (short) 0, itEmployeeNames);
+        checker.checkListCells(sourceSheet, 5, resultSheet, 3, (short) 1, itPayments);
+        checker.checkListCells(sourceSheet, 5, resultSheet, 3, (short) 2, itBonuses);
+        props.clear();
+        props.put("${department.name}", "HR");
+        checker = new CellsChecker(props);
+        checker.checkRows(sourceSheet, resultSheet, 1, 9, 3);
+        props.clear();
+        checker.checkListCells(sourceSheet, 5, resultSheet, 12, (short) 0, hrEmployeeNames);
+        checker.checkListCells(sourceSheet, 5, resultSheet, 12, (short) 1, hrPayments);
+        checker.checkListCells(sourceSheet, 5, resultSheet, 12, (short) 2, hrBonuses);
+        props.clear();
+        props.put("${department.name}", "BA");
+        checker = new CellsChecker(props);
+        checker.checkRows(sourceSheet, resultSheet, 1, 17, 3);
+        props.clear();
+        checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 0, baEmployeeNames);
+        checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 1, baPayments);
+        checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 2, baBonuses);
+        is.close();
+        saveWorkbook( resultWorkbook, poiobjectsDestXLS);
+    }
+
 
     private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
         String saveResultsProp = System.getProperty("saveResults");

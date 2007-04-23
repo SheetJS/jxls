@@ -29,6 +29,7 @@ public class Configuration {
     private Digester digester;
     private String jxlsRoot;
     private boolean encodeXMLAttributes = true;
+    String sheetKeyName = "sheet";
 
     private String excludeSheetProcessingMark = "#Exclude";
 
@@ -77,6 +78,14 @@ public class Configuration {
 
     public void setUTF16(boolean UTF16) {
         this.isUTF16 = UTF16;
+    }
+
+    public String getSheetKeyName() {
+        return sheetKeyName;
+    }
+
+    public void setSheetKeyName(String sheetKeyName) {
+        this.sheetKeyName = sheetKeyName;
     }
 
     public String getTagPrefix() {
