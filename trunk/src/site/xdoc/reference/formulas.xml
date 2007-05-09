@@ -1,0 +1,76 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Formulas Notation</title>
+    </properties>
+    <body>
+        <section name="Overview" id="overview">
+            <p>This section demonstrates how to apply different formulas to your exported data. First any static Excel formulas (which are supported by
+                <a href="http://jakarta.apache.org/poi/">POI</a>) will be copied  to result Excel file untouched.
+			 But if you want to apply formula to dynamic data like exported collections you have to use predefined notation.
+			Any cell with value starting with
+                <strong>
+                    <code>$[</code>
+                </strong> and ending with
+                <strong>
+                    <code>]</code>
+                </strong> will be rendered as a formula cell. For example
+            </p>
+            <source>
+				$[formula]
+            </source>
+            <p>where
+                <code>formula</code> is the real formula which will be processed by jXLS engine.
+            </p>
+        </section>
+        <section id="formulaCellReference" name="Formula Cell References notation.">
+            <p>When you reference a worksheet cell in a jXLS formula and that cell is transformed into some other cell or
+               a set of cells the cell reference in the formula will be updated accordingly.
+                For example if you have a formula like
+            </p>
+            <source>
+            		       	$[E5 + B4 * 5]
+            </source>
+            <p>
+                And after jXLS transformation cell E5 turns to E20 and cell B4 turns to cell B15 the result formula will look like
+            </p>
+            <source>
+            			E20 + B15 * 5
+            </source>
+            <p>Let's consider more complex sample where a source cell was duplicated and turned into several cells forming a cell range.
+            For example if we have a formula like </p>
+            <source>
+                $[SUM(C2)]
+            </source>
+            <p>and cell C2 turns into a set of cells C2, C3, C4, C5, C6. This can happen for example if cell C2 is contained in jx:forEach tag body.
+            In this case jXLS detects that result cells form a range C2:C6 and replaces the original cell reference with this range </p>
+            <source>
+                SUM(C2:C6)
+            </source>
+            <p>jXLS also detects column ranges like A5:E5 when result cells are A5, B5, C5, D5, E5.</p>
+            <p>If result cells do not form any cell range original cell will be replaced with list of all cells separated with commas. If in previous
+            example cell C2 is transformed into cells C2, C3, C4, C10, C11, C20 result formula will look like</p>
+            <source>
+                SUM(C2,C3,C4,C10,C11,C20)
+            </source>
+            <p>Also you can reference cells from different worksheets in a formula cell. For example you can have following formula
+            referencing cells from other worksheets</p>
+            <source>
+                $[SUM(Sheet2!B10) - 'Sheet 1'!D15]
+            </source>
+            <p>jXLS updates formula cell references throughout the workbook during excel template transformation. It means
+            for example that any transformation that changes cell original location will reflect new cell location
+            in all affected formulas. If we have <code>jx:forEach</code> tag like this</p>
+            <source>
+                &lt;jx:forEach items="${employees}" var="employee">
+                ${employee.name} | ${employee.payment}
+                &lt;jx:forEach>
+            </source>
+            <p>And assuming that before transformation ${employee.payment} was located in a cell <code>B5</code> and after transformation
+            we have employee payments in all cells from <code>B5</code> to <code>B10</code> then if any other cell references
+            original cell <code>B5</code> like for example <code>$[SUM(B5)]</code> then all such formulas will be updated.
+                In this case we will get a formula like <code>SUM(B5:B10)</code>.
+           </p>
+        </section>
+    </body>
+</document>

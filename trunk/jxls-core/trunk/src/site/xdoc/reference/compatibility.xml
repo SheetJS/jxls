@@ -1,0 +1,113 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Version Compatibility</title>
+    </properties>
+    <body>
+        <section id="compatibilityBetween0.9.2And0.9.3" name="Changes in version 0.9.3">
+            <ul>
+                <li>Accessing POI objects in template file. See <a href="poiaccess.html">POI Objects Access</a> section</li>
+                <li>Bug fixes and updates in <code>jxls-reader</code> module. See <a href="reader.html">Reading XLS file</a></li>
+            </ul>
+        </section>
+        <section id="compatibilityBetween0.9.1And0.9.2" name="Changes in version 0.9.2">
+            <ul>
+                <li>New module for reading XLS files and populating Java beans according to XML configuration. See <a href="reference/reader.html">XLS Reader</a> section</li>
+                <li>Select keyword to forEach tag (i.e. &gt;jx:forEach items="..."  select="${condition}">. See <a href="reference/tags.html#forEachTagSelect">Using tags</a> section for details.</li>
+                <li>Aggregate functions to the ${...} syntax (i.e. ${sum(field):collection}. See <a href="reference/expressions.html#aggregateFunctions">Using Expressions</a> for details</li>
+                <li>Many improvements and optimizations in jx:tags processing mechanism. New jx:out tag.</li>
+            </ul>
+        </section>
+        <section id="compatibilityBetween0.9And0.9.1" name="Changes in version 0.9.1">
+            <ul>
+                <li>Major issue with inner forEach/if tags fixed</li>
+                <li>java.util.Calendar type support added</li>
+            </ul>
+        </section>
+        <section id="compatibilityBetween0.8.9And0.9" name="Changes in version 0.9">
+            <ul>
+                <li>Root packages were changed to net.sf.jxls to correspond current project domain</li>
+                <li>Due to formula processing re-engineering to enhance overall performance old-style formulas notation like
+                    for example $[SUM(@employees.payment@)] is no longer supported</li>
+                <li>Project build system was migrated to <a href="http://maven.apache.org">Maven 2</a></li>
+                <li>Several issues fixed</li>
+            </ul>
+            <p>Note the package modification feature. You have to update jxls package names in your existing code to be able to use jxls-0.9.</p>
+        </section>
+        <section id="compatibilityBetween0.8.8And0.8.9" name="Changes in version 0.8.9">
+            <ul>
+                <li>This release simplifies using quotes inside tag attributes. See <a href="sqlreporting.html#parameterizedquerieswithquotes">SQL Reporting</a> section for an example</li>
+                <li>Fixed issue with merged cells and last column width when using dynamic sheets feature</li>
+                <li>Fixed issue with incorrect formulas for collections containing just 2 items</li>
+            </ul>
+        </section>
+        <section id="compatibilityBetween0.8.7And0.8.8" name="Changes in version 0.8.8">
+            <ul>
+                <li>SQL queries in XLS templates. See <a href="sqlreporting.html">SQL Reporting</a> section.</li>
+                <li>Grouping data on-the-fly support. See <a href="tags.html#foreachGroup">Grouping data with jx:forEach tag</a> section.</li>
+                <li>Complex formula references support. See <a href="formulas.html#newcellrefnotation">Formulas section</a> section.</li>
+                <li>jx:group tag was renamed to jx:outline</li>
+            </ul>
+            <p>
+                There were changes related to formula references resolution. Now you can use direct cell references in your template formulas even for duplicated blocks.
+                Still there is a restriction that formulas in exports with dynamic number of columns may not be evaluated properly.
+            </p>
+        </section>
+        <section id="compatibilityBetween0.8.6And0.8.7" name="Changes in version 0.8.7">
+            <ul>
+                <li>Extended JEXL expressions support! See <a href="expressions.html#fullJEXLSupport">JEXL Expressions Support</a> section.</li>
+                <li>New jx:group tag. </li>
+                <li>Various bug fixes</li>
+            </ul>
+            <p>Unfortunately new JEXL expressions support has some tradeoffs and now some custom Cell Processors may no longer work
+            as expected. This applies to the ones which rely on getBean/getBeanName methods of Property class. If custom cell processor
+            was used to apply some formatting based on bean property values you may use jx:forEach/jx:if tags to do the same. </p>
+            <p>Also you need to remember if you enable JEXL inner collections access support (using setJexlInnerCollectionsAccess( true ) )
+            method of XLSTransformer you will not be able to use <a href="advancedcollections.html#innercollections">jXLS inner collections</a>
+                any more. Instead <a href="tags.html#foreach">jx:forEachTag</a> to iterate inner collections can be used.
+            </p>
+        </section>
+        <section id="compatibilityBetween0.8.5And0.8.6" name="Changes in version 0.8.6">
+            <p>Flow-control <a href="tags.html">jx tags</a> support.</p>
+            <p>New <a href="formulas.html">formula cell references</a> support. Also cross-sheet cell references are allowed.</p>
+            <p> <a href="dynamicsheets.html">Dynamic worksheets</a> support.</p>
+            <p>Also there was a lot of refactoring done in this release. You will have to update jXLS package classes imports. </p>
+        </section>
+        <section id="compatibilityBetween0.8And0.8.5" name="Changes in version 0.8.5">
+            <p>Main feature in this version is <a href="expressions.html">Expression Language</a> support.</p>
+            <p>Pay attention to dynamic cell properties processing changes:</p>
+            <ul>
+                <li>CellInfo class was renamed to <code>Cell</code></li>
+                <li>RowInfo class was renamed to <code>Row</code> </li>
+                <li>Property class was renamed to <code>Property</code></li>
+                <li><code>Cell</code> object has been changed.
+                    Now <code>Cell</code> object consists of a list of <code>Expression</code> objects and each
+                    Expression consists of a list of <code>Property</code> objects</li>
+            </ul>
+        </section>
+        <section id="compatibilityBetween0.7.xAnd0.8" name="Changes in version 0.8">
+            <p>In jXLS v.0.8 some changes in template notation for collections export were done.
+            It was because of new <a href="advancedcollections.html#adjacentcollections">Adjacent Collections</a> feature</p>
+            <p>To briefly summarize:</p>
+            <ul>
+                <li>To specify dependent rows number when you have multiple rows for each collection item you have to write
+                    something like (for 3 rows per collection item)
+                    <strong><code>${department.staff.name}//:3</code></strong>
+                </li>
+                <li>To indicate for a cell that it relates to some collection (in the same row) and so to have the cell to be duplicated
+                for every collection row you should specify collection name separated with <strong><code>//</code></strong>
+                    at the end of cell content like
+                    <strong><code>Employee Name//department.staff</code></strong>
+                    <p>If you have only one collection in a row you may not specify collection name for empty cells - they will be copied automatically</p>
+                </li>
+                <li>To connect inline formula cell to some collection in the same row you have to specify collection
+                name separated with <strong><code>//</code></strong> after cell label (if any) similar to
+                    <strong><code>$[B#*(C#+1)]total//department.staff</code></strong>
+                </li>
+                <li>Changed notation for exporting <a href="collections.html#fixedSizeCollections">fixed size collections</a>.
+                Now you don't have to repeat collection properties in every Excel row for such collection. It is required to specify
+                collection properties only in the first row as for common collections.</li>
+            </ul>
+        </section>
+    </body>
+</document>

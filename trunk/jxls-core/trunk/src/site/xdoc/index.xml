@@ -1,0 +1,61 @@
+<document>
+  <properties>
+    <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+    <title>Welcome to jXLS</title>
+  </properties>
+    <body>
+        <section name="News">
+            <p><strong>jXLS v.0.9.3 released</strong></p>
+            <p>This release updates:  </p>
+            <ul>
+                <li>Accessing POI objects in template file. Now you can drive Excel generation and execute various POI Excel operations directly in XLS template.
+                    See <a href="reference/poiaccess.html">POI Objects Access</a> section</li>
+                <li>Bug fixes and updates in <code>jxls-reader</code> module. See <a href="reference/reader.html">Reading XLS file</a> </li>
+            </ul>
+        </section>
+        <section name="Overview">
+            <p>jXLS is small and easy-to-use Java library for generating Excel files using XLS templates. Also jXLS can be used to read XLS files and populate Java beans
+            with spreadsheet data according to XML configuration file</p>
+        </section>
+        <section name="Introduction">
+            <p>Excel generation is required in many Java applications that have some kind of reporting functionality.
+            			The most complete library to manipulate XLS files from Java is
+                <a href="http://jakarta.apache.org/poi/"> Jakarta POI </a> library.
+            			The problems appear when it is required to create a lot of custom and complex Excel reports with rich formatting and enhanced functionality.</p>
+ <p>In this case you have to write a great bunch of Java code for creating workbook with all required formatting, formulas and other specific settings and correctly export data from a set of Java objects.
+ Such code is hard to debug and the task of its creating  is usually errorprone and timeconsuming. The other problem is that there are many Excel components for which there is no manipulation API provided.</p>
+<p> Fortunately
+                <a href="http://jakarta.apache.org/poi/">POI</a> API allows to read Excel file trying to preserve it as is and then modify it as required.
+ It is obvious it would be much easier to create all correctly formatted report template in some  Excel editing tool and specify places where real data should appear. </p>
+                <p><a href="http://jxls.sourceforge.net">jXLS</a> is a project that implements this approach and allows creation of extremely complex Excel reports just in several lines of code.
+ All you need is to create XLS template file with all required formatting, formulas, macros etc using
+                specific notation to indicate placement of data and then write a couple lines of code to invoke jXLS engine passing XLS template and the exported data as parameters.
+            </p>
+        </section>
+        <section name="Main Features">
+            <ul>
+                <li>Using SQL queries directly in XLS templates</li>
+                <li>Simple property access notation</li>
+                <li>Full expression language support</li>
+                <li>Complex object graph export</li>
+                <li>Flexible collection export</li>
+                <li>Flow-Control Tags support</li>
+                <li>Dynamic grouping of data</li>
+                <li>Export of a single collection into multiple worksheets</li>
+                <li>Adjacent tables support!</li>
+                <li>Complex formulas support</li>
+                <li>Charts, Macros and many other Excel features in XLS template</li>
+                <li>Dynamic Outlines</li>
+                <li>Dynamic Columns Hiding</li>
+                <li>Dynamic Cell Style processing through custom Processors</li>
+                <li>JDBC ResultSet export</li>
+                <li>Merged Cells support</li>
+                <li>Multiple bean properties in a single cell</li>
+                <li>Reading XLS files</li>
+            </ul>
+            <note>In your XLS template you can use any Excel features which are preserved by
+                <a href="http://jakarta.apache.org/poi/">Jakarta POI</a> when reading and writing XLS files. Particularly it means you can use Charts and Macros in your XLS template and many other features
+            </note>
+        </section>
+    </body>
+</document>

@@ -1,0 +1,50 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>JDBC ResultSet Export</title>
+    </properties>
+	<body>
+		<section id="overview" name="Overview">
+			<p>Though <a href="http://jxls.sourceforge.net">jXLS</a> was not designed to export JDBC query results it can be easily done
+                using dynabean classes from Jakarta <a href="http://jakarta.apache.org/commons/beanutils/">Commons BeanUtils</a>. There are two ways to export
+            <code>ResultSet</code> object with <code>XLSTransformer</code>. First one uses <code>org.apache.commons.beanutils.RowSetDynaClass</code>.
+            Second one is based on <code>net.sf.jxls.report.ResultSetCollection</code> class.
+            </p>
+            </section>
+            <section name="RowSet based export" id="rowSet">
+				<p> When you construct an instance of <code>org.apache.commons.beanutils.RowSetDynaClass</code>,
+                    the underlying data are copied into a set of in-memory DynaBeans that represent the result.
+                    So you can immediately close the <code>ResultSet</code>, normally before you even process the actual data that was returned.
+                    But the disadvantage is that you must pay the performance and memory costs of copying the result data.</p>
+				<p>To use this approach first you have to construct new <code>RowSetDynaClass</code> instance passing your ResultSet to it.</p>
+				<source>
+                        ResultSet resultSet = ...
+                        RowSetDynaClass rowSet = new RowSetDynaClass(resultSet, false);
+                    </source>
+				<p>Second constructor parameter indicates that property names should not be lowercased in resulted collection of dynamic beans.
+                    After you have initialized instance of <code>RowSetDynaClass</code> you can invoke its <code>getRows()</code> method
+                    to get collection of DynaBeans which can be exported in common way.</p>
+				<source>
+                        Map beans = new HashMap();
+                        beans.put( "employee", rowSet.getRows() );
+                        XLSTransformer transformer = new XLSTransformer();
+                        transformer.transformXLS( templateFileName, beans, destFileName);
+                		</source>
+				<p>See <a href="../samples/resultsetsample.html">ResultSet sample</a> for more details.</p>
+		</section>
+		<section name="ResultSet" id="resultset">
+			<p> If you don't want to load all <code>ResultSet</code> data in memory and agree to keep database connection open
+                    while processing all data you may use <code>net.sf.jxls.report.ResultSetCollection</code> class.
+                    This class takes <code>ResultSet</code> object as a parameter and implements <code>Collection</code> interface
+                    to operate with underlying data. In its turn <code>ResultSetCollection</code> uses <code>org.apache.commons.beanutils.ResultSetDynaClass</code>
+                    to return retrieved data as dynamic objects.</p>
+			<p>Usage of <code>net.sf.jxls.report.ResultSetCollection</code> class is as easy as</p>
+			<source>
+                    ResultSetCollection rsc = new ResultSetCollection(resultSet, false);
+                    beans.put( "employee", rsc );
+                </source>
+			<p>The second constructor argument indicates that property names should not be lowercased before processing. </p>
+			<p>See <a href="../samples/resultsetsample.html">ResultSet sample</a> for more details</p>
+		</section>
+	</body>
+</document>

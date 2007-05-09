@@ -1,0 +1,96 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>SQL Reporting</title>
+    </properties>
+	<body>
+		<section name="Overview" id="overview">
+			<p>Excel reporting plays very important role in many enterprise applications. Now jXLS allows you to
+                place SQL queries directly into XLS template to be executed during template transformation so that
+                all query results are available in your excel report.
+            </p>
+            </section>
+            <section name="Execution of SQL queries" id="sqlQueries">
+				<p>To execute your SQL query and display its results in your excel file you have to put a special bean implementing
+                <code>ReportManager</code> interface into the bean context before running transformation. Currently this interface
+                    has the only method </p>
+                    <source>public List exec(String sql) throws SQLException</source>
+                <p> This method should take SQL query and execute it returning required results as a list of beans. </p>
+                 <p>jXLS provides a default implementation of this interface called <code>ReportManagerImpl</code>
+                     which uses <code>RowSetDynaClass</code> to wrap ResultSet object into collections of objects.
+                     This technique is described in the <a href="resultset.html">JDBC resultset</a> section.
+                The usage of this class can be as following </p>
+                <source>
+                    Connection conn = ...// get database connection in some way
+                    Map beans = new HashMap();
+                    ReportManager rm = new ReportManagerImpl( conn, beans );
+                    beans.put("rm", rm);
+                    InputStream is = new BufferedInputStream(new FileInputStream("reportTemplate.xls"));
+                    XLSTransformer transformer = new XLSTransformer();
+                    HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+                </source>
+                <p>Here we see that <code>ReportManagerImpl</code> constructor takes database connection object
+                and the map of beans passed to XLSTransformer as parameters. Then we place ReportManager object into
+                the bean context using &quot;rm&quot; key. It means that in XLS template we will be able to execute any SQL
+                query by passing it to <code>rm.exec()</code> method as a parameter. For example </p>
+                <source>
+                    ${rm.exec(&quot;SELECT name, age FROM employee&quot;)}
+                </source>
+                <p>Usually it will be used in conjunction with <code>jx:forEach</code> tag to iterate
+                ResultSet beans collection and display it in your excel. For example </p>
+                <source>
+                    &lt;jx:forEach items="${rm.exec('SELECT e.name, e.age, e.payment FROM employee e')}" var="employee">
+                    ${employee.name} | ${employee.age} | ${employee.payment}
+                    &lt;/jx:forEach>
+                </source>
+                <p>You can use <code>groupBy</code> attribute of <code>jx:forEach</code> to group query results
+                by some column values. See <a href="tags.html#foreachGroup">Grouping data with jx:forEach tag</a> section for details.</p>
+                <p>See <a href="../samples/reportsample.html">Reporting Sample</a> for real sample.</p>
+		</section>
+		<section name="Dependent SQL queries" id="dependentQueries">
+            <p>You should be able to pass any SQL queries to ReportManagerImpl if used jdbc driver supports them.</p>
+			<p>You can also use the results of the one query in the next queries. This can be done by placing
+                the result of the first query into the bean context when processing so that it will be available
+                when constructing dependent query.</p>
+            <p>Typical usage of dependent queries (or subqueries) can be demonstrated using two <code>jx:forEach</code>
+                tag where one of them is nested in the other. This is an example from <a href="../samples/reportsample.html">Reporting Sample</a>
+            </p>
+            <source>
+                &lt;jx:forEach  items="${rm.exec('SELECT d.name, d.id FROM department d')}" var="dep">
+                Department: ${dep.name}
+                Name | Payment | Bonus | Total
+                &lt;jx:forEach items="${rm.exec('SELECT name, age, payment, bonus, birthDate FROM employee e where e.depid = ' + dep.id)}" var="employee">
+                ${employee.empname} | ${employee.payment} | ${employee.bonus} | $[B23*(1+C23)]
+                &lt;/jx:forEach>
+                &lt;/jx:forEach>
+            </source>
+            <p>Here we place each department we got from the first query into the context under <code>dep</code> key.
+            After that we use it in the inner <code>jx:forEach</code> tag</p>
+            <source>
+                &lt;jx:forEach items="${rm.exec('SELECT name, age, payment, bonus, birthDate FROM employee e where e.depid = ' + dep.id)}" var="employee">
+            </source>
+            <p>jXLS will substitute the <code>id</code> value of currently processed department so that executed query will
+            select all the employees for the department.</p>
+        </section>
+        <section name="Parameterized queries. Queries containing quotes." id="parameterizedQueriesWithQuotes">
+            <p>
+                Previous example already showed how to use a parameter inside SQL query. Also we can use an external parameter if we put
+                it into the bean context
+            </p>
+            <source>
+                Map beans = new HashMap();
+                ReportManager reportManager = new ReportManagerImpl( conn, beans );
+                beans.put("rm", reportManager);
+                beans.put("minDate", "1979-01-01");
+                XLSTransformer transformer = new XLSTransformer();
+                transformer.transformXLS(templateFileName, beans, destFileName);
+            </source>
+            <p>Here we put date value "1979-01-01" into the bean context under <code>minDate</code> key. Next is how we can use it to construct a query</p>
+            <source>
+        &lt;jx:forEach items="${rm.exec("SELECT d.name depname, e.name empname, age, payment, bonus, birthDate FROM employee e, department d WHERE d.id = e.depid AND birthDate > '1975-01-01' AND birthDate &lt; '" + minDate + "' order by age desc")}" var="employee">
+            </source>
+            <p>Also you can see how it is possible to use single quotes inside SQL query if needed.</p>
+            <p>See usage sample in the <a href="../samples/reportsample.html#parameterizedquerieswithquotes">Reporting sample</a> section</p>
+        </section>
+    </body>
+</document>

@@ -1,0 +1,33 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Dynamic Outlines</title>
+    </properties>
+    <body>
+        <section id="outlines" name="Dynamic Outlines">
+            <p>To have some collection items outlined in rows you can use
+                <code>public void groupCollection(String collectionName)</code> method of
+                <code>XLSTransformer</code> class.
+			For example to outline
+                <code>staff</code> in
+                <code>department</code> object we can use code like
+            </p>
+            <source>
+				Department department = new Department("IT");
+				//...  initialization is skipped here
+			        Map beans = new HashMap();
+			        beans.put("department", department);
+			        XLSTransformer transformer = new XLSTransformer();
+			        // set outlines for rows of "department.staff" collection
+			        transformer.groupCollection("department.staff");
+			        transformer.transformXLS(templateFileName, beans, destFileName);
+            </source>
+            <p>So here we invoke
+                <code>transformer.groupCollection("department.staff")</code> to group/outline rows of exported collection.
+            </p>
+            <p>Take a look at
+                <a href="../samples/collectionsample.html#complexBeanExport"> Complex Bean Export sample</a> for real example.
+            </p>
+        </section>
+    </body>
+</document>

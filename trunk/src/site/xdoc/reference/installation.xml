@@ -1,0 +1,51 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Installation</title>
+    </properties>
+	<body>
+		<section id="download" name="Download">
+			<p> You can download the latest release version of <a href="http://jxls.sourceforge.net">jXLS</a> library from
+                <a href="http://sourceforge.net/project/showfiles.php?group_id=141729">sourceforge site</a>
+			</p>
+		</section>
+		<section id="installation" name="Installation">
+			<p> To use jXLS engine you have to put
+                <strong>
+					<code>jxls-core</code>
+				</strong> jar in your classpath.
+            </p>
+            <p>And if you are planning to use jXLS to read XLS files you have to add <strong><code>jxls-reader</code></strong>
+                jar file to your classpath.
+            </p>
+            <p>
+                If you use Maven to build your application you can specify required jXLS modules in your pom.xml as dependencies
+                to allow them to be downloaded from Maven repository
+            </p>
+            <p>The following
+                <a href="ext:jakarta">Jakarta</a> libraries are also required to be on your classpath.
+            </p>
+			<ul>
+				<li>
+					<a href="http://jakarta.apache.org/poi/">POI 2.5.1</a> or higher
+				</li>
+				<li>
+					<a href="http://jakarta.apache.org/commons/beanutils/">Commons BeanUtils</a>
+				</li>
+				<li>
+					<a href="http://jakarta.apache.org/commons/collections/">Commons Collections</a>
+				</li>
+                <li>
+                    <a href="http://jakarta.apache.org/commons/jexl/">Commons JEXL</a>
+                </li>
+				<li>
+					<a href="http://jakarta.apache.org/commons/logging/">Commons Logging</a>
+				</li>
+				<li>
+					<a href="http://jakarta.apache.org/commons/digester/">Commons Digester</a>
+				</li>
+			</ul>
+		</section>
+
+	</body>
+</document>
