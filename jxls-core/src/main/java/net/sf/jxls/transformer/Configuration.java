@@ -1,13 +1,12 @@
 package net.sf.jxls.transformer;
 
+import net.sf.jxls.tag.JxTaglib;
+import net.sf.jxls.tag.TagLib;
+import org.apache.commons.digester.Digester;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.apache.commons.digester.Digester;
-
-import net.sf.jxls.tag.JxTaglib;
-import net.sf.jxls.tag.TagLib;
 
 /**
  * Defines configuration properties for XLS transformation
@@ -30,6 +29,7 @@ public class Configuration {
     private String jxlsRoot;
     private boolean encodeXMLAttributes = true;
     String sheetKeyName = "sheet";
+    String workbookKeyName = "workbook";
 
     private String excludeSheetProcessingMark = "#Exclude";
 
@@ -86,6 +86,14 @@ public class Configuration {
 
     public void setSheetKeyName(String sheetKeyName) {
         this.sheetKeyName = sheetKeyName;
+    }
+
+    public String getWorkbookKeyName() {
+        return workbookKeyName;
+    }
+
+    public void setWorkbookKeyName(String workbookKeyName) {
+        this.workbookKeyName = workbookKeyName;
     }
 
     public String getTagPrefix() {

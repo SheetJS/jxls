@@ -31,6 +31,17 @@
       <id>mzarillo</id>
     </developer>
   </developers>
+    <contributors>
+        <contributor>
+            <name>Curtis Stanford</name>
+        </contributor>
+        <contributor>
+            <name>Rafael Borges</name>
+        </contributor>
+        <contributor>
+            <name>Balachandar Nageswaran</name>
+        </contributor>
+    </contributors>
   <inceptionYear>2005</inceptionYear>
   <organization>
     <name>jXLS Team</name>
@@ -59,7 +70,9 @@
     </mailingList>
   </mailingLists>
     <scm>
-        <connection>scm:svn:https://svn.sourceforge.net/svnroot/jxls/tags/jxls-0.9.2</connection>
+        <connection>scm:svn:https://svn.sourceforge.net/svnroot/jxls/trunk</connection>
+        <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/jxls/trunk</developerConnection>
+        <url>http://svn.sourceforge.net/viewcvs.cgi/jxls/trunk/</url>
     </scm>
   <issueManagement>
     <system>SourceForge Tracker</system>
@@ -79,15 +92,45 @@
 		</dependency>
 	</dependencies>
   </dependencyManagement>
-    <distributionManagement>
-        <repository>
-            <id>jxls-repository</id>
-            <name>jXLS Repository</name>
-            <url>file://${basedir}/target/deploy</url>
-        </repository>
-    </distributionManagement>
+  <distributionManagement>
+    <repository>
+      <id>sourceforge.net</id>
+      <name>jXLS Releases Repository at Sourceforge</name>
+      <url>scp://shell.sourceforge.net/home/groups/j/jx/jxls/htdocs/repository/releases</url>
+    </repository>
+    <!--<snapshotRepository>-->
+      <!--<id>sourceforge.net</id>-->
+      <!--<name>jXLS Snapshots Repository at Sourceforge</name>-->
+      <!--<url>scp://shell.sourceforge.net/home/groups/j/jx/jxls/htdocs/repository/snapshots</url>-->
+    <!--</snapshotRepository>-->
+    <site>
+      <id>sourceforge.net</id>
+      <name>jXLS Website at Sourceforge</name>
+      <url>scp://shell.sourceforge.net/home/groups/j/jx/jxls/htdocs</url>
+    </site>
+  </distributionManagement>
 
-  <build>
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+            <!--<id>jxls-repository</id>-->
+            <!--<name>jXLS Repository</name>-->
+            <!--<url>file://${basedir}/target/deploy</url>-->
+        <!--</repository>-->
+    <!--</distributionManagement>-->
+
+    <repositories>
+        <repository>
+            <id>sourceforge.net</id>
+            <name>jXLS snapshot repository</name>
+            <url>http://jxls.sourceforge.net/repository/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+
+    <build>
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>

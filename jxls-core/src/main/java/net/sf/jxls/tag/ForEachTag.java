@@ -157,35 +157,11 @@ public class ForEachTag extends BaseTag {
             shiftNumber += -2; // due to the borders
             ResultTransformation shift = new ResultTransformation(0);
             Map beans = tagContext.getBeans();
-            int k = 0;
-            ResultTransformation processResult;
-            int startRowNum, endRowNum;
-            if (groupBy == null || groupBy.length() == 0) {
-                Collection c2 = new ArrayList();
-                for (Iterator iterator = itemsCollection.iterator(); iterator.hasNext();) {
-                    Object o = iterator.next();
-                    beans.put(var, o);
-                    if (ReportUtil.shouldSelectCollectionData(beans, select, configuration)) {
-                        c2.add(o);
-                    }
-                }
-                shiftNumber += tagContext.getSheetTransformationController().duplicateDown(body, c2.size() - 1);
-                for (Iterator iterator = c2.iterator(); iterator.hasNext();) {
-                    Object o = iterator.next();
-                    beans.put(var, o);
-//                    if (ReportUtil.shouldSelectCollectionData(beans, select, configuration)) {
 
-                        try {
-                            startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
-                            endRowNum = startRowNum + body.getNumberOfRows() - 1;
-                            processResult = sheetTransformer.processRows(tagContext.getSheetTransformationController(), tagContext.getSheet(), startRowNum, endRowNum, beans, null);
-                            shift.add(processResult);
-                        } catch (ParsePropertyException e) {
-                            log.error("Can't parse property ", e);
-                            throw new RuntimeException("Can't parse property", e);
-                        }
-//                    }
-                }
+            if (groupBy == null || groupBy.length() == 0) {
+                Collection collectionToProcess = selectCollectionDataToProcess(beans);
+                shiftNumber += tagContext.getSheetTransformationController().duplicateDown(body, collectionToProcess.size() - 1);
+                shift = processCollectionItems(collectionToProcess, beans, body, sheetTransformer);
             } else {
                 try {
                     Collection groupedData = ReportUtil.groupCollectionData(itemsCollection, groupBy, groupOrder, select, configuration);
@@ -194,18 +170,7 @@ public class ForEachTag extends BaseTag {
                     if (beans.containsKey(GROUP_DATA_KEY)) {
                         savedGroupData = beans.get(GROUP_DATA_KEY);
                     }
-                    for (Iterator iterator = groupedData.iterator(); iterator.hasNext();) {
-                        GroupData groupData = (GroupData) iterator.next();
-                        beans.put(GROUP_DATA_KEY, groupData);
-                        try {
-                            startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
-                            endRowNum = startRowNum + body.getNumberOfRows() - 1;
-                            processResult = sheetTransformer.processRows(tagContext.getSheetTransformationController(), tagContext.getSheet(), startRowNum, endRowNum, beans, null);
-                            shift.add(processResult);
-                        } catch (ParsePropertyException e) {
-                            log.error("Can't parse property ", e);
-                        }
-                    }
+                    shift = processGroupedData(groupedData, beans, body, sheetTransformer);
                     beans.remove(GROUP_DATA_KEY);
                     if (savedGroupData != null) {
                         beans.put(GROUP_DATA_KEY, savedGroupData);
@@ -238,49 +203,21 @@ public class ForEachTag extends BaseTag {
         if (itemsCollection != null && !itemsCollection.isEmpty()) {
             tagContext.getSheetTransformationController().removeLeftRightBorders(body);
             shiftNumber += -2;
-            int k = 0;
             Map beans = tagContext.getBeans();
             ResultTransformation shift = new ResultTransformation();
             shift.setLastProcessedRow(-1);
             if (groupBy == null || groupBy.length() == 0) {
                 shiftNumber += tagContext.getSheetTransformationController().duplicateRight(body, itemsCollection.size() - 1);
-                for (Iterator iterator = itemsCollection.iterator(); iterator.hasNext();) {
-                    Object o = iterator.next();
-                    beans.put(var, o);
-                    try {
-                        short startCellNum = (short) (body.getStartCellNum() + shift.getLastCellShift() + body.getNumberOfColumns() * k++);
-                        short endCellNum = (short) (startCellNum + body.getNumberOfColumns() - 1);
-                        ResultTransformation processResult = sheetTransformer.processRow(tagContext.getSheetTransformationController(), tagContext.getSheet(),
-                                tagContext.getSheet().getHssfSheet().getRow(body.getStartRowNum()),
-                                startCellNum, endCellNum, beans, null);
-                        shift.add(processResult);
-                    } catch (Exception e) {
-                        log.error("Can't parse property ", e);
-                    }
-                }
+                processCollectionItemsOneRow(beans, body, shift, sheetTransformer);
             } else {
                 try {
-                    ResultTransformation processResult;
-                    short startColNum, endColNum;
                     Collection groupedData = ReportUtil.groupCollectionData(itemsCollection, groupBy, groupOrder, select, configuration);
                     shiftNumber += tagContext.getSheetTransformationController().duplicateRight(body, groupedData.size() - 1);
                     Object savedGroupData = null;
                     if (beans.containsKey(GROUP_DATA_KEY)) {
                         savedGroupData = beans.get(GROUP_DATA_KEY);
                     }
-                    for (Iterator iterator = groupedData.iterator(); iterator.hasNext();) {
-                        GroupData groupData = (GroupData) iterator.next();
-                        beans.put(GROUP_DATA_KEY, groupData);
-                        try {
-                            startColNum = (short) (body.getStartCellNum() + shift.getLastCellShift() + body.getNumberOfColumns() * k++);
-                            endColNum = (short) (startColNum + body.getNumberOfColumns() - 1);
-                            processResult = sheetTransformer.processRow(tagContext.getSheetTransformationController(), tagContext.getSheet(), tagContext.getSheet().getHssfSheet().getRow(body.getStartRowNum()),
-                                    startColNum, endColNum, beans, null);
-                            shift.add(processResult);
-                        } catch (ParsePropertyException e) {
-                            log.error("Can't parse property ", e);
-                        }
-                    }
+                    processGroupedDataOneRow(groupedData, beans, body, shift, sheetTransformer);
                     beans.remove(GROUP_DATA_KEY);
                     if (savedGroupData != null) {
                         beans.put(GROUP_DATA_KEY, savedGroupData);
@@ -306,4 +243,103 @@ public class ForEachTag extends BaseTag {
             return shift;
         }
     }
+
+    private ResultTransformation processGroupedData(Collection groupedData, Map beans, Block body, SheetTransformer sheetTransformer) {
+        ResultTransformation shift;
+        int startRowNum;
+        int endRowNum;
+        ResultTransformation processResult;
+        shift = new ResultTransformation(0);
+        int k = 0;
+        for (Iterator iterator = groupedData.iterator(); iterator.hasNext();) {
+            GroupData groupData = (GroupData) iterator.next();
+            beans.put(GROUP_DATA_KEY, groupData);
+            try {
+                startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
+                endRowNum = startRowNum + body.getNumberOfRows() - 1;
+                processResult = sheetTransformer.processRows(tagContext.getSheetTransformationController(), tagContext.getSheet(), startRowNum, endRowNum, beans, null);
+                shift.add(processResult);
+            } catch (ParsePropertyException e) {
+                log.error("Can't parse property ", e);
+            }
+        }
+        return shift;
+    }
+
+    private void processGroupedDataOneRow(Collection groupedData, Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) {
+        ResultTransformation processResult;
+        short startColNum, endColNum;
+        int k = 0;
+        for (Iterator iterator = groupedData.iterator(); iterator.hasNext();) {
+            GroupData groupData = (GroupData) iterator.next();
+            beans.put(GROUP_DATA_KEY, groupData);
+            try {
+                startColNum = (short) (body.getStartCellNum() + shift.getLastCellShift() + body.getNumberOfColumns() * k++);
+                endColNum = (short) (startColNum + body.getNumberOfColumns() - 1);
+                processResult = sheetTransformer.processRow(tagContext.getSheetTransformationController(), tagContext.getSheet(), tagContext.getSheet().getHssfSheet().getRow(body.getStartRowNum()),
+                        startColNum, endColNum, beans, null);
+                shift.add(processResult);
+            } catch (ParsePropertyException e) {
+                log.error("Can't parse property ", e);
+            }
+        }
+    }
+
+
+
+    private ResultTransformation processCollectionItems(Collection c2, Map beans, Block body, SheetTransformer sheetTransformer) {
+        ResultTransformation shift = new ResultTransformation(0);
+        int startRowNum;
+        int endRowNum;
+        ResultTransformation processResult;
+        int k = 0;
+        for (Iterator iterator = c2.iterator(); iterator.hasNext();) {
+            Object o = iterator.next();
+            beans.put(var, o);
+//                    if (ReportUtil.shouldSelectCollectionData(beans, select, configuration)) {
+                try {
+                    startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
+                    endRowNum = startRowNum + body.getNumberOfRows() - 1;
+                    processResult = sheetTransformer.processRows(tagContext.getSheetTransformationController(), tagContext.getSheet(), startRowNum, endRowNum, beans, null);
+                    shift.add(processResult);
+                } catch (ParsePropertyException e) {
+                    log.error("Can't parse property ", e);
+                    throw new RuntimeException("Can't parse property", e);
+                }
+//                    }
+        }
+        return shift;
+    }
+
+    private void processCollectionItemsOneRow(Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) {
+        int k = 0;
+        for (Iterator iterator = itemsCollection.iterator(); iterator.hasNext();) {
+            Object o = iterator.next();
+            beans.put(var, o);
+            try {
+                short startCellNum = (short) (body.getStartCellNum() + shift.getLastCellShift() + body.getNumberOfColumns() * k++);
+                short endCellNum = (short) (startCellNum + body.getNumberOfColumns() - 1);
+                ResultTransformation processResult = sheetTransformer.processRow(tagContext.getSheetTransformationController(), tagContext.getSheet(),
+                        tagContext.getSheet().getHssfSheet().getRow(body.getStartRowNum()),
+                        startCellNum, endCellNum, beans, null);
+                shift.add(processResult);
+            } catch (Exception e) {
+                log.error("Can't parse property ", e);
+            }
+        }
+    }
+
+    private Collection selectCollectionDataToProcess(Map beans) {
+        Collection c2 = new ArrayList();
+        for (Iterator iterator = itemsCollection.iterator(); iterator.hasNext();) {
+            Object o = iterator.next();
+            beans.put(var, o);
+            if (ReportUtil.shouldSelectCollectionData(beans, select, configuration)) {
+                c2.add(o);
+            }
+        }
+        return c2;
+    }
+
+
 }

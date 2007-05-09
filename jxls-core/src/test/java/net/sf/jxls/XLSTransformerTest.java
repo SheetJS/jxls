@@ -9,7 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.usermodel.HSSFHeader;
 import org.apache.poi.hssf.util.Region;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
@@ -1780,7 +1779,7 @@ public class XLSTransformerTest extends TestCase {
         assertEquals(resultSheet.getHeader().getRight(), "Test Right Header");
         assertEquals(resultSheet.getFooter().getRight(), "Test Right Footer");
         assertEquals(resultSheet.getFooter().getCenter(), "Test Center Footer");
-
+        assertEquals( resultWorkbook.getSheetName(2), itDepartment.getName());
         Map props = new HashMap();
         props.put("${department.name}", "IT");
         CellsChecker checker = new CellsChecker(props);

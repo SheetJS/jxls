@@ -220,6 +220,7 @@ public class XLSTransformer {
             POIFSFileSystem fs = new POIFSFileSystem(is);
             hssfWorkbook = new HSSFWorkbook(fs);
             Workbook workbook = createWorkbook( hssfWorkbook );
+            exposePOIObjects(workbook, beanParams);
             workbookTransformationController = new WorkbookTransformationControllerImpl( workbook );
             preprocess(hssfWorkbook);
             SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
@@ -244,6 +245,10 @@ public class XLSTransformer {
             e.printStackTrace();
         }
         return hssfWorkbook;
+    }
+
+    private void exposePOIObjects(Workbook workbook, Map beanParams) {
+        beanParams.put( configuration.getWorkbookKeyName(), workbook.getHssfWorkbook() );
     }
 
     /**
@@ -276,6 +281,7 @@ public class XLSTransformer {
             preprocess(hssfWorkbook);
 
             Workbook workbook = createWorkbook( hssfWorkbook );
+            exposePOIObjects( workbook,  beanParams );
             workbookTransformationController = new WorkbookTransformationControllerImpl( workbook );
 
             SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
@@ -384,6 +390,7 @@ public class XLSTransformer {
 
                     Map beanParams = (Map) beanParamsList.get(sheetNo);
                     beanParams.put("index", String.valueOf(sheetNo));
+                    exposePOIObjects( workbook,  beanParams );
                     sheetTransformer.transformSheet(workbookTransformationController, sheet, beanParams);
                 } else {
                     // let's remove spreadsheet

@@ -5,18 +5,16 @@
     </properties>
 	<body>
 		<section id="overview" name="Overview">
-			<p> Starting from version 0.9.2 jXLS provides <strong>jxls-reader</strong> module to read XLS files and populate Java beans
+			<p>jXLS provides <strong>jxls-reader</strong> module to read XLS files and populate Java beans
                 with spreadsheet data.
             </p>
 		</section>
 		<section id="details" name="Usage Details">
 			<p>To use jXLS to parse excel files and populate your Java objects with read data you have to construct XLSReader object first.
-            Currently this can be done in two ways: through manual creation or using XML configuration file. In the next releases probably it will be possible
-            to construct it based on XLS template file but for now let's take a more detailed look at the existing methods.
-            We will use following XLS file with department data to demonstrate both methods <a href="../xls/departmentdata.xls">departmentdata.xls</a> </p>
+                The easiest way to do this is to use a special XML configuration file.
+            We will use <a href="../xls/departmentdata.xls">departmentdata.xls</a> file with department data to demonstrate this method  </p>
             <section id="xmlReaderXMLConfigBased" name="Construction of XLSReader using XML config file">
-                <p>This is currently the simplest way to construct XLSReader class to read XLS data.
-                    Mapping between spreadsheet cells and Java objects is configured in XML file. Mapping file structure is rather straightforward.
+                <p>   Mapping between spreadsheet cells and Java objects is configured in XML file. Mapping file structure is rather straightforward.
                 Let's take a look at xml mapping file for 'Sheet1' of our <a href="../xls/departmentdata.xls">departmentdata.xls</a> sample file </p>
                 <source>
                     &lt;?xml version="1.0" encoding="ISO-8859-1"?>
@@ -51,11 +49,14 @@
                 <p><strong>worksheet</strong> element can contain any number of <strong>section</strong> and <strong>loop</strong> child elements.</p>
                 <p><strong>section</strong> element represents a simple block of spreadsheet cells. The first and the last rows of the block are
                 specified with <strong>startRow</strong> and <strong>endRow</strong> attributes</p>
+                <note> In the current version you have to specify sections for the whole excel sheet so that it is completely broken down into sections.
+                It means that even if you are not going to read for example the first rows of the sheet you need to create an empty section (a section without mappings but with startRow/endRow attributes)
+                    so that these rows are reflected in XML file. The unnecessary rows will be skipped and all other sections will be read as required.</note>
                 <p>Mapping of XLS cells onto Java bean properties is defined using <strong>mapping</strong> tag which looks like following </p>
                 <source>
                         &lt;mapping cell="B1">department.name&lt;/mapping>
                 </source>
-                <p>As you can see we can use <strong>cell</strong> attribute to specify mapped cell and the body of the tag for a full property name
+                <p>You also can use <strong>cell</strong> attribute to specify mapped cell and the body of the tag for a full property name
                 to populate from this cell. By full property name we mean bean name concatenated with property name like department.name or department.chief.payment .
                 Another option to specify mapped cell is to use cell row and column numbers (zero-based) </p>
                 <source>
@@ -84,8 +85,7 @@
                     to construct XLSReader class and read XLS data populating corresponding Java beans with XLS data</p>
                 <source>
                     InputStream inputXML = new BufferedInputStream(getClass().getResourceAsStream(xmlConfig));
-                    ReaderBuilder builder = new ReaderBuilder();
-                    XLSReader mainReader = builder.buildFromXML( inputXML );
+                    XLSReader mainReader = ReaderBuilder.buildFromXML( inputXML );
                     InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));
                     Department department = new Department();
                     Department hrDepartment = new Department();
@@ -97,118 +97,7 @@
                     mainReader.read( inputXLS, beans);
                 </source>
             </section>
-            <section id="xmlReaderManual" name="Manual Creation of XLSReader">
-                <p>It is possible to construct XLSReader object manually. Though this require much more efforts than using XML configuration methods.</p>
-                <p>Here is a sample code snippet that creates <strong>XLSReader</strong> object to read department data from two worksheets (Sheet 1 and Sheet 2).</p>
-                <source>
-                    InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));
 
-                    Department itDepartment = new Department();
-                    Department hrDepartment = new Department();
-                    Map beans = new HashMap();
-                    beans.put("itDepartment", itDepartment);
-                    beans.put("hrDepartment", hrDepartment);
-                    // Create Sheet1 Reader
-                    List chiefMappings = new ArrayList();
-                    chiefMappings.add( new BeanCellMapping(0, (short) 1, "itDepartment", "name") );
-                    chiefMappings.add( new BeanCellMapping(3, (short) 0, "itDepartment", "chief.name") );
-                    chiefMappings.add( new BeanCellMapping(3, (short) 1, "itDepartment", "chief.age") );
-                    chiefMappings.add( new BeanCellMapping(3, (short) 3, "itDepartment", "chief.payment") );
-                    chiefMappings.add( new BeanCellMapping("E4", "itDepartment", "chief.bonus") );
-                    XLSBlockReader chiefReader = new XLSBlockReaderImpl(0, 6, chiefMappings);
-                    List employeeMappings = new ArrayList();
-                    employeeMappings.add( new BeanCellMapping(7, (short) 0, "employee", "name") );
-                    employeeMappings.add( new BeanCellMapping(7, (short) 1, "employee", "age") );
-                    employeeMappings.add( new BeanCellMapping(7, (short) 3, "employee", "payment") );
-                    employeeMappings.add( new BeanCellMapping(7, (short) 4, "employee", "bonus") );
-                    XLSBlockReader employeeReader = new XLSBlockReaderImpl(7, 7, employeeMappings);
-                    XLSBlockReader employeesReader = new XLSForEachBlockReaderImpl(7, 7, "itDepartment.staff", "employee", Employee.class);
-                    employeesReader.addBlockReader( employeeReader );
-                    SectionCheck loopBreakCheck = getLoopBreakCheck();
-                    employeesReader.setLoopBreakCondition( loopBreakCheck );
-                    XLSSheetReader sheet1Reader = new XLSSheetReaderImpl();
-                    sheet1Reader.addBlockReader( chiefReader );
-                    sheet1Reader.addBlockReader( employeesReader );
-                    // Create Sheet2 Reader
-                    XLSSheetReader sheet2Reader = new XLSSheetReaderImpl();
-                    employeeMappings = new ArrayList();
-                    employeeMappings.add( new BeanCellMapping(2, (short) 0, "employee", "name") );
-                    employeeMappings.add( new BeanCellMapping(2, (short) 1, "employee", "age") );
-                    employeeMappings.add( new BeanCellMapping(2, (short) 2, "employee", "payment") );
-                    employeeMappings.add( new BeanCellMapping(2, (short) 3, "employee", "bonus") );
-                    XLSBlockReader sheet2EmployeeReader = new XLSBlockReaderImpl(2, 2, employeeMappings);
-                    XLSBlockReader sheet2EmployeesReader = new XLSForEachBlockReaderImpl(2, 2, "hrDepartment.staff", "employee", Employee.class);
-                    sheet2EmployeesReader.addBlockReader( sheet2EmployeeReader );
-                    sheet2EmployeesReader.setLoopBreakCondition( getLoopBreakCheck() );
-                    chiefMappings = new ArrayList();
-                    chiefMappings.add( new BeanCellMapping(7, (short)0, "hrDepartment", "chief.name"));
-                    chiefMappings.add( new BeanCellMapping(7, (short)1, "hrDepartment", "chief.age"));
-                    chiefMappings.add( new BeanCellMapping(7, (short)2, "hrDepartment", "chief.payment"));
-                    chiefMappings.add( new BeanCellMapping(7, (short)3, "hrDepartment", "chief.bonus"));
-                    XLSBlockReader hrChiefReader = new XLSBlockReaderImpl(3, 7, chiefMappings);
-                    sheet2Reader.addBlockReader( new XLSBlockReaderImpl(0, 1, new ArrayList()));
-                    sheet2Reader.addBlockReader( sheet2EmployeesReader );
-                    sheet2Reader.addBlockReader( hrChiefReader );
-                    // create main reader
-                    XLSReader mainReader = new XLSReaderImpl();
-                    mainReader.addSheetReader("Sheet1", sheet1Reader);
-                    mainReader.addSheetReader("Sheet2", sheet2Reader);
-                    mainReader.read( inputXLS, beans);
-                </source>
-                <p>As you can see first we create <strong>XLSSheetReader</strong> objects sheet1Reader and sheet2Reader corresponding to 'Sheet 1' and 'Sheet 2' worksheets.
-                    Each <strong>XLSSheetReader</strong> can contain a number of <strong>XLSBlockReader</strong> objects.
-                    <strong>XLSBlockReader</strong>s correspond to a set of excel rows in xls data file and contain mappings of excel cells onto Java bean properties.
-                    Specifying mappings is as simple as creating <strong>BeanCellMapping</strong> objects.
-                    For example,</p>
-                    <source>
-                        chiefMappings.add( new BeanCellMapping(3, (short) 3, "itDepartment", "chief.payment") );
-                    </source>
-                <p>means we create a mapping of cell 3 of row 3 onto "chief.payment" property of "department" bean.
-                    Alternative way to specify such mapping is using of second constructor of BeanCellMapping class taking cell name instead of cell row and column </p>
-                <source>
-                    chiefMappings.add( new BeanCellMapping("E4", "itDepartment", "chief.bonus") );
-                </source>
-                <p>To create <strong>XLSBlockReader</strong> we use XLSBlockReaderImpl constructor that takes first and last row numbers of this block and a List of
-                BeanCellMapping objects</p>
-                <source>
-                    XLSBlockReader chiefReader = new XLSBlockReaderImpl(0, 6, chiefMappings);
-                </source>
-                <p>If we need to specify a loop (repetitive) block of excel rows we have to use <strong>XLSForEachBlockReaderImpl</strong> implementation of XLSBlockReader interface.
-                    In our case we use it to define mapping of employees data </p>
-                <source>
-                    List employeeMappings = new ArrayList();
-                    employeeMappings.add( new BeanCellMapping(7, (short) 0, "employee", "name") );
-                    employeeMappings.add( new BeanCellMapping(7, (short) 1, "employee", "age") );
-                    employeeMappings.add( new BeanCellMapping(7, (short) 3, "employee", "payment") );
-                    employeeMappings.add( new BeanCellMapping(7, (short) 4, "employee", "bonus") );
-                    XLSBlockReader employeeReader = new XLSBlockReaderImpl(7, 7, employeeMappings);
-                    XLSBlockReader employeesReader = new XLSForEachBlockReaderImpl(7, 7, "itDepartment.staff", "employee", Employee.class);
-                </source>
-                <p>This code defines inner XLSBlockReader for a start loop row (for single employee) and then it constructs <strong>XLSForEachBlockReaderImpl</strong> object
-                passing to it start row and end row of each repetitive loop section and name of collection from bean context to populate with data.
-                Another two parameters are name of collection item for each loop pass and type of loop items. Then we add inner XLSBlockReaderImpl to outer XLSForEachBlockReaderImpl</p>
-                <source>
-                    employeesReader.addBlockReader( employeeReader );
-                </source>
-                <p>Also we need to specify break condition indicating when we should stop iterate loop data rows. It looks like this </p>
-                <source>
-                    SectionCheck loopBreakCheck = getLoopBreakCheck();
-                    employeesReader.setLoopBreakCondition( loopBreakCheck );
-                </source>
-                <p>where getLoopBreakCheck() method is </p>
-                <source>
-                    private SectionCheck getLoopBreakCheck() {
-                        OffsetRowCheck rowCheck = new OffsetRowCheckImpl( 0 );
-                        rowCheck.addCellCheck( new OffsetCellCheckImpl((short) 0, "Employee Payment Totals:") );
-                        SectionCheck sectionCheck = new SimpleSectionCheck();
-                        sectionCheck.addRowCheck( rowCheck );
-                        return sectionCheck;
-                    }
-                </source>
-                <p>In this case we simply use "Employee Payment Totals:" string in the first cell of the checked row as a break condition becase
-                we know that this string appears in the next line after employees data. We used OffsetRowCheckImpl and OffsetCellCheckImpl
-                to specify such check. These classes can be combined in arbitrary manner to create as much complex checks as needed.  </p>
-            </section>
         </section>
     </body>
 </document>

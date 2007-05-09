@@ -26,6 +26,7 @@
       <item name="Dynamic Sheets" href="reference/dynamicsheets.html"/>
       <item name="Using Expressions" href="reference/expressions.html"/>
       <item name="Formulas Notation" href="reference/formulas.html"/>
+      <item name="POI Objects Access" href="reference/poiaccess.html"/>
       <item name="Column Hiding" href="reference/columnhiding.html"/>
       <item name="Spreadsheet Operations" href="reference/sheetoperations.html"/>
       <item name="Custom Processor" href="reference/customprocessor.html"/>
