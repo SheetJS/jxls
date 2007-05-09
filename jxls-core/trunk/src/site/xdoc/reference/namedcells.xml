@@ -1,0 +1,38 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Named Formula Cells</title>
+    </properties>
+    <body>
+        <section id="summaryFormulaCells" name="Summary formula cell name">
+            <p>You can assign a name to any summary formula cell. This can be done by adding cell name after right bracket
+                <code>]</code>
+            For example cell value in XLS template like
+            </p>
+            <source>
+            		       	$[SUM(A1:A20)]sum
+            </source>
+            <p>assigns name
+                <code>sum</code> to the address of this cell. Such cell can be referenced later in some other formula cell by putting its name between
+                <code>@</code> symbols. For example
+            </p>
+            <source>
+            			$[B1 + @sum@]sum2
+            </source>
+            <p>As you see this cell also may be referenced in some other formula using
+                <code>sum2</code> name.
+            </p>
+        </section>
+        <section id="rowFormulaCells" name="Row formula cell name">
+            <p>You may need to reference row formula cells in some summary formula. The name of row formula cell will be translated to corresponding cell range if formula will be referenced later with its name in
+                <code>@</code> symbols.
+			Let's look again at department example template screenshot
+            </p>
+            <img src="../images/departmentTemplateXLS.gif" alt="Screenshot of Department XLS template file"/>
+            <p>
+                <a href="../samples/xls/department.xls">department.xls</a>
+            </p>
+            <p>You can see that in cell </p>
+        </section>
+    </body>
+</document>

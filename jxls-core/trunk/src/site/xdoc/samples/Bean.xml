@@ -1,0 +1,67 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Sample Bean</title>
+    </properties>
+    <body>
+        <section id="samplebean" name="Sample Bean">
+            <source>
+                public class SampleBean {
+                    private int id;
+                    private String name = "My Bean Name";
+                    private boolean flag = true;
+                    private List collection = new ArrayList();
+                    private String[] myArray = new String[2];
+                    private Date date = new Date();
+
+                    List innerCollection = new ArrayList();
+
+                    public SampleBean() {
+                        myArray[0] = "first";
+                        myArray[1] = "last";
+                    }
+
+                    public void addBean(MyBean bean){
+                        collection.add( bean );
+                    }
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public int getId() {
+                        return id;
+                    }
+
+                    public boolean getFlag() {
+                        return flag;
+                    }
+
+                    public Date getDate() {
+                        return date;
+                    }
+
+                    public String[] getMyArray() {
+                        return myArray;
+                    }
+
+                    public List getCollection() {
+                        return collection;
+                    }
+
+                    public List getInnerCollection() {
+                        return innerCollection;
+                    }
+
+                    public String printIt() {
+                        return myArray[0] + " is the first array element.";
+                    }
+
+                    public String echo(String str) {
+                        return str;
+                    }
+                }
+            </source>
+        </section>
+    </body>
+</document>
