@@ -57,7 +57,7 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
 
     public boolean isCheckSuccessful(XLSRowCursor cursor) {
         if( !cursor.hasNext() ){
-            return cellChecks.isEmpty();
+            return isCellChecksEmpty();
         }
         HSSFRow row = cursor.getSheet().getRow( offset + cursor.getCurrentRowNum() );
         if( row == null ){
@@ -66,6 +66,32 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
             return isCheckSuccessful( row );
         }
     }
+
+    private boolean isCellChecksEmpty() {
+        if( cellChecks.isEmpty() ){
+            return true;
+        }else{
+            for (int i = 0; i < cellChecks.size(); i++) {
+                OffsetCellCheck offsetCellCheck = (OffsetCellCheck) cellChecks.get(i);
+                if( !isCellCheckEmpty(offsetCellCheck) ){
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    private boolean isCellCheckEmpty(OffsetCellCheck cellCheck) {
+        if( cellCheck.getValue() == null ){
+            return true;
+        }
+        if( cellCheck.getValue().toString().trim().equals("") ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     public void addCellCheck(OffsetCellCheck cellCheck) {
         cellChecks.add( cellCheck );

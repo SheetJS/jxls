@@ -6,6 +6,7 @@ import net.sf.jxls.reader.sample.Employee;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.xml.sax.SAXException;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -19,10 +20,13 @@ import java.util.Map;
  * @author Leonid Vysochyn
  */
 public class XLSForEachBlockReaderImplTest extends TestCase {
-    public static final String dataXLS = "/templates/departmentData.xls";
+    public static final String departmentDataXLS = "/templates/departmentData.xls";
+    public static final String employeeDataXLS = "/templates/employeesData.xls";
+    public static final String xmlConfig = "/xml/emptyloopbreak.xml";
+
 
     public void testRead() throws IOException {
-        InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));
+        InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(departmentDataXLS));
         POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
         HSSFWorkbook hssfInputWorkbook = new HSSFWorkbook(fsInput);
         HSSFSheet sheet = hssfInputWorkbook.getSheetAt( 0 );
@@ -54,7 +58,7 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
     }
 
     public void testRead2() throws IOException {
-        InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));
+        InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(departmentDataXLS));
         POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
         HSSFWorkbook hssfInputWorkbook = new HSSFWorkbook(fsInput);
         HSSFSheet sheet = hssfInputWorkbook.getSheetAt( 2 );
@@ -133,7 +137,24 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
         checkEmployee( employee, "Natali", new Integer(28), new Double(2600.0), new Double(0.10) );
         employee = (Employee) department.getStaff().get(3);
         checkEmployee( employee, "Martha", new Integer(33), new Double(2150.0), new Double(0.25) );
+    }
 
+    public void testEmptyLoopBreakCondition() throws IOException, SAXException {
+        InputStream inputXML = new BufferedInputStream(getClass().getResourceAsStream(xmlConfig));
+        XLSReader reader = ReaderBuilder.buildFromXML( inputXML );
+        assertNotNull( reader );
+        InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(employeeDataXLS));
+        List employees = new ArrayList();
+        Map beans = new HashMap();
+        beans.put("employees", employees);
+        reader.read( inputXLS, beans);
+        assertNotNull( employees );
+        assertEquals(4, employees.size());
+        checkEmployee((Employee) employees.get(0), "Oleg", new Integer(34), new Double(3000.0), null);
+        checkEmployee((Employee) employees.get(1), "Yuriy", new Integer(29), new Double(2500.0), null);
+        checkEmployee((Employee) employees.get(2), "Alex", new Integer(30), new Double(2300.0), null);
+        checkEmployee((Employee) employees.get(3), "Vlad", new Integer(31), new Double(2000.0), null);
+        inputXLS.close();
 
     }
 

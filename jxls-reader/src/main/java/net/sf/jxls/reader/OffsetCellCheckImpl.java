@@ -64,7 +64,7 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
     private Object getCellValue(HSSFCell cell, Object obj) {
         Object value = null;
         if (obj instanceof String) {
-            value = cell.getStringCellValue();
+            value = cell.getStringCellValue() != null ? cell.getStringCellValue().trim() : null;
         } else if (obj instanceof Double) {
             value = new Double(cell.getNumericCellValue());
         } else if (obj instanceof BigDecimal) {
