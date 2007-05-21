@@ -64,7 +64,7 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
     private Object getCellValue(HSSFCell cell, Object obj) {
         Object value = null;
         if (obj instanceof String) {
-            value = cell.getStringCellValue() != null ? cell.getStringCellValue().trim() : null;
+            value = readStringValue(cell);
         } else if (obj instanceof Double) {
             value = new Double(cell.getNumericCellValue());
         } else if (obj instanceof BigDecimal) {
@@ -87,6 +87,30 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
             }else{
                 value = Boolean.FALSE;
             }
+        }
+        return value;
+    }
+
+    private String readStringValue(HSSFCell cell) {
+        String value = null;
+        switch (cell.getCellType()) {
+            case HSSFCell.CELL_TYPE_STRING:
+                value = cell.getStringCellValue() != null ? cell.getStringCellValue().trim() : null;
+                break;
+            case HSSFCell.CELL_TYPE_NUMERIC:
+                value = Double.toString(cell.getNumericCellValue()).trim();
+                break;
+            case HSSFCell.CELL_TYPE_BLANK:
+                value = "";
+                break;
+            case HSSFCell.CELL_TYPE_BOOLEAN:
+                break;
+            case HSSFCell.CELL_TYPE_ERROR:
+                break;
+            case HSSFCell.CELL_TYPE_FORMULA:
+                break;
+            default:
+                break;
         }
         return value;
     }

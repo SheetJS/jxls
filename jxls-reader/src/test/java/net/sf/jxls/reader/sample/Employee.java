@@ -15,6 +15,7 @@ public class Employee {
     private Date birthDate;
     private Employee superior;
     private List notes;
+    private String id;
 
 
     public Employee() {
@@ -26,6 +27,14 @@ public class Employee {
 
     public void setNotes(List notes) {
         this.notes = notes;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Employee(String name, Integer age, Double payment, Double bonus) {

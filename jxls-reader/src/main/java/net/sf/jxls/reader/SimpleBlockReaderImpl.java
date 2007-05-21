@@ -93,6 +93,15 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
                     break;
                 case HSSFCell.CELL_TYPE_NUMERIC:
                     value = new Double(cell.getNumericCellValue());
+                    // if we expect String type instead of numeric then we converting Double value to String
+                    if( !type.isInstance(value) ){
+                        double doubleValue = ((Double)value).doubleValue();
+                        if( Math.floor( doubleValue ) == doubleValue ){
+                            value = Long.toString(((Double) value).longValue());
+                        }else{
+                            value = value.toString();
+                        }
+                    }
                     break;
                 case HSSFCell.CELL_TYPE_BOOLEAN:
                     value = (cell.getBooleanCellValue()) ? Boolean.TRUE : Boolean.FALSE;

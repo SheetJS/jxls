@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<workbook>
+    <worksheet name="Sheet1">
+        <section startRow="0" endRow="0"/>
+        <loop startRow="1" endRow="1" items="employees" var="employee" varType="net.sf.jxls.reader.sample.Employee">
+            <section startRow="1" endRow="1">
+                <mapping cell="A2">employee.id</mapping>
+                <mapping cell="B2">employee.name</mapping>
+            </section>
+            <loopbreakcondition>
+                <rowcheck offset="0">
+                    <cellcheck offset="0"/>
+                </rowcheck>
+            </loopbreakcondition>
+        </loop>
+    </worksheet>
+</workbook>

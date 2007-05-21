@@ -23,6 +23,8 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
     public static final String departmentDataXLS = "/templates/departmentData.xls";
     public static final String employeeDataXLS = "/templates/employeesData.xls";
     public static final String xmlConfig = "/xml/emptyloopbreak.xml";
+    public static final String idsXML = "/xml/ids.xml";
+    public static final String idsXLS = "/templates/ids.xls";
 
 
     public void testRead() throws IOException {
@@ -158,6 +160,27 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
 
     }
 
+    public void testReadIdentifiers() throws IOException, SAXException {
+        InputStream inputXML = new BufferedInputStream(getClass().getResourceAsStream(idsXML));
+        XLSReader reader = ReaderBuilder.buildFromXML( inputXML );
+        assertNotNull( reader );
+        InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(idsXLS));
+        List employees = new ArrayList();
+        Map beans = new HashMap();
+        beans.put("employees", employees);
+        reader.read( inputXLS, beans);
+        assertNotNull( employees );
+        assertEquals(6, employees.size());
+        checkEmployeeId((Employee) employees.get(0), "Oleg", "a123b");
+        checkEmployeeId((Employee) employees.get(1), "Yuriy", "a567");
+        checkEmployeeId((Employee) employees.get(2), "Alex", "89x");
+        checkEmployeeId((Employee) employees.get(3), "Vlad", "xyz");
+        checkEmployeeId((Employee) employees.get(4), "Sergey", "123");
+        checkEmployeeId((Employee) employees.get(5), "Slava", "5");
+        inputXLS.close();
+
+    }
+
     private void checkDepartmentInfo(Department department, String name, String chiefName, Integer chiefAge, Double chiefPayment, Double chiefBonus){
         assertNotNull( department );
         assertEquals( name, department.getName() );
@@ -170,6 +193,12 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
         assertEquals( age, employee.getAge() );
         assertEquals( payment, employee.getPayment() );
         assertEquals( bonus, employee.getBonus() );
+    }
+
+    private void checkEmployeeId(Employee employee, String name, String id){
+        assertNotNull( employee );
+        assertEquals( name, employee.getName() );
+        assertEquals( id, employee.getId() );
     }
 
     private SectionCheck getLoopBreakCheck() {
