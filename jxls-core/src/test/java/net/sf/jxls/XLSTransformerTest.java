@@ -374,7 +374,7 @@ public class XLSTransformerTest extends TestCase {
         checker.checkFormulaCell( sourceSheet, 19, resultSheet, 37, (short)3, "B38*(1+C38)");
         checker.checkFormulaCell( sourceSheet, 19, resultSheet, 39, (short)3, "B40*(1+C40)");
 
-        checker.checkFormulaCell( sourceSheet, 24, resultSheet, 43, (short)1, "Sheet 2!B55");
+        checker.checkFormulaCell( sourceSheet, 24, resultSheet, 43, (short)1, "'Sheet 2'!B55");
 
         sourceSheet = sourceWorkbook.getSheetAt( 1 );
         resultSheet = resultWorkbook.getSheetAt( 1 );
@@ -1421,6 +1421,7 @@ public class XLSTransformerTest extends TestCase {
     public void testListOfStringsExport() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
         beans.put("employee", itEmployees.get(0));
+        beans.put("employees", itEmployees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(employeeNotesXLS));
         XLSTransformer transformer = new XLSTransformer();
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
@@ -1451,6 +1452,7 @@ public class XLSTransformerTest extends TestCase {
         notes.add("Строка 3");
         emp.setNotes( notes );
         beans.put("employee", emp);
+        beans.put("employees", itEmployees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(employeeNotesXLS));
         XLSTransformer transformer = new XLSTransformer();
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
