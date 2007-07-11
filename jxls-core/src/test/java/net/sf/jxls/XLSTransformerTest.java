@@ -98,6 +98,9 @@ public class XLSTransformerTest extends TestCase {
     public static final String forifTagOneRowXLS = "/templates/foriftagOneRow.xls";
     public static final String forifTagOneRowDestXLS = "target/foriftagOneRow_output.xls";
 
+    public static final String dynamicColumnsXLS = "/templates/dynamicColumns.xls";
+    public static final String dynamicColumnsDestXLS = "target/dynamicColumns_output.xls";
+
     public static final String forifTagOneRow2XLS = "/templates/foriftagOneRow2.xls";
     public static final String forifTagOneRowDest2XLS = "target/foriftagOneRow2_output.xls";
 
@@ -106,6 +109,9 @@ public class XLSTransformerTest extends TestCase {
 
     public static final String multipleSheetList2XLS = "/templates/multipleSheetList2.xls";
     public static final String multipleSheetList2DestXLS = "target/multipleSheetList2_output.xls";
+
+    public static final String multiTabXLS = "/templates/multi-tab-template.xls";
+    public static final String multiTabDestXLS = "target/multi-tab_output.xls";
 
     public static final String groupTagXLS = "/templates/groupTag.xls";
     public static final String groupTagDestXLS = "target/groupTag_output.xls";
@@ -1499,10 +1505,10 @@ public class XLSTransformerTest extends TestCase {
             if( itPayments[i].doubleValue() > 2000 ){
                 srcCol = 4;
             }
-            checker.checkCells(sourceSheet, resultSheet, 2, (short)2, 1, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 2, srcCol, 1, (short)(i*2 + 2));
-            checker.checkCells(sourceSheet, resultSheet, 3, (short)2, 2, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 3, srcCol, 2, (short)(i*2 + 2));
+            checker.checkCells(sourceSheet, resultSheet, 2, (short)2, 1, (short)(i*2 + 1), false);
+            checker.checkCells(sourceSheet, resultSheet, 2, srcCol, 1, (short)(i*2 + 2), false);
+            checker.checkCells(sourceSheet, resultSheet, 3, (short)2, 2, (short)(i*2 + 1), false);
+            checker.checkCells(sourceSheet, resultSheet, 3, srcCol, 2, (short)(i*2 + 2), false);
         }
 
         for(int i = 0; i < hrEmployeeNames.length; i++){
@@ -1513,10 +1519,10 @@ public class XLSTransformerTest extends TestCase {
             if( hrPayments[i].doubleValue() > 2000 ){
                 srcCol = 4;
             }
-            checker.checkCells(sourceSheet, resultSheet, 2, (short)2, 4, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 2, srcCol, 4, (short)(i*2 + 2));
-            checker.checkCells(sourceSheet, resultSheet, 3, (short)2, 5, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 3, srcCol, 5, (short)(i*2 + 2));
+            checker.checkCells(sourceSheet, resultSheet, 2, (short)2, 4, (short)(i*2 + 1), false);
+            checker.checkCells(sourceSheet, resultSheet, 2, srcCol, 4, (short)(i*2 + 2), false);
+            checker.checkCells(sourceSheet, resultSheet, 3, (short)2, 5, (short)(i*2 + 1), false);
+            checker.checkCells(sourceSheet, resultSheet, 3, srcCol, 5, (short)(i*2 + 2), false);
         }
 
         for(int i = 0; i < baEmployeeNames.length; i++){
@@ -1527,14 +1533,46 @@ public class XLSTransformerTest extends TestCase {
             if( baPayments[i].doubleValue() > 2000 ){
                 srcCol = 4;
             }
-            checker.checkCells(sourceSheet, resultSheet, 2, (short)2, 7, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 2, srcCol, 7, (short)(i*2 + 2));
-            checker.checkCells(sourceSheet, resultSheet, 3, (short)2, 8, (short)(i*2 + 1));
-            checker.checkCells(sourceSheet, resultSheet, 3, srcCol, 8, (short)(i*2 + 2));
+            checker.checkCells(sourceSheet, resultSheet, 2, (short)2, 7, (short)(i*2 + 1), false);
+            checker.checkCells(sourceSheet, resultSheet, 2, srcCol, 7, (short)(i*2 + 2), false);
+            checker.checkCells(sourceSheet, resultSheet, 3, (short)2, 8, (short)(i*2 + 1), false);
+            checker.checkCells(sourceSheet, resultSheet, 3, srcCol, 8, (short)(i*2 + 2), false);
         }
 
         is.close();
         saveWorkbook( resultWorkbook, forifTagOneRowDestXLS);
+    }
+
+    public void testDynamicColumns() throws IOException, ParsePropertyException {
+        Map beans = new HashMap();
+        List cols = new ArrayList();
+        String[] colNames = new String[]{"Column 1", "Column 2", "Column 3"};
+        for (int i = 0; i < colNames.length; i++) {
+            String colName = colNames[i];
+            cols.add( new Column(colName) );
+        }
+        beans.put( "cols", cols );
+
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(dynamicColumnsXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        is = new BufferedInputStream(getClass().getResourceAsStream(dynamicColumnsXLS));
+        POIFSFileSystem fs = new POIFSFileSystem(is);
+        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+
+        Map props = new HashMap();
+        props.put( "${col.text}", colNames[0]);
+        CellsChecker checker = new CellsChecker(props);
+        checker.checkCells( sourceSheet, resultSheet, 0, (short)1, 0, (short)0, true);
+        props.put( "${col.text}", colNames[1]);
+        checker.checkCells( sourceSheet, resultSheet, 0, (short)1, 0, (short)1, true);
+        props.put( "${col.text}", colNames[2]);
+        checker.checkCells( sourceSheet, resultSheet, 0, (short)1, 0, (short)2, true);
+        is.close();
+        saveWorkbook( resultWorkbook, dynamicColumnsDestXLS);
     }
 
     public void testForIfTagOneRowExport2() throws IOException, ParsePropertyException {
@@ -1594,9 +1632,9 @@ public class XLSTransformerTest extends TestCase {
         HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
 
         assertEquals( "Number of result worksheets is incorrect ", sourceWorkbook.getNumberOfSheets() + departments.size() - 1, resultWorkbook.getNumberOfSheets());
-        for (int sheetNo = 0; sheetNo < resultWorkbook.getNumberOfSheets() && sheetNo < sheetNames.size(); sheetNo++) {
+//        for (int sheetNo = 0; sheetNo < resultWorkbook.getNumberOfSheets() && sheetNo < sheetNames.size(); sheetNo++) {
 //             assertEquals( "Result worksheet name is incorrect", sheetNames.get(sheetNo), resultWorkbook.getSheetName(sheetNo));
-        }
+//        }
 // todo create all necessary checks
 //        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
 //        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
@@ -1615,6 +1653,28 @@ public class XLSTransformerTest extends TestCase {
         is.close();
         saveWorkbook(resultWorkbook, multipleSheetListDestXLS);
     }
+
+    public void testMultiTab() throws IOException, ParsePropertyException {
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multiTabXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        List sheetNames = new ArrayList();
+        sheetNames.add("foo");
+        sheetNames.add("bar");
+        sheetNames.add("foobar");
+
+        List objects = new ArrayList();
+        objects.add("foo");
+        objects.add("bar");
+        objects.add("foobar");
+
+        Map map = new HashMap();
+        map.put("other", "fnord");
+
+        HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, objects, sheetNames, "name", map, 0);
+        is.close();
+        saveWorkbook(resultWorkbook, multiTabDestXLS);
+    }
+
     // todo complete this test
     public void atestMultipleSheetList2() throws IOException, ParsePropertyException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetList2XLS));

@@ -609,12 +609,21 @@ public final class Util {
                     }
                     copyCell( cell, destCell, true );
                     if( doSetWidth ){
-                        sheet.setColumnWidth( destCell.getCellNum(), sheet.getColumnWidth(cell.getCellNum()));
+                        sheet.setColumnWidth( destCell.getCellNum(), getWidth( sheet, cell.getCellNum() ) );
                     }
                 }
             }
         }
     }
+
+    static short getWidth(HSSFSheet sheet, short col){
+        short width = sheet.getColumnWidth( col );
+        if( width == sheet.getDefaultColumnWidth() ){
+            width = (short) (width * 256);
+        }
+        return width;
+    }
+
 
     public static void shiftCellsRight(HSSFSheet sheet, int startRow, int endRow, short startCol, short shiftNumber){
         for(int i = startRow; i <= endRow; i++){

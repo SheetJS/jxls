@@ -1,16 +1,16 @@
 package net.sf.jxls.util;
 
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.CellReference;
+import net.sf.jxls.tag.Block;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import net.sf.jxls.util.Util;
-import net.sf.jxls.tag.Block;
-import net.sf.jxls.tag.Point;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellReference;
 
-import java.util.Map;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Leonid Vysochyn
@@ -102,7 +102,7 @@ public class TagBodyHelper {
                                 destCell = row.createCell( destCellNum );
                             }
                             Util.copyCell( cell, destCell, true );
-                            sheet.setColumnWidth( destCellNum, sheet.getColumnWidth( j ) );
+                            sheet.setColumnWidth( destCellNum, Util.getWidth(sheet, j) );
                         }
                     }
                 }

@@ -7,10 +7,10 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Calendar;
 
 /**
  * @author Leonid Vysochyn
@@ -155,7 +155,7 @@ public class CellsChecker extends Assert {
         }
     }
 
-    void checkCells(HSSFSheet srcSheet, HSSFSheet destSheet, int srcRowNum, short srcCellNum, int destRowNum, short destCellNum) {
+    void checkCells(HSSFSheet srcSheet, HSSFSheet destSheet, int srcRowNum, short srcCellNum, int destRowNum, short destCellNum, boolean checkCellWidth) {
         HSSFRow srcRow = srcSheet.getRow(srcRowNum);
         HSSFRow destRow = destSheet.getRow(destRowNum);
         assertEquals("Row height is not the same", srcRow.getHeight(), destRow.getHeight());
@@ -165,7 +165,19 @@ public class CellsChecker extends Assert {
         if (srcCell != null && destCell != null) {
             checkCells(srcCell, destCell);
         }
+        if( checkCellWidth ){
+            assertEquals("Cell Widths are different", getWidth(srcSheet, srcCellNum ), getWidth(destSheet, destCellNum ) );
+        }
     }
+
+    static short getWidth(HSSFSheet sheet, short col){
+        short width = sheet.getColumnWidth( col );
+        if( width == sheet.getDefaultColumnWidth() ){
+            width = (short) (width * 256);
+        }
+        return width;
+    }
+
 
     private void checkCells(HSSFCell sourceCell, HSSFCell destCell) {
         checkCellValue(sourceCell, destCell);
