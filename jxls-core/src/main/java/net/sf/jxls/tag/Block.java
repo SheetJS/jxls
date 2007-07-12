@@ -2,6 +2,7 @@ package net.sf.jxls.tag;
 
 import net.sf.jxls.transformer.Sheet;
 import net.sf.jxls.formula.CellRef;
+import net.sf.jxls.formula.Formula;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -110,6 +111,14 @@ public class Block {
         }
     }
 
+    public boolean contains(Formula formula){
+        if( formula.getSheet().getSheetName().equals( sheet.getSheetName() ) ){
+            return contains( formula.getRowNum().intValue(), formula.getCellNum().intValue() );
+        }else{
+            return false;
+        }
+    }
+
     public boolean contains(Point p){
         boolean flag =  (startRowNum <= p.getRow() && p.getRow() <= endRowNum &&
                 ((startCellNum<0 || endCellNum<0) || (startCellNum <= p.getCol() && p.getCol() <= endCellNum)));
@@ -121,7 +130,8 @@ public class Block {
     }
 
     public boolean contains(CellRef cellRef){
-        boolean flag =  (startRowNum <= cellRef.getRowNum() && cellRef.getRowNum() <= endRowNum &&
+        String refSheetName = cellRef.getSheetName();
+        boolean flag =  ((refSheetName == null || sheet.getSheetName().equals(refSheetName)) && startRowNum <= cellRef.getRowNum() && cellRef.getRowNum() <= endRowNum &&
                 ((startCellNum<0 || endCellNum<0) || (startCellNum <= cellRef.getColNum() && cellRef.getColNum() <= endCellNum)));
         if(flag && !affectedColumns.isEmpty()){
             return affectedColumns.contains( new Short( cellRef.getColNum() ) );

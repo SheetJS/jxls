@@ -58,7 +58,7 @@ public class FormulaControllerImpl implements FormulaController {
                 for (Iterator iter = cellRefs.iterator(); iter.hasNext();) {
                     cellRef = (CellRef) iter.next();
                     if( !(transformation instanceof DuplicateTransformation && transformation.getBlock().contains(cellRef) &&
-                            transformation.getBlock().contains( formula.getRowNum().intValue(), formula.getCellNum().intValue())) ){
+                            transformation.getBlock().contains( formula ) ) ){
                         resultCells = transformation.transformCell( sheetName, cellRef );
                         if( resultCells != null ){
                             if( resultCells.size() == 1 ){
