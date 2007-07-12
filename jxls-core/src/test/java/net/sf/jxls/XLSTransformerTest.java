@@ -1831,6 +1831,19 @@ public class XLSTransformerTest extends TestCase {
         beans.put( "departments", departments );
         beans.put("itDepartment", itDepartment);
 
+        List employees = itDepartment.getStaff();
+        ((Employee)employees.get(0)).setComment("");
+        for (int i = 1; i < employees.size(); i++) {
+            Employee employee = (Employee) employees.get(i);
+            String comment = "";
+            for( int j =0; j <= i; j++ ){
+                comment += "Employee Comment Line " + j + " ..\r\n";
+            }
+            employee.setComment( comment );
+        }
+        beans.put("employees", employees);
+        beans.put("lineSize", new Integer(0));
+
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(poiobjectsXLS));
         XLSTransformer transformer = new XLSTransformer();
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);

@@ -10,6 +10,7 @@
             <ul>
                 <li>workbook    - gives an access to current HSSFWorkbook instance</li>
                 <li>sheet       - provides an access to current HSSFSheet object being processed </li>
+                <li>hssfRow     - provides an access to current HSSFRow object being processed </li>
             </ul>
             <p>Having access to these objects you can invoke different methods to manipulate current template transformation.
             Next sections show some examples of tasks that can be performed using this approach.</p>

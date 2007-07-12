@@ -16,6 +16,7 @@ public class Employee {
     private Employee superior;
     private List notes;
 
+    String comment;
 
     public Employee() {
     }
@@ -54,6 +55,15 @@ public class Employee {
         this.age = new Integer(age);
         this.payment = new Double(payment);
         this.bonus = new Double(bonus);
+    }
+
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getName() {

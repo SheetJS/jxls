@@ -168,6 +168,10 @@ public class SheetTransformer {
     }
 
     private List parseCells(Sheet sheet, HSSFRow hssfRow, short startCell, short endCell, Map beans) {
+        if( configuration.getRowKeyName() != null ){
+            beans.put( configuration.getRowKeyName(), hssfRow );
+        }
+
         List transformers = new ArrayList();
         RowTransformer rowTransformer = null;
         Row row = new Row(sheet, hssfRow);

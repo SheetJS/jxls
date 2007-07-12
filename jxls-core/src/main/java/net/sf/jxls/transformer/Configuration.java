@@ -30,6 +30,7 @@ public class Configuration {
     private boolean encodeXMLAttributes = true;
     String sheetKeyName = "sheet";
     String workbookKeyName = "workbook";
+    String rowKeyName = "hssfRow";
 
     private String excludeSheetProcessingMark = "#Exclude";
 
@@ -94,6 +95,15 @@ public class Configuration {
 
     public void setWorkbookKeyName(String workbookKeyName) {
         this.workbookKeyName = workbookKeyName;
+    }
+
+
+    public String getRowKeyName() {
+        return rowKeyName;
+    }
+
+    public void setRowKeyName(String rowKeyName) {
+        this.rowKeyName = rowKeyName;
     }
 
     public String getTagPrefix() {
