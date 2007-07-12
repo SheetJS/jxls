@@ -1552,6 +1552,12 @@ public class XLSTransformerTest extends TestCase {
             cols.add( new Column(colName) );
         }
         beans.put( "cols", cols );
+        List list = new ArrayList();
+        list.add(new Item("A", new int[] { 1, 2, 3 }));
+        list.add(new Item("B", new int[] { }));
+        list.add(new Item("C", new int[] { 4, 5, 6 }));
+        list.add(new Item("D", new int[] { }));
+        beans.put("list", list);        
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(dynamicColumnsXLS));
         XLSTransformer transformer = new XLSTransformer();

@@ -10,6 +10,7 @@ import net.sf.jxls.util.ReportUtil;
 import net.sf.jxls.util.Util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -235,9 +236,10 @@ public class ForEachTag extends BaseTag {
             return shift;
         } else {
             log.warn("Collection " + items + " is empty");
-            tagContext.getSheetTransformationController().removeBodyRows(body);
+            HSSFRow currentRow = tagContext.getSheet().getHssfSheet().getRow(body.getStartRowNum());
+            tagContext.getSheetTransformationController().removeRowCells(currentRow, body.getStartCellNum(), body.getEndCellNum());
             ResultTransformation shift = new ResultTransformation(0);
-            shift.add(new ResultTransformation(-1, -body.getNumberOfRows()));
+            shift.add( new ResultTransformation((short)-body.getNumberOfColumns(), (short)(-body.getNumberOfColumns() )));
             shift.setLastProcessedRow(-1);
             shift.setTagProcessResult(true);
             return shift;

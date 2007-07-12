@@ -22,4 +22,16 @@ public class Item {
     public void setAttributes(List attributes) {
         this.attributes = attributes;
     }
+
+    private String key;
+    private List values = new ArrayList();
+    public Item(String key, int[] _values) {
+        this.key = key;
+        for (int i = 0; i < _values.length; i++) {
+            values.add(Integer.valueOf(_values[i]));
+        }
+    }
+    public String getKey() { return key; }
+    public List getValues() { return values; }    
+
 }
