@@ -206,7 +206,8 @@ public class TagBodyHelper {
         if( row!=null ){
             for(short i = startCell; i <= endCell; i++ ){
                 HSSFCell cell = row.getCell( i );
-                clearCell( cell );
+                row.removeCell( cell );
+                row.createCell( i );
             }
         }
     }
