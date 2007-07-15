@@ -72,7 +72,7 @@
     <scm>
         <connection>scm:svn:https://jxls.svn.sourceforge.net/svnroot/jxls/tags/jxls-0.9.3</connection>
         <developerConnection>scm:svn:https://jxls.svn.sourceforge.net/svnroot/jxls/tags/jxls-0.9.3</developerConnection>
-        <url>http://svn.sourceforge.net/viewcvs.cgi/jxls/tags/jxls-0.9.3</url>
+        <url>http://jxls.svn.sourceforge.net/viewvc/jxls/tags/jxls-0.9.3</url>
     </scm>
   <issueManagement>
     <system>SourceForge Tracker</system>
