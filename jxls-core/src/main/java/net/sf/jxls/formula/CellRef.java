@@ -2,8 +2,8 @@ package net.sf.jxls.formula;
 
 import org.apache.poi.hssf.util.CellReference;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Leonid Vysochyn
@@ -21,6 +21,8 @@ public class CellRef {
     int rowNum;
     short colNum;
     String sheetName;
+
+    Integer cellIndex;
 
     List rangeFormulaParts = new ArrayList();
 
@@ -49,6 +51,15 @@ public class CellRef {
 
     public short getColNum() {
         return colNum;
+    }
+
+
+    public Integer getCellIndex() {
+        return cellIndex;
+    }
+
+    public void setCellIndex(Integer cellIndex) {
+        this.cellIndex = cellIndex;
     }
 
     public void update(String newCellRef){

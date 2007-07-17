@@ -393,6 +393,10 @@ public class XLSTransformerTest extends TestCase {
         checker.checkFormulaCell( sourceSheet, 15, resultSheet, 24, (short)1, "SUM(B10,B13,B16,B19,B22)");
         checker.checkFormulaCell( sourceSheet, 15, resultSheet, 40, (short)1, "SUM(B29,B32,B35,B38)");
         checker.checkFormulaCell( sourceSheet, 15, resultSheet, 53, (short)1, "SUM(B45,B48,B51)");
+
+        checker.checkFormulaCell( sourceSheet, 18, resultSheet, 55, (short)1, "Sheet1!D24");
+        checker.checkFormulaCell( sourceSheet, 19, resultSheet, 56, (short)1, "Sheet1!D33");
+        checker.checkFormulaCell( sourceSheet, 20, resultSheet, 57, (short)1, "Sheet1!D41");
         // todo Create checks for "Sheet 3"
 
         is.close();
@@ -1753,6 +1757,9 @@ public class XLSTransformerTest extends TestCase {
         beans.put( "bean", bean );
 
         beans.put("obj", obj);
+        beans.put("departmentIT", itDepartment);
+        beans.put("departmentMgr", mgrDepartment);
+        mgrDepartment.getStaff().clear();
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(jexlXLS));
         XLSTransformer transformer = new XLSTransformer();
@@ -1892,6 +1899,9 @@ public class XLSTransformerTest extends TestCase {
     private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
         String saveResultsProp = System.getProperty("saveResults");
         if( "true".equalsIgnoreCase(saveResultsProp) ){
+            if( log.isInfoEnabled() ){
+                log.info("Saving " + fileName);
+            }
             OutputStream os = new BufferedOutputStream(new FileOutputStream(fileName));
             resultWorkbook.write(os);
             os.flush();

@@ -1,12 +1,12 @@
 package net.sf.jxls.transformation;
 
+import net.sf.jxls.formula.CellRef;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.tag.Point;
-import net.sf.jxls.formula.CellRef;
 import org.apache.poi.hssf.util.CellReference;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines duplicate transformation for {@link Block}
@@ -64,12 +64,19 @@ public class DuplicateTransformation extends BlockTransformation {
         cells.clear();
         if( block.getSheet().getSheetName().equalsIgnoreCase( refSheetName ) || (refSheetName == null && block.getSheet().getSheetName().equalsIgnoreCase( sheetName ))){
             // sheet check passed
-            if( block.contains( cellRef.getRowNum(), cellRef.getColNum() ) /*&& duplicateNumber >= 1*/){
+            if( block.contains( cellRef.getRowNum(), cellRef.getColNum() ) ){
                 rowNum = cellRef.getRowNum();
-                cells.add( cellToString( rowNum, cellRef.getColNum(), refSheetName) );
-                for( int i = 0; i < duplicateNumber; i++){
-                    rowNum += block.getNumberOfRows();
-                    cells.add( cellToString( rowNum, cellRef.getColNum(), refSheetName ));
+                if( cellRef.getCellIndex() == null ){
+                    // transformation result is a set of cells
+                    cells.add( cellToString( rowNum, cellRef.getColNum(), refSheetName) );
+                    for( int i = 0; i < duplicateNumber; i++){
+                        rowNum += block.getNumberOfRows();
+                        cells.add( cellToString( rowNum, cellRef.getColNum(), refSheetName ));
+                    }
+                }else{
+                    // transformation result is a single cell according to index number
+                    rowNum += block.getNumberOfRows() * ( cellRef.getCellIndex().intValue() );
+                    cells.add( cellToString( rowNum, cellRef.getColNum(), refSheetName ) );
                 }
             }
         }

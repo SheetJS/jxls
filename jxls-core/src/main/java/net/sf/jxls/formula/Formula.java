@@ -1,14 +1,14 @@
 package net.sf.jxls.formula;
 
+import net.sf.jxls.controller.SheetCellFinder;
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.transformer.Sheet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import net.sf.jxls.transformer.Sheet;
-import net.sf.jxls.parser.Cell;
-import net.sf.jxls.controller.SheetCellFinder;
 
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -85,6 +85,7 @@ public class Formula {
         this.cellNum = cellNum;
     }
 
+
     public Set getCellRefs() {
         return cellRefs;
     }
@@ -154,6 +155,9 @@ public class Formula {
     private static final String regexCellRef = "([a-zA-Z]+[a-zA-Z0-9]*![a-zA-Z]+[0-9]+|[a-zA-Z]+[0-9]+|'[^?\\\\/:'*]+'![a-zA-Z]+[0-9]+)";
     private static final Pattern regexCellRefPattern = Pattern.compile( regexCellRef );
 
+//    private static final String regexFormulaIndexCellRef = "\\([\\s]*[\\d]+[\\s]+\\)";
+//    private static final Pattern regexFormulaIndexCellRefPattern = Pattern.compile( regexFormulaIndexCellRef );
+
     public String getActualFormula(){
         Object formulaPart;
         String actualFormula = "";
@@ -178,16 +182,52 @@ public class Formula {
         cellRefs.clear();
         Matcher refCellMatcher = regexCellRefPattern.matcher( formula );
         int end = 0;
-        CellRef cellRef;
+        CellRef cellRef = null;
         while( refCellMatcher.find() ){
-            formulaParts.add( formula.substring( end, refCellMatcher.start() ) );
+            String formulaPart = formula.substring(end, refCellMatcher.start());
+            formulaPart = adjustFormulaPartForCellIndex(cellRef, formulaPart);
+            formulaParts.add(formulaPart);
             cellRef = new CellRef( refCellMatcher.group(), this );
             formulaParts.add( cellRef );
             cellRefs.add( cellRef );
             end = refCellMatcher.end();
         }
-        formulaParts.add( formula.substring( end ));
+        formulaParts.add( adjustFormulaPartForCellIndex( cellRef, formula.substring( end ) ));
     }
+
+    private String adjustFormulaPartForCellIndex(CellRef cellRef, String formulaPart) {
+        if( cellRef != null){
+            int indStart = formulaPart.indexOf('(');
+            int indEnd = formulaPart.indexOf(')');
+            if( indStart == 0 && indEnd > 0){
+                String cellIndex = formulaPart.substring( indStart + 1, indEnd );
+                try {
+                    cellRef.setCellIndex( Integer.valueOf( cellIndex ) );
+                    formulaPart = formulaPart.substring( indEnd + 1 );
+                } catch (NumberFormatException e) {
+                    log.error("Can't parse cell index " + cellIndex + " for cell " + cellRef + ". Make sure you don't have any spaces for index part.", e);
+                }
+            }
+        }
+        return formulaPart;
+    }
+
+// legacy version
+//    public void parseFormula(){
+//        formulaParts.clear();
+//        cellRefs.clear();
+//        Matcher refCellMatcher = regexCellRefPattern.matcher( formula );
+//        int end = 0;
+//        CellRef cellRef;
+//        while( refCellMatcher.find() ){
+//            formulaParts.add( formula.substring( end, refCellMatcher.start() ) );
+//            cellRef = new CellRef( refCellMatcher.group(), this );
+//            formulaParts.add( cellRef );
+//            cellRefs.add( cellRef );
+//            end = refCellMatcher.end();
+//        }
+//        formulaParts.add( formula.substring( end ));
+//    }
 
     public String toString() {
         return "Formula{" +
