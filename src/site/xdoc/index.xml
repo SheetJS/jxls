@@ -5,12 +5,11 @@
   </properties>
     <body>
         <section name="News">
-            <p><strong>jXLS v.0.9.3 released</strong></p>
+            <p><strong>jXLS v.0.9.4 released</strong></p>
             <p>This release updates:  </p>
             <ul>
-                <li>Accessing POI objects in template file. Now you can drive Excel generation and execute various POI Excel operations directly in XLS template.
-                    See <a href="reference/poiaccess.html">POI Objects Access</a> section</li>
-                <li>Bug fixes and updates in <code>jxls-reader</code> module. See <a href="reference/reader.html">Reading XLS file</a> </li>
+                <li>Provided access to HSSFRow object in XLS template. See <a href="reference/poiaccess.html">POI Objects Access</a> section</li>
+                <li>Many bug fixes and improvements. </li>
             </ul>
         </section>
         <section name="Overview">

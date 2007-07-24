@@ -4,6 +4,12 @@
       <title>Version Compatibility</title>
     </properties>
     <body>
+        <section id="compatibilityBetween0.9.3And0.9.4" name="Changes in version 0.9.4">
+            <ul>
+                <li>Accessing HSSFRow POI object in template file. See <a href="poiaccess.html">POI Objects Access</a> section</li>
+                <li>Many other bug fixes and improvements</li>
+            </ul>
+        </section>
         <section id="compatibilityBetween0.9.2And0.9.3" name="Changes in version 0.9.3">
             <ul>
                 <li>Accessing POI objects in template file. See <a href="poiaccess.html">POI Objects Access</a> section</li>

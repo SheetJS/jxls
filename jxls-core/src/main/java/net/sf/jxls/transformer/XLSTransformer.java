@@ -219,32 +219,36 @@ public class XLSTransformer {
         try {
             POIFSFileSystem fs = new POIFSFileSystem(is);
             hssfWorkbook = new HSSFWorkbook(fs);
-            Workbook workbook = createWorkbook( hssfWorkbook );
-            exposePOIObjects(workbook, beanParams);
-            workbookTransformationController = new WorkbookTransformationControllerImpl( workbook );
-            preprocess(hssfWorkbook);
-            SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
-            for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
-                final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
-                if( spreadsheetName != null && !spreadsheetName.startsWith( configuration.getExcludeSheetProcessingMark() )){
-                    if (!isSpreadsheetToHide(spreadsheetName)) {
-                        if (isSpreadsheetToRename(spreadsheetName)) {
-                            hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
-                        }
-                        Sheet sheet = workbook.getSheetAt( sheetNo );
-                        sheetTransformer.transformSheet( workbookTransformationController, sheet, beanParams );
-                    } else {
-                        // let's remove spreadsheet
-                        workbook.removeSheetAt( sheetNo );
-                        sheetNo--;
-                    }
-                }
-            }
-            updateFormulas();
+            transformWorkbook(hssfWorkbook, beanParams);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return hssfWorkbook;
+    }
+
+    public void transformWorkbook(HSSFWorkbook hssfWorkbook, Map beanParams) {
+        Workbook workbook = createWorkbook( hssfWorkbook );
+        exposePOIObjects(workbook, beanParams);
+        workbookTransformationController = new WorkbookTransformationControllerImpl( workbook );
+        preprocess(hssfWorkbook);
+        SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
+        for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
+            final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
+            if( spreadsheetName != null && !spreadsheetName.startsWith( configuration.getExcludeSheetProcessingMark() )){
+                if (!isSpreadsheetToHide(spreadsheetName)) {
+                    if (isSpreadsheetToRename(spreadsheetName)) {
+                        hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
+                    }
+                    Sheet sheet = workbook.getSheetAt( sheetNo );
+                    sheetTransformer.transformSheet( workbookTransformationController, sheet, beanParams );
+                } else {
+                    // let's remove spreadsheet
+                    workbook.removeSheetAt( sheetNo );
+                    sheetNo--;
+                }
+            }
+        }
+        updateFormulas();
     }
 
     private void exposePOIObjects(Workbook workbook, Map beanParams) {
@@ -278,15 +282,16 @@ public class XLSTransformer {
             POIFSFileSystem fs = new POIFSFileSystem(is);
             hssfWorkbook = new HSSFWorkbook(fs);
 
-            preprocess(hssfWorkbook);
-
-            Workbook workbook = createWorkbook( hssfWorkbook );
-            exposePOIObjects( workbook,  beanParams );
-            workbookTransformationController = new WorkbookTransformationControllerImpl( workbook );
+//            preprocess(hssfWorkbook);
+//
+//            Workbook workbook = createWorkbook( hssfWorkbook );
+//            exposePOIObjects( workbook,  beanParams );
+//            workbookTransformationController = new WorkbookTransformationControllerImpl( workbook );
 
             SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
-            final String templateSheetName = "InternalTemplateSheetName";
+//            final String templateSheetName = "InternalTemplateSheetName";
             // todo refactoring required
+            int sheetNumber = 1;
             for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
                 final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
                 if (!isSpreadsheetToHide(spreadsheetName)) {
@@ -295,39 +300,47 @@ public class XLSTransformer {
                     }
                     HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(sheetNo);
                     if( startSheetNum == sheetNo && objects != null && !objects.isEmpty()){
-                        Object firstBean = objects.get(0);
-                        beanParams.put( beanName, firstBean );
-                        hssfWorkbook.setSheetName( sheetNo, (String) newSheetNames.get(0), HSSFWorkbook.ENCODING_UTF_16);
-                        HSSFSheet templateSheet = hssfWorkbook.createSheet(templateSheetName );
-                        Util.copySheets( templateSheet, hssfSheet );
-                        Sheet sheet = workbook.getSheetAt( sheetNo );
-                        sheetTransformer.transformSheet(workbookTransformationController, sheet, beanParams );
-                        for (int i = 1; i < objects.size(); i++) {
+//                        Object firstBean = objects.get(0);
+//                        beanParams.put( beanName + sheetNumber++, firstBean );
+//                        hssfWorkbook.setSheetName( sheetNo, (String) newSheetNames.get(0), HSSFWorkbook.ENCODING_UTF_16);
+//                        HSSFSheet templateSheet = hssfWorkbook.createSheet(templateSheetName );
+//                        Util.copySheets( templateSheet, hssfSheet );
+//                        Sheet sheet = workbook.getSheetAt( sheetNo );
+//                        sheetTransformer.transformSheet(workbookTransformationController, sheet, beanParams );
+                        for (int i = 0; i < objects.size() ; i++) {
                             Object bean = objects.get(i);
-                            beanParams.put( beanName, bean );
-                            HSSFSheet newSheet = hssfWorkbook.createSheet( (String) newSheetNames.get(i) );
-                            Util.copySheets(newSheet, templateSheet);
-                            Util.copyPageSetup(newSheet, hssfSheet);
-                            Util.copyPrintSetup(newSheet, hssfSheet);
-                            sheet = new Sheet(hssfWorkbook, newSheet, configuration);
+                            String beanKey = beanName;
+                            HSSFSheet newSheet;
+                            if( i != 0 ){
+                                beanKey = beanName+i;
+                                newSheet = hssfWorkbook.createSheet( (String) newSheetNames.get(i) );
+                                Util.copySheets(newSheet, hssfSheet, beanName, beanKey );
+                                Util.copyPageSetup(newSheet, hssfSheet);
+                                Util.copyPrintSetup(newSheet, hssfSheet);
+                            }else{
+                                hssfWorkbook.setSheetName( sheetNo, (String) newSheetNames.get(i));
+                            }
+                            beanParams.put( beanKey, bean );
+//                            sheet = new Sheet(hssfWorkbook, newSheet, configuration);
                             // todo: implement update of the FormulaController instance when adding new sheet to workbook
-                            workbook.addSheet( sheet );
-                            workbook.initSheetNames();
-                            sheetTransformer.transformSheet(workbookTransformationController, sheet, beanParams );
+//                            workbook.addSheet( sheet );
+//                            workbook.initSheetNames();
+//                            sheetTransformer.transformSheet(workbookTransformationController, sheet, beanParams );
                         }
-                        hssfWorkbook.removeSheetAt( hssfWorkbook.getSheetIndex( templateSheetName ) );
-                        beanParams.remove( beanName );
+//                        hssfWorkbook.removeSheetAt( hssfWorkbook.getSheetIndex( templateSheetName ) );
+//                        beanParams.remove( beanName );
                     }else{
-                          Sheet sheet = workbook.getSheetAt( sheetNo );
-                        sheetTransformer.transformSheet(workbookTransformationController, sheet, beanParams );
+//                          Sheet sheet = workbook.getSheetAt( sheetNo );
+//                        sheetTransformer.transformSheet(workbookTransformationController, sheet, beanParams );
                     }
                 } else {
                     // let's remove spreadsheet
-                    workbook.removeSheetAt( sheetNo );
+                    hssfWorkbook.removeSheetAt(sheetNo);
+//                    workbook.removeSheetAt( sheetNo );
                     sheetNo--;
                 }
             }
-            updateFormulas();
+//            updateFormulas();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -337,6 +350,7 @@ public class XLSTransformer {
                 Util.setPrintArea(hssfWorkbook,i);
             }
         }
+        transformWorkbook( hssfWorkbook, beanParams );
         return hssfWorkbook;
     }
 

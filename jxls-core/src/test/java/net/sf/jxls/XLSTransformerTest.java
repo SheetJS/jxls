@@ -1629,7 +1629,7 @@ public class XLSTransformerTest extends TestCase {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetListXLS));
         XLSTransformer transformer = new XLSTransformer();
         List sheetNames = new ArrayList();
-        sheetNames.add("New Sheet");
+//        sheetNames.add("New Sheet");
         for(int i = 0; i < departments.size(); i++){
             Department department = (Department) departments.get( i );
             sheetNames.add( department.getName() );
@@ -1757,9 +1757,11 @@ public class XLSTransformerTest extends TestCase {
         beans.put( "bean", bean );
 
         beans.put("obj", obj);
-        beans.put("departmentIT", itDepartment);
-        beans.put("departmentMgr", mgrDepartment);
-        mgrDepartment.getStaff().clear();
+        beans.put("employees1", ((Department)departments.get(0)).getStaff());
+        beans.put("employees2", new ArrayList());
+        beans.put("employees3", ((Department)departments.get(1)).getStaff());
+        beans.put("employees4", new ArrayList());
+        beans.put("employees5", ((Department)departments.get(2)).getStaff());
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(jexlXLS));
         XLSTransformer transformer = new XLSTransformer();
@@ -1850,6 +1852,7 @@ public class XLSTransformerTest extends TestCase {
         }
         beans.put("employees", employees);
         beans.put("lineSize", new Integer(0));
+        beans.put("row", new Integer(3));
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(poiobjectsXLS));
         XLSTransformer transformer = new XLSTransformer();

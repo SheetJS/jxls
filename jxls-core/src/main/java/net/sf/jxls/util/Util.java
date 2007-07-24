@@ -398,6 +398,32 @@ public final class Util {
         }
     }
 
+    public static void copyRow( HSSFSheet srcSheet, HSSFSheet destSheet, HSSFRow srcRow, HSSFRow destRow, String expressionToReplace, String expressionReplacement ){
+        Set mergedRegions = new TreeSet();
+        destRow.setHeight( srcRow.getHeight() );
+        for( short j = srcRow.getFirstCellNum(); j <= srcRow.getLastCellNum(); j++){
+            HSSFCell oldCell = srcRow.getCell( j );
+            HSSFCell newCell = destRow.getCell( j );
+            if( oldCell != null ){
+                if( newCell == null ){
+                    newCell = destRow.createCell( j );
+                }
+                copyCell( oldCell, newCell, true, expressionToReplace, expressionReplacement );
+                Region mergedRegion = getMergedRegion( srcSheet, srcRow.getRowNum(), oldCell.getCellNum() );
+                if( mergedRegion != null ){
+//                    Region newMergedRegion = new Region( destRow.getRowNum(), mergedRegion.getColumnFrom(),
+//                            destRow.getRowNum() + mergedRegion.getRowTo() - mergedRegion.getRowFrom(), mergedRegion.getColumnTo() );
+                    Region newMergedRegion = new Region( mergedRegion.getRowFrom(), mergedRegion.getColumnFrom(),
+                            mergedRegion.getRowTo(), mergedRegion.getColumnTo() );
+                    if( isNewMergedRegion( newMergedRegion, mergedRegions ) ){
+                        mergedRegions.add( newMergedRegion );
+                        destSheet.addMergedRegion( newMergedRegion );
+                    }
+                }
+            }
+        }
+    }
+
     public static void copySheets(HSSFSheet newSheet, HSSFSheet sheet) {
         int maxColumnNum = 0;
         for(int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++){
@@ -405,6 +431,23 @@ public final class Util {
             HSSFRow destRow = newSheet.createRow( i );
             if( srcRow != null ){
                 Util.copyRow( sheet, newSheet, srcRow, destRow);
+                if( srcRow.getLastCellNum() > maxColumnNum ){
+                    maxColumnNum = srcRow.getLastCellNum();
+                }
+            }
+        }
+        for(short i = 0; i <= maxColumnNum; i++){
+            newSheet.setColumnWidth( i, sheet.getColumnWidth( i ) );
+        }
+    }
+
+    public static void copySheets(HSSFSheet newSheet, HSSFSheet sheet, String expressionToReplace, String expressionReplacement) {
+        int maxColumnNum = 0;
+        for(int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++){
+            HSSFRow srcRow = sheet.getRow( i );
+            HSSFRow destRow = newSheet.createRow( i );
+            if( srcRow != null ){
+                Util.copyRow( sheet, newSheet, srcRow, destRow, expressionToReplace, expressionReplacement);
                 if( srcRow.getLastCellNum() > maxColumnNum ){
                     maxColumnNum = srcRow.getLastCellNum();
                 }
@@ -423,6 +466,36 @@ public final class Util {
         switch (oldCell.getCellType()) {
             case HSSFCell.CELL_TYPE_STRING:
                 newCell.setCellValue(oldCell.getStringCellValue());
+                break;
+            case HSSFCell.CELL_TYPE_NUMERIC:
+                newCell.setCellValue(oldCell.getNumericCellValue());
+                break;
+            case HSSFCell.CELL_TYPE_BLANK:
+                newCell.setCellType(HSSFCell.CELL_TYPE_BLANK);
+                break;
+            case HSSFCell.CELL_TYPE_BOOLEAN:
+                newCell.setCellValue(oldCell.getBooleanCellValue());
+                break;
+            case HSSFCell.CELL_TYPE_ERROR:
+                newCell.setCellErrorValue(oldCell.getErrorCellValue());
+                break;
+            case HSSFCell.CELL_TYPE_FORMULA:
+                newCell.setCellFormula( oldCell.getCellFormula() );
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static void copyCell(HSSFCell oldCell, HSSFCell newCell, boolean copyStyle, String expressionToReplace, String expressionReplacement) {
+        if( copyStyle ){
+            newCell.setCellStyle(oldCell.getCellStyle());
+        }
+        newCell.setEncoding( oldCell.getEncoding() );
+        switch (oldCell.getCellType()) {
+            case HSSFCell.CELL_TYPE_STRING:
+                String oldValue = oldCell.getStringCellValue();
+                newCell.setCellValue(oldValue!=null?oldValue.replaceAll(expressionToReplace, expressionReplacement):null);
                 break;
             case HSSFCell.CELL_TYPE_NUMERIC:
                 newCell.setCellValue(oldCell.getNumericCellValue());
