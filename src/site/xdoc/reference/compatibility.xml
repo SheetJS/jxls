@@ -7,6 +7,7 @@
         <section id="compatibilityBetween0.9.3And0.9.4" name="Changes in version 0.9.4">
             <ul>
                 <li>Accessing HSSFRow POI object in template file. See <a href="poiaccess.html">POI Objects Access</a> section</li>
+                <li>Method setSpreadsheetsToHide() of XLSTransformer class was renamed to setSpreadsheetsToRemove() to reflect its real function</li>
                 <li>Many other bug fixes and improvements</li>
             </ul>
         </section>

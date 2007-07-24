@@ -1612,12 +1612,12 @@ public class XLSTransformerTest extends TestCase {
         beans.put("bean", simpleBean1);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(hideSheetsXLS));
         XLSTransformer transformer = new XLSTransformer();
-        transformer.setSpreadsheetsToHide(new String[]{"Sheet 2", "Sheet 3"});
+        transformer.setSpreadsheetsToRemove(new String[]{"Sheet 2", "Sheet 3"});
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
         assertEquals("Number of sheets in result workbook is incorrect", 1, resultWorkbook.getNumberOfSheets() );
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(hideSheetsXLS));
-        transformer.setSpreadsheetsToHide(new String[]{"Sheet 2"});
+        transformer.setSpreadsheetsToRemove(new String[]{"Sheet 2"});
         resultWorkbook = transformer.transformXLS(is, beans);
         assertEquals("Number of sheets in result workbook is incorrect", 2, resultWorkbook.getNumberOfSheets() );
         is.close();

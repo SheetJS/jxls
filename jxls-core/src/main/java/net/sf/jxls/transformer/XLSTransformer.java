@@ -96,7 +96,7 @@ public class XLSTransformer {
      */
     private short[] columnsToHide;
 
-    private Set spreadsheetsToHide = new HashSet();
+    private Set spreadsheetsToRemove = new HashSet();
 
     private Map spreadsheetsToRename = new HashMap();    // hash map 'spdsheet tpl name' => 'new name'
 
@@ -235,7 +235,7 @@ public class XLSTransformer {
         for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
             final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
             if( spreadsheetName != null && !spreadsheetName.startsWith( configuration.getExcludeSheetProcessingMark() )){
-                if (!isSpreadsheetToHide(spreadsheetName)) {
+                if (!isSpreadsheetToRemove(spreadsheetName)) {
                     if (isSpreadsheetToRename(spreadsheetName)) {
                         hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
                     }
@@ -294,7 +294,7 @@ public class XLSTransformer {
             int sheetNumber = 1;
             for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
                 final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
-                if (!isSpreadsheetToHide(spreadsheetName)) {
+                if (!isSpreadsheetToRemove(spreadsheetName)) {
                     if (isSpreadsheetToRename(spreadsheetName)) {
                         hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
                     }
@@ -396,7 +396,7 @@ public class XLSTransformer {
                     rowProcessors, cellProcessors, configuration);
             for (int sheetNo = 0; sheetNo < workbook.getNumberOfSheets(); sheetNo++) {
                 final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
-                if (!isSpreadsheetToHide(spreadsheetName)) {
+                if (!isSpreadsheetToRemove(spreadsheetName)) {
                     if (isSpreadsheetToRename(spreadsheetName)) {
                         hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
                     }
@@ -553,10 +553,10 @@ public class XLSTransformer {
      * Set spreadsheets with given names to be hidden
      * @param names - Names of the worksheets to hide
      */
-    public void setSpreadsheetsToHide(String[] names) {
-        spreadsheetsToHide.clear();
+    public void setSpreadsheetsToRemove(String[] names) {
+        spreadsheetsToRemove.clear();
         for (int i = 0; i < names.length; i++) {
-            spreadsheetsToHide.add(names[i]);
+            spreadsheetsToRemove.add(names[i]);
         }
     }
 
@@ -564,8 +564,8 @@ public class XLSTransformer {
         spreadsheetsToRename.put(name, newName);
     }
 
-    protected boolean isSpreadsheetToHide(String name) {
-        return spreadsheetsToHide.contains(name);
+    protected boolean isSpreadsheetToRemove(String name) {
+        return spreadsheetsToRemove.contains(name);
     }
 
     protected boolean isSpreadsheetToRename(String name) {

@@ -9,6 +9,7 @@
             <p>This release updates:  </p>
             <ul>
                 <li>Provided access to HSSFRow object in XLS template. See <a href="reference/poiaccess.html">POI Objects Access</a> section</li>
+                <li>Method setSpreadsheetsToHide() of XLSTransformer class was renamed to setSpreadsheetsToRemove() to reflect its real purpose</li>
                 <li>Many bug fixes and improvements. </li>
             </ul>
         </section>
