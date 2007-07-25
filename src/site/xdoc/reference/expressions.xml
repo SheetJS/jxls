@@ -24,11 +24,18 @@
                 Applying expressions to every collection item is the same easy
             </p>
             <source>
-                ${department.staff.payment * ( department.staff.bonus + 1 )}
+                ${employee.payment * ( employee.bonus + 1 )}
             </source>
             <p>In every Excel cell you may use as many expressions as you want. For example</p>
             <source>
-    Payment:${department.staff.payment/10}, Total:${department.staff.payment * ( department.staff.bonus + 1 )}
+    Payment:${employee.payment/10}, Total:${employee.payment * ( employee.bonus + 1 )}
+            </source>
+        </section>
+        <section id="mapPropertiesAccess" name="Map Properties Access">
+            <p>It is easy to access properties which are placed in a Map object. For example assuming a Map is placed into
+            bean context under 'map' key we can access individual objects using String-valued key</p>
+            <source>
+                ${map.get("object1").property1} + ${map.get('object2').property3}
             </source>
         </section>
         <section id="fullJEXLSupport" name="JEXL Expressions Support">

@@ -6,7 +6,7 @@
     <body>
         <section id="introduction" name="Introduction">
             <p>This section specifies how to export collections with jXLS in a simplest way.
-            An alternative is to use <code>&lt;jx:forEach></code>. See <a href="tags.html#foreach">Using tags</a> section for details.
+            Currently it is recommended to use <code>&lt;jx:forEach></code> tag to export collections. See <a href="tags.html#foreach">Using tags</a> section for details.
             Another option is to export every collection item into a separate excel worksheet. See <a href="dynamicsheets.html">Dynamic sheets</a> section for details.
             </p>
             <p>We assume that we have two dependent Java beans of type

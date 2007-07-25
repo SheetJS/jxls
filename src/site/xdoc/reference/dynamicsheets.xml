@@ -33,6 +33,26 @@ HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, depart
             </source>
             <p>In this example we export each department into a separate worksheet using the first worksheet as
                 the main template for a single department export. Every sheet will be named as corresponding department name.</p>
+            <p>You can also export many objects per each worksheet. This can be done using Maps. Just put all the objects that needs to be accessed
+            from the corresponding worksheet into a Map. Create a List of such Map objects (one Map per each Worksheet). Then
+            pass it to transformMultipleSheetsList() method.</p>
+            <p>In your template you have to access each object via Map using map values access notation ${map.get('object1').prop1}. As an example take a look at the following code
+            which demonstrates this by exporting every Department object into a separate worksheet</p>
+            <source>
+                List sheetNames = new ArrayList();
+                List maps = new ArrayList();
+                for(int i = 0; i < departments.size(); i++){
+                    Map map = new HashMap();
+                    Department department = (Department) departments.get( i );
+                    map.put("department", department );
+                    sheetNames.add( department.getName() );
+                    map.put("name", "Number " + i);
+                    maps.add( map );
+                }
+                XLSTransformer transformer = new XLSTransformer();
+                HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(inputStream, maps, sheetNames, "map", new HashMap(), 0);                
+            </source>
+
         </section>
 
     </body>
