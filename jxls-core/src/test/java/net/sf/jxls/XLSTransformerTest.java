@@ -1668,19 +1668,19 @@ public class XLSTransformerTest extends TestCase {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multiTabXLS));
         XLSTransformer transformer = new XLSTransformer();
         List sheetNames = new ArrayList();
-        sheetNames.add("foo");
-        sheetNames.add("bar");
-        sheetNames.add("foobar");
+//        sheetNames.add("New Sheet");
+        List maps = new ArrayList();
+        for(int i = 0; i < departments.size(); i++){
+            Map map = new HashMap();
+            Department department = (Department) departments.get( i );
+            map.put("department", department );
+            sheetNames.add( department.getName() );
+            map.put("name", "Number " + i);
+            maps.add( map );
+        }
 
-        List objects = new ArrayList();
-        objects.add("foo");
-        objects.add("bar");
-        objects.add("foobar");
 
-        Map map = new HashMap();
-        map.put("other", "fnord");
-
-        HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, objects, sheetNames, "name", map, 0);
+        HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, maps, sheetNames, "map", new HashMap(), 0);
         is.close();
         saveWorkbook(resultWorkbook, multiTabDestXLS);
     }
@@ -1749,6 +1749,13 @@ public class XLSTransformerTest extends TestCase {
         Map beans = new HashMap();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         beans.put("dateFormat", dateFormat);
+
+        Map map = new HashMap();
+        map.put("Name", "Leonid");
+        map.put("Surname", "Vysochyn");
+        map.put("employees", itDepartment.getStaff());
+
+        beans.put("map", map);
 
         MyBean obj = new MyBean();
 
