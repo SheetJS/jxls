@@ -50,15 +50,10 @@ public class Formula {
         this.formula = f.formula;
         this.sheet = f.getSheet();
         for (int i = 0; i < f.formulaParts.size(); i++) {
-            Object formulaPart = f.formulaParts.get(i);
-            if( formulaPart instanceof String ){
-                formulaParts.add(formulaPart.toString());
-            }else if(formulaPart instanceof CellRef){
-                CellRef cellRef = new CellRef( formulaPart.toString(), this );
-                formulaParts.add( cellRef );
-                cellRefs.add( cellRef );
-            }
+            FormulaPart formulaPart = (FormulaPart) f.formulaParts.get(i);
+            formulaParts.add( new FormulaPart( formulaPart ) );
         }
+        updateCellRefs();
     }
 
     public String getFormula() {
@@ -140,94 +135,52 @@ public class Formula {
         return appliedFormula;
     }
 
-    String adjust(SheetCellFinder cellFinder){
-//        String adjustedFormula = formula;
-//        Set refCells = findRefCells();
-//        for (Iterator iterator = refCells.iterator(); iterator.hasNext();) {
-//            String refCell = (String) iterator.next();
-//            String newCell = cellFinder.findCell( refCell );
-//            adjustedFormula = adjustedFormula.replaceAll( refCell, newCell );
-//        }
-//        formula = adjustedFormula;
-        return formula;
-    }
+    private static final String regexFormulaPart = "[a-zA-Z]+[0-9]*\\([^@()]+\\)@[0-9]+";
 
-    private static final String regexCellRef = "([a-zA-Z]+[a-zA-Z0-9]*![a-zA-Z]+[0-9]+|[a-zA-Z]+[0-9]+|'[^?\\\\/:'*]+'![a-zA-Z]+[0-9]+)";
-    private static final Pattern regexCellRefPattern = Pattern.compile( regexCellRef );
-
-//    private static final String regexFormulaIndexCellRef = "\\([\\s]*[\\d]+[\\s]+\\)";
-//    private static final Pattern regexFormulaIndexCellRefPattern = Pattern.compile( regexFormulaIndexCellRef );
+    private static final Pattern regexFormulaPartPattern = Pattern.compile( regexFormulaPart );
 
     public String getActualFormula(){
-        Object formulaPart;
+        FormulaPart formulaPart;
         String actualFormula = "";
         for (Iterator iterator = formulaParts.iterator(); iterator.hasNext();) {
-            formulaPart =  iterator.next();
-            actualFormula += formulaPart.toString();
+            formulaPart = (FormulaPart) iterator.next();
+            actualFormula += formulaPart.getActualFormula();
         }
         return actualFormula;
     }
 
     public Set findRefCells() {
         Set refCells = new HashSet();
-        Matcher refCellMatcher = regexCellRefPattern.matcher( formula );
-        while( refCellMatcher.find() ){
-            refCells.add( refCellMatcher.group() );
+        for (Iterator iterator = formulaParts.iterator(); iterator.hasNext();) {
+            FormulaPart formulaPart = (FormulaPart) iterator.next();
+            refCells.addAll( formulaPart.findRefCells() );
         }
         return refCells;
     }
 
     public void parseFormula(){
         formulaParts.clear();
-        cellRefs.clear();
-        Matcher refCellMatcher = regexCellRefPattern.matcher( formula );
+        Matcher formulaPartMatcher = regexFormulaPartPattern.matcher( formula );
         int end = 0;
-        CellRef cellRef = null;
-        while( refCellMatcher.find() ){
-            String formulaPart = formula.substring(end, refCellMatcher.start());
-            formulaPart = adjustFormulaPartForCellIndex(cellRef, formulaPart);
-            formulaParts.add(formulaPart);
-            cellRef = new CellRef( refCellMatcher.group(), this );
-            formulaParts.add( cellRef );
-            cellRefs.add( cellRef );
-            end = refCellMatcher.end();
-        }
-        formulaParts.add( adjustFormulaPartForCellIndex( cellRef, formula.substring( end ) ));
-    }
-
-    private String adjustFormulaPartForCellIndex(CellRef cellRef, String formulaPart) {
-        if( cellRef != null){
-            int indStart = formulaPart.indexOf('(');
-            int indEnd = formulaPart.indexOf(')');
-            if( indStart == 0 && indEnd > 0){
-                String cellIndex = formulaPart.substring( indStart + 1, indEnd );
-                try {
-                    cellRef.setCellIndex( Integer.valueOf( cellIndex ) );
-                    formulaPart = formulaPart.substring( indEnd + 1 );
-                } catch (NumberFormatException e) {
-                    log.error("Can't parse cell index " + cellIndex + " for cell " + cellRef + ". Make sure you don't have any spaces for index part.", e);
-                }
+        while( formulaPartMatcher.find() ){
+            String formulaPartString = formula.substring(end, formulaPartMatcher.start());
+            if( formulaPartString.length() > 0){
+                formulaParts.add( new FormulaPart( formulaPartString, this) );
             }
+            formulaParts.add( new FormulaPart(formulaPartMatcher.group(), this));
+            end = formulaPartMatcher.end();
         }
-        return formulaPart;
+
+        String endPart = formula.substring(end);
+        if( endPart.length() > 0 ){
+            formulaParts.add( new FormulaPart(endPart, this ));
+        }
+        updateCellRefs();
     }
 
-// legacy version
-//    public void parseFormula(){
-//        formulaParts.clear();
-//        cellRefs.clear();
-//        Matcher refCellMatcher = regexCellRefPattern.matcher( formula );
-//        int end = 0;
-//        CellRef cellRef;
-//        while( refCellMatcher.find() ){
-//            formulaParts.add( formula.substring( end, refCellMatcher.start() ) );
-//            cellRef = new CellRef( refCellMatcher.group(), this );
-//            formulaParts.add( cellRef );
-//            cellRefs.add( cellRef );
-//            end = refCellMatcher.end();
-//        }
-//        formulaParts.add( formula.substring( end ));
-//    }
+    void updateCellRefs(){
+        cellRefs = findRefCells();
+    }
 
     public String toString() {
         return "Formula{" +
@@ -238,83 +191,23 @@ public class Formula {
     }
 
     public boolean containsListRanges() {
-        return formula.indexOf( formulaListRangeToken ) >= 0;
-    }
-
-    public void replaceCellRef(CellRef cellRef, List rangeFormulaParts) {
-        for (int i = 0; i < formulaParts.size(); i++) {
-            Object formulaPart = formulaParts.get(i);
-            if( formulaPart == cellRef ){
-                replaceFormulaPart( i, rangeFormulaParts );
-                replaceCellRefs( cellRef, rangeFormulaParts );
-                break;
-            }
-        }
+        return formula.matches("[^)]*@.*");
     }
 
     public void removeCellRefs( Set cellRefsToRemove ){
-        List formulaPartIndexesToRemove = new ArrayList();
-        Object prevFormulaPart = null;
-        Object nextFormulaPart = null;
         for (int i = 0; i < formulaParts.size(); i++) {
-            Object formulaPart = formulaParts.get(i);
-            if( cellRefsToRemove.contains( formulaPart ) ){
-                formulaPartIndexesToRemove.add( new Integer( i ) );
-                if( i > 0 ){
-                    prevFormulaPart = formulaParts.get( i - 1 );
-                }
-                if( i < formulaParts.size() - 1 ){
-                    nextFormulaPart = formulaParts.get( i + 1 );
-                }else{
-                    nextFormulaPart = null;
-                }
-                if( prevFormulaPart != null ){
-                    if( prevFormulaPart.toString().equals(",") ){
-                        formulaPartIndexesToRemove.add( new Integer(i - 1) );
-                    }else if( nextFormulaPart != null && nextFormulaPart.toString().equals( "," )){
-                        formulaPartIndexesToRemove.add( new Integer(i + 1) );
-                    }
-                }
-            }
+            FormulaPart formulaPart = (FormulaPart) formulaParts.get(i);
+            formulaPart.removeCellRefs( cellRefsToRemove );
         }
-        int shift = 0;
-        for (int i = 0; i < formulaPartIndexesToRemove.size(); i++) {
-            int index =  ((Integer) formulaPartIndexesToRemove.get(i)).intValue() ;
-            formulaParts.remove( index - shift );
-            shift++;
-        }
-        cellRefs.removeAll( cellRefsToRemove );
+        updateCellRefs();
     }
 
-    private void replaceCellRefs(CellRef cellRef, List rangeFormulaParts) {
-        cellRefsToRemove.add( cellRef );
-        for (int i = 0; i < rangeFormulaParts.size(); i++) {
-            Object formulaPart = rangeFormulaParts.get(i);
-            if( formulaPart instanceof CellRef ){
-                cellRefsToAdd.add( formulaPart );
-            }
-        }
-    }
-
-    List cellRefsToRemove = new ArrayList();
-    List cellRefsToAdd = new ArrayList();
     public void updateReplacedRefCellsCollection(){
-        CellRef cellRef;
-        for (int i = 0, size = cellRefsToRemove.size(); i < size; i++) {
-            cellRef = (CellRef) cellRefsToRemove.get(i);
-            cellRefs.remove( cellRef );
+        for (Iterator iterator = formulaParts.iterator(); iterator.hasNext();) {
+            FormulaPart formulaPart = (FormulaPart) iterator.next();
+            formulaPart.updateReplacedRefCellsCollection( );
         }
-        cellRefsToRemove.clear();
-        Object cellRef2;
-        for (int i = 0, size = cellRefsToAdd.size(); i < size; i++) {
-            cellRef2 = cellRefsToAdd.get(i);
-            cellRefs.add( cellRef2 );
-        }
-        cellRefsToAdd.clear();
+
     }
 
-    private void replaceFormulaPart(int pos, List rangeFormulaParts) {
-        formulaParts.remove( pos );
-        formulaParts.addAll( pos, rangeFormulaParts );
-    }
 }

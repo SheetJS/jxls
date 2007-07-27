@@ -19,6 +19,9 @@ public class Configuration {
     private String startFormulaToken = "$[";
     private String endFormulaToken = "]";
 
+    private String startFormulaPartToken = "{";
+    private String endFormulaPartToken = "}";
+
     String tagPrefix = "jx";
     String forTagName = "forEach";
     String forTagItems = "items";
@@ -164,6 +167,23 @@ public class Configuration {
 
     public void setEndFormulaToken(String endFormulaToken) {
         this.endFormulaToken = endFormulaToken;
+    }
+
+
+    public String getStartFormulaPartToken() {
+        return startFormulaPartToken;
+    }
+
+    public void setStartFormulaPartToken(String startFormulaPartToken) {
+        this.startFormulaPartToken = startFormulaPartToken;
+    }
+
+    public String getEndFormulaPartToken() {
+        return endFormulaPartToken;
+    }
+
+    public void setEndFormulaPartToken(String endFormulaPartToken) {
+        this.endFormulaPartToken = endFormulaPartToken;
     }
 
     public String getExcludeSheetProcessingMark() {

@@ -17,7 +17,7 @@ public class CellRef {
 
     String cellRef;
     String baseCellRef;
-    Formula parentFormula;
+    FormulaPart parentFormula;
     int rowNum;
     short colNum;
     String sheetName;
@@ -36,7 +36,7 @@ public class CellRef {
         sheetName = cellReference.getSheetName();
     }
 
-    public CellRef(String cellRef, Formula parentFormula) {
+    public CellRef(String cellRef, FormulaPart parentFormula) {
         this(cellRef);
         this.parentFormula = parentFormula;
     }

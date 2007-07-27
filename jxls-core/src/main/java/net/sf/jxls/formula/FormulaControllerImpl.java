@@ -77,6 +77,7 @@ public class FormulaControllerImpl implements FormulaController {
                     formula.removeCellRefs( cellRefsToRemove );
                 }
                 formula.updateReplacedRefCellsCollection();
+                    formula.updateCellRefs();
                     if(formulaPoints != null && !formulaPoints.isEmpty()){
                         if(formulaPoints.size() == 1){
                             newPoint = (Point) formulaPoints.get(0);

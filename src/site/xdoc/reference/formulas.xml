@@ -72,5 +72,21 @@
                 In this case we will get a formula like <code>SUM(B5:B10)</code>.
            </p>
         </section>
+        <section id="defaultFormulaValues" name="Default Formula Values">
+            <p>
+            Sometime you may have a situation when all cells referenced in your formula are removed from the sheet.
+            For example it can happen when formula references a cell inside jx:forEach tag and the collection is empty.
+            To deal with this situation you can use <code>@</code> symbol to define default formula value.
+            Default formula value will replace the formula only in that case when all underlying cell references were removed during processing.
+            </p>
+            <p>Example</p>
+            <source>
+            $[SUM(B6) + SUM(B13)@0 + (SUM(B20)@0) +SUM(B27)@0 + SUM(B34)]
+            </source>
+            <p>Assuming cells B13 and B27 were removed during transformation you will get Excel output similar to this </p>
+            <source>
+                =SUM(B5:B9)+0+(SUM(B18:B21))+0+SUM(B30:B32)
+            </source>
+        </section>
     </body>
 </document>

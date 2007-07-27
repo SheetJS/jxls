@@ -41,7 +41,7 @@ HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, depart
             <source>
                 List sheetNames = new ArrayList();
                 List maps = new ArrayList();
-                for(int i = 0; i < departments.size(); i++){
+                for(int i = 0; i &lt; departments.size(); i++){
                     Map map = new HashMap();
                     Department department = (Department) departments.get( i );
                     map.put("department", department );

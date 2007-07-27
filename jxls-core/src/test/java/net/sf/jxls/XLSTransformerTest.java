@@ -36,6 +36,8 @@ public class XLSTransformerTest extends TestCase {
 
     public static final String formulasXLS = "/templates/formulas.xls";
     public static final String formulasDestXLS = "target/formulas_output.xls";
+    public static final String formulas2XLS = "/templates/formulas2.xls";
+    public static final String formulas2DestXLS = "target/formulas2_output.xls";
 
     public static final String multipleListRowsXLS = "/templates/multiplelistrows.xls";
     public static final String multipleListRowsDestXLS = "target/multiplelistrows_output.xls";
@@ -316,6 +318,19 @@ public class XLSTransformerTest extends TestCase {
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 3, dateValues);
         is.close();
         saveWorkbook(resultWorkbook, beanWithListDestXLS);
+    }
+
+    public void testFormulas2() throws IOException {
+        Map beans = new HashMap();
+        beans.put("departments", departments);
+
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(formulas2XLS));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+
+        saveWorkbook(resultWorkbook, formulasDestXLS);
+
     }
 
     public void testFormulas() throws IOException, ParsePropertyException {

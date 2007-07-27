@@ -21,7 +21,7 @@ public class RemoveTransformation extends BlockTransformation {
     }
 
     public Block getBlockAfterTransformation() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;  
     }
 
 
@@ -29,6 +29,7 @@ public class RemoveTransformation extends BlockTransformation {
         List cells = null;
         if( !block.contains( p ) ){
             cells = new ArrayList();
+            cells.add(p);
         }
         return cells;
     }
