@@ -43,6 +43,7 @@ public class CellTransformer {
                                 Object value = ((Expression) cell.getExpressions().get(0)).evaluate();
                                 if (value == null) {
                                     cell.getHssfCell().setCellValue("");
+                                    cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
                                 } else if (value instanceof Double) {
                                     cell.getHssfCell().setCellValue(((Double) value).doubleValue());
                                 } else if (value instanceof BigDecimal) {
@@ -62,7 +63,11 @@ public class CellTransformer {
                                         fixedValue = fixedValue.replaceAll("\r\n", "\n");
                                     }
                                     cell.getHssfCell().setEncoding( HSSFCell.ENCODING_UTF_16 );
-                                    cell.getHssfCell().setCellValue(fixedValue);
+                                    if( fixedValue.length() == 0 ){
+                                        cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
+                                    }else{
+                                        cell.getHssfCell().setCellValue(fixedValue);
+                                    }
                                 }
                             } else {
                                 if (cell.getExpressions().size() > 1) {
@@ -75,7 +80,11 @@ public class CellTransformer {
                                         }
                                     }
                                     cell.getHssfCell().setEncoding( HSSFCell.ENCODING_UTF_16 );
-                                    cell.getHssfCell().setCellValue(value);
+                                    if( value == null || value.length() == 0){
+                                        cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
+                                    }else{
+                                        cell.getHssfCell().setCellValue(value);
+                                    }
                                 }
                             }
                     }
@@ -93,7 +102,11 @@ public class CellTransformer {
                         }
                     }
                     cell.getHssfCell().setEncoding( HSSFCell.ENCODING_UTF_16 );
-                    cell.getHssfCell().setCellValue(value);
+                    if( value == null || value.length() == 0){
+                        cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
+                    }else{
+                        cell.getHssfCell().setCellValue(value);
+                    }
                 }
             }
         } catch (Exception e) {

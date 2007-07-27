@@ -1778,6 +1778,9 @@ public class XLSTransformerTest extends TestCase {
 
         beans.put( "bean", bean );
 
+        beans.put("emptyVar", "");
+        beans.put("nullVar", null);
+
         beans.put("obj", obj);
         beans.put("employees1", ((Department)departments.get(0)).getStaff());
         beans.put("employees2", new ArrayList());
