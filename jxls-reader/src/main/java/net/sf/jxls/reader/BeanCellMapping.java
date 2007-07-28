@@ -1,5 +1,6 @@
 package net.sf.jxls.reader;
 
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -134,6 +135,20 @@ public class BeanCellMapping {
         if( beans.containsKey( beanKey ) ){
             bean = beans.get( beanKey );
             PropertyUtils.setProperty( bean, propertyName, data );
+        }else{
+            if( log.isWarnEnabled() ){
+                log.warn("Can't find bean under the key=" + beanKey);
+            }
+        }
+    }
+
+    public void populateBean(String dataString, Map beans) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        Object bean;
+        if( beans.containsKey( beanKey ) ){
+            bean = beans.get( beanKey );
+            Class dataType = getPropertyType( beans );
+            Object value = ConvertUtils.convert( dataString, dataType );
+            PropertyUtils.setProperty( bean, propertyName, value );
         }else{
             if( log.isWarnEnabled() ){
                 log.warn("Can't find bean under the key=" + beanKey);

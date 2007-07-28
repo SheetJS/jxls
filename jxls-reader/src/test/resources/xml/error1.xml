@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<workbook>
+    <worksheet name="Sheet1">
+        <section startRow="0" endRow="10">
+            <mapping cell="B1">bean.intValue1</mapping>
+            <mapping cell="B2">bean.intValue2</mapping>
+            <mapping cell="B3">bean.intValue3</mapping>
+            <mapping cell="B4">bean.intValue4</mapping>
+        </section>
+    </worksheet>
+</workbook>

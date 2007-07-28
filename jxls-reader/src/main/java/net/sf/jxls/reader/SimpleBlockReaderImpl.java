@@ -39,17 +39,60 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
     public void read(XLSRowCursor cursor, Map beans)  {
         final int currentRowNum = cursor.getCurrentRowNum();
         final int rowShift = currentRowNum - startRow;
-        BeanCellMapping mapping = null;
-        try {
+        BeanCellMapping mapping;
             for (Iterator iterator = beanCellMappings.iterator(); iterator.hasNext();) {
                 mapping = (BeanCellMapping) iterator.next();
-                Object value = readCellValue(cursor.getSheet(), mapping.getRow() + rowShift, mapping.getCol(), mapping.getPropertyType( beans ));
-                mapping.populateBean( value, beans );
+//                Object value;
+                try {
+//                    value = readCellValue(cursor.getSheet(), mapping.getRow() + rowShift, mapping.getCol(), mapping.getPropertyType( beans ));
+                    String dataString = readCellString(cursor.getSheet(), mapping.getRow() + rowShift, mapping.getCol() );
+                    mapping.populateBean( dataString, beans );
+                } catch (Exception e) {
+                    String message = "Can't read cell " + getCellName( mapping, rowShift ) + " on " + cursor.getSheetName() + " spreadsheet";
+                    if( Configuration.getInstance().isSkipErrors() )    {
+                        log.error( message, e);
+                    }else{
+                        throw new XLSDataReadException(getCellName( mapping, rowShift ), "Can't read cell " + getCellName( mapping, rowShift ) + " on " + cursor.getSheetName() + " spreadsheet", e );
+                    }
+                }
             }
-        } catch (Exception e) {
-            throw new XLSDataReadException(getCellName( mapping, rowShift ), "Can't read cell " + getCellName( mapping, rowShift ) + " on " + cursor.getSheetName() + " spreadsheet", e );
-        }
         cursor.setCurrentRowNum( endRow + rowShift );
+    }
+
+    private String readCellString(HSSFSheet sheet, int rowNum, short cellNum) {
+        HSSFCell cell = getCell(sheet, rowNum, cellNum);
+        return getCellString( cell );
+    }
+
+    private String getCellString(HSSFCell cell) {
+        String dataString = null;
+        if( cell != null ){
+            switch (cell.getCellType()) {
+                case HSSFCell.CELL_TYPE_STRING:
+                    dataString = cell.getStringCellValue();
+                    break;
+                case HSSFCell.CELL_TYPE_NUMERIC:
+                    double value = cell.getNumericCellValue();
+                    if( ((int)value) == value ){
+                        dataString = Integer.toString( (int)value );
+                    }else{
+                        dataString = Double.toString( cell.getNumericCellValue());
+                    }
+                    break;
+                case HSSFCell.CELL_TYPE_BOOLEAN:
+                    dataString = Boolean.toString( cell.getBooleanCellValue() );
+                    break;
+                case HSSFCell.CELL_TYPE_BLANK:
+                    break;
+                case HSSFCell.CELL_TYPE_ERROR:
+                    break;
+                case HSSFCell.CELL_TYPE_FORMULA:
+                    break;
+                default:
+                    break;
+            }
+        }
+        return dataString;
     }
 
     private Object readCellValue(HSSFSheet sheet, int rowNum, short cellNum, Class type) {

@@ -73,24 +73,12 @@ public class Employee {
         this.name = name;
     }
 
-//    public Integer getAge() {
-//        return age;
-//    }
-//
-//    public void setAge(Integer age) {
-//        this.age = age;
-//    }
-
-    public Object getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(Object age) {
-        if( age instanceof Double){
-            this.age = new Integer( ((Double)age).intValue() );
-        }else if( age instanceof Integer ){
-            this.age = (Integer) age;
-        }
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public Double getPayment() {

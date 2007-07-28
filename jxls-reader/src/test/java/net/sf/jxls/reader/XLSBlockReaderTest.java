@@ -3,8 +3,10 @@ package net.sf.jxls.reader;
 import junit.framework.TestCase;
 import net.sf.jxls.reader.sample.Department;
 import net.sf.jxls.reader.sample.Employee;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.LazyDynaBean;
+import org.apache.commons.beanutils.converters.SqlDateConverter;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -23,6 +25,12 @@ import java.util.Map;
  */
 public class XLSBlockReaderTest extends TestCase {
     public static final String dataXLS = "/templates/departmentData.xls";
+
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        ConvertUtils.register( new SqlDateConverter(null), java.util.Date.class);
+    }
 
     public void testRead() throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));
@@ -60,6 +68,6 @@ public class XLSBlockReaderTest extends TestCase {
         mappings.add( new BeanCellMapping(9, (short) 3, "total", "totalPayment"));
         cursor.setCurrentRowNum( 12 );
         reader.read( cursor, beans );
-        assertEquals( new Double(10100), dynaBean.get( "totalPayment" ));
+        assertEquals( new Integer(10100).toString(), dynaBean.get( "totalPayment" ));
     }
 }

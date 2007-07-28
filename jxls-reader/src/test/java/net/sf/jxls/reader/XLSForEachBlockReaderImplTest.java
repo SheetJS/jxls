@@ -27,6 +27,11 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
     public static final String idsXLS = "/templates/ids.xls";
 
 
+    protected void setUp() throws Exception {
+        super.setUp();
+        Configuration.getInstance().setUseDefaultValuesForPrimitiveTypes( true );
+    }
+
     public void testRead() throws IOException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(departmentDataXLS));
         POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
@@ -47,6 +52,7 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
         SectionCheck loopBreakCheck = getLoopBreakCheck();
         forEachReader.setLoopBreakCondition( loopBreakCheck );
         cursor.setCurrentRowNum( 7 );
+
         forEachReader.read( cursor, beans );
         assertEquals( 4, department.getStaff().size() );
         Employee employee = (Employee) department.getStaff().get(0);
