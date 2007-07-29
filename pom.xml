@@ -3,7 +3,7 @@
   <groupId>net.sf.jxls</groupId>
   <artifactId>jxls</artifactId>
   <packaging>pom</packaging>
-  <version>0.9.5</version>
+  <version>0.9.6-SNAPSHOT</version>
   <name>jXLS</name>
   <url>http://jxls.sf.net</url>
   <modules>
@@ -70,9 +70,9 @@
     </mailingList>
   </mailingLists>
     <scm>
-        <connection>scm:svn:https://jxls.svn.sourceforge.net/svnroot/jxls/tags/jxls-0.9.5</connection>
-        <developerConnection>scm:svn:https://jxls.svn.sourceforge.net/svnroot/jxls/tags/jxls-0.9.5</developerConnection>
-        <url>http://jxls.svn.sourceforge.net/viewvc/jxls/tags/jxls-0.9.5</url>
+        <connection>scm:svn:https://jxls.svn.sourceforge.net/svnroot/jxls/tags/jxls-0.9.4</connection>
+        <developerConnection>scm:svn:https://jxls.svn.sourceforge.net/svnroot/jxls/tags/jxls-0.9.4</developerConnection>
+        <url>http://jxls.svn.sourceforge.net/viewvc/jxls/tags/jxls-0.9.4</url>
     </scm>
   <issueManagement>
     <system>SourceForge Tracker</system>
