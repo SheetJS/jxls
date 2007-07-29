@@ -94,10 +94,44 @@
                     beans.put("department", department);
                     beans.put("hrDepartment", hrDepartment);
                     beans.put("departments", departments);
-                    mainReader.read( inputXLS, beans);
+                    XLSReadStatus readStatus = mainReader.read( inputXLS, beans);
                 </source>
             </section>
-
+        </section>
+        <section id="errorProcessing" name="Error Processing">
+            <p>By default jXLS throws <code>XLSDataReadException</code> if it fails to read some cell value and stops further processing.</p>
+            <p>You can override this behaviour and allow to skip errors and continue processing with <code>setSkipErrors(true)</code> method of <code>ReaderConfig</code> class.
+                You get an instance of <code>ReaderConfig</code> class using <code>ReaderConfig.getInstance()</code> method.
+            </p>
+            <source>
+                ReaderConfig.getInstance().setSkipErrors( true );
+            </source>
+            <p>All the error messages are stored in <code>XLSReadStatus</code> object which is returned from <code>read</code> method.
+            <code>XLSDataReadException</code> also contains a reference to this object. You can analyse  <code>XLSReadMessage</code>
+                objects after getting them from <code>XLSReadStatus</code> using <code>getReadMessages()</code> method. 
+            </p>
+        </section>
+        <section id="excelValuesConversion" name="Conversion Mechanism">
+            <p>
+                jXLS integrates with Jakarta BeanUtils conversion utilities to perform actual conversion from Excel cell values into bean properties.
+                See more about this in <a href="http://commons.apache.org/beanutils/apidocs/org/apache/commons/beanutils/ConvertUtils.html">ConvertUtils</a>.
+                jXLS uses standard converters for primitive types provided by <code>org.apache.commons.beanutils.converters</code> package.
+                For <code>java.util.Date</code> type we provide a custom <code>DateConverter</code> which uses POI utility methods to convert from Excel date
+                representation into <code>Date</code> class.
+            </p>
+            <p>BeanUtils Converters for primitive types return a default value when a conversion error occurs. jXLS overrides this behaviour
+            in <code>ReaderConfig</code> class registering these classes to throw a ConversionException. You can use
+            <code>setUseDefaultValuesForPrimitiveTypes(true)</code> method of <code>ReaderConfig</code> class if you prefer these classes to use
+            a default value. For example
+            </p>
+            <source>
+                ReaderConfig.getInstance().setUseDefaultValuesForPrimitiveTypes( true );
+            </source>
+            <p>
+                To define your own converters from an excel cell into your own property type you should implement
+                <a href="http://commons.apache.org/beanutils/apidocs/org/apache/commons/beanutils/Converter.html">Converter</a> interface
+                and register your converter with <a href="http://commons.apache.org/beanutils/apidocs/org/apache/commons/beanutils/ConvertUtils.html">ConvertUtils</a> class.
+            </p>
         </section>
     </body>
 </document>

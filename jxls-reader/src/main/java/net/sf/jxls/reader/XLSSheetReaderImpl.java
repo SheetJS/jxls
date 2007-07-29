@@ -14,13 +14,18 @@ public class XLSSheetReaderImpl implements XLSSheetReader {
     List blockReaders = new ArrayList();
     String sheetName;
 
-    public void read(HSSFSheet sheet, Map beans) {
+    XLSReadStatus readStatus = new XLSReadStatus();
+
+
+    public XLSReadStatus read(HSSFSheet sheet, Map beans) {
+        readStatus.clear();
         XLSRowCursor cursor = new XLSRowCursorImpl( sheetName, sheet );
         for (int i = 0; i < blockReaders.size(); i++) {
             XLSBlockReader blockReader = (XLSBlockReader) blockReaders.get(i);
-            blockReader.read( cursor, beans );
+            readStatus.mergeReadStatus( blockReader.read( cursor, beans ) );
             cursor.moveForward();
         }
+        return readStatus;
     }
 
     public List getBlockReaders() {

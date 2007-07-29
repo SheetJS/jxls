@@ -8,8 +8,8 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.converters.*;
 
-public class Configuration {
-    private static Configuration ourInstance = new Configuration();
+public class ReaderConfig {
+    private static ReaderConfig ourInstance = new ReaderConfig();
 
     private boolean skipErrors = false;
     private boolean useDefaultValuesForPrimitiveTypes = true;
@@ -49,12 +49,13 @@ public class Configuration {
 
 
 
-    public static Configuration getInstance() {
+    public static ReaderConfig getInstance() {
         return ourInstance;
     }
 
-    private Configuration() {
+    private ReaderConfig() {
         setUseDefaultValuesForPrimitiveTypes( false );
+        ConvertUtils.register( new DateConverter(), java.util.Date.class);
     }
 
     public boolean isSkipErrors() {

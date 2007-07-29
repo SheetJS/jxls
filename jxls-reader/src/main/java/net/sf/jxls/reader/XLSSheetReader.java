@@ -14,8 +14,9 @@ public interface XLSSheetReader {
      * Method to read data from excel sheet and populate objects
      * @param sheet - {@link HSSFSheet} object
      * @param beans - {@link Map} of beans to populate
+     * @return {@link XLSReadStatus} object with info about read status
      */
-    void read(HSSFSheet sheet, Map beans);
+    XLSReadStatus read(HSSFSheet sheet, Map beans);
 
     List getBlockReaders();
     void setBlockReaders(List blockReaders);

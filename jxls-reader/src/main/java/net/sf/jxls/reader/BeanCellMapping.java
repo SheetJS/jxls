@@ -20,6 +20,9 @@ public class BeanCellMapping {
     String propertyName;
     String beanKey;
     String cell;
+    static{
+        ReaderConfig.getInstance();
+    }
 
     public BeanCellMapping(int rowNum, short cellNum, String fullPropertyName) {
         this.row = rowNum;
@@ -128,18 +131,6 @@ public class BeanCellMapping {
 
     public void setPropertyName(String propertyName) {
         this.propertyName = propertyName;
-    }
-
-    public void populateBean(Object data, Map beans) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-        Object bean;
-        if( beans.containsKey( beanKey ) ){
-            bean = beans.get( beanKey );
-            PropertyUtils.setProperty( bean, propertyName, data );
-        }else{
-            if( log.isWarnEnabled() ){
-                log.warn("Can't find bean under the key=" + beanKey);
-            }
-        }
     }
 
     public void populateBean(String dataString, Map beans) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {

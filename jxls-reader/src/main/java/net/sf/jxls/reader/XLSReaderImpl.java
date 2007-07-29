@@ -20,15 +20,20 @@ public class XLSReaderImpl implements XLSReader {
 
     Map sheetReaders = new HashMap();
 
-    public void read(InputStream inputXLS, Map beans) throws IOException {
+    XLSReadStatus readStatus = new XLSReadStatus();
+
+
+    public XLSReadStatus read(InputStream inputXLS, Map beans) throws IOException {
+        readStatus.clear();
         POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
         HSSFWorkbook workbook = new HSSFWorkbook(fsInput);
         for (int sheetNo = 0; sheetNo < workbook.getNumberOfSheets(); sheetNo++) {
-            readSheet(workbook, sheetNo, beans);
+            readStatus.mergeReadStatus( readSheet(workbook, sheetNo, beans) );
         }
+        return readStatus;
     }
 
-    private void readSheet(HSSFWorkbook workbook, int sheetNo, Map beans) {
+    private XLSReadStatus readSheet(HSSFWorkbook workbook, int sheetNo, Map beans) {
         HSSFSheet sheet = workbook.getSheetAt( sheetNo );
         String sheetName = workbook.getSheetName( sheetNo );
         if( log.isInfoEnabled() ){
@@ -37,7 +42,9 @@ public class XLSReaderImpl implements XLSReader {
         if( sheetReaders.containsKey( sheetName ) ){
             XLSSheetReader sheetReader = (XLSSheetReader) sheetReaders.get( sheetName );
             sheetReader.setSheetName( sheetName );
-            sheetReader.read( sheet, beans );
+            return sheetReader.read( sheet, beans );
+        }else{
+            return null;
         }
     }
 

@@ -6,6 +6,7 @@
             <mapping cell="B2">bean.intValue2</mapping>
             <mapping cell="B3">bean.intValue3</mapping>
             <mapping cell="B4">bean.intValue4</mapping>
+            <mapping cell="B5">bean.dateValue</mapping>
         </section>
     </worksheet>
 </workbook>

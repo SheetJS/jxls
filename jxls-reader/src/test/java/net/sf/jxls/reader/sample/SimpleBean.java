@@ -1,5 +1,7 @@
 package net.sf.jxls.reader.sample;
 
+import java.util.Date;
+
 /**
  * @author Leonid Vysochyn
  * @version 1.0 28.07.2007
@@ -11,6 +13,7 @@ public class SimpleBean {
     Integer intValue2;
     Integer intValue3;
     Integer intValue4;
+    Date dateValue;
 
 
     public Integer getIntValue4() {
@@ -59,5 +62,13 @@ public class SimpleBean {
 
     public void setStr(String str) {
         this.str = str;
+    }
+
+    public Date getDateValue() {
+        return dateValue;
+    }
+
+    public void setDateValue(Date dateValue) {
+        this.dateValue = dateValue;
     }
 }

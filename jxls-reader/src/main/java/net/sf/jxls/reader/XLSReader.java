@@ -9,7 +9,7 @@ import java.util.Map;
  * @author Leonid Vysochyn
  */
 public interface XLSReader {
-    void read(InputStream inputXLS, Map beans) throws IOException;
+    XLSReadStatus read(InputStream inputXLS, Map beans) throws IOException;
     void setSheetReaders(Map sheetReaders);
     Map getSheetReaders();
     void addSheetReader( String sheetName, XLSSheetReader reader);

@@ -3,10 +3,8 @@ package net.sf.jxls.reader;
 import junit.framework.TestCase;
 import net.sf.jxls.reader.sample.Department;
 import net.sf.jxls.reader.sample.Employee;
-import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.LazyDynaBean;
-import org.apache.commons.beanutils.converters.SqlDateConverter;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -15,10 +13,9 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author Leonid Vysochyn
@@ -29,10 +26,10 @@ public class XLSBlockReaderTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        ConvertUtils.register( new SqlDateConverter(null), java.util.Date.class);
+//        ConvertUtils.register( new SqlDateConverter(null), java.util.Date.class);
     }
 
-    public void testRead() throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException {
+    public void testRead() throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException, ParseException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));
         POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
         HSSFWorkbook hssfInputWorkbook = new HSSFWorkbook(fsInput);
@@ -60,6 +57,11 @@ public class XLSBlockReaderTest extends TestCase {
         assertEquals( new Integer(30), chief.getAge() );
         assertEquals( new Double( 3000.0), chief.getPayment() );
         assertEquals( new Double(0.25), chief.getBonus() );
+
+        SimpleDateFormat format = new SimpleDateFormat("d-MMM-yy");
+        Date date = format.parse("20-Dec-76");
+        assertEquals("Date value read error", date, chief.getBirthDate());
+
         mappings.clear();
         DynaBean dynaBean = new LazyDynaBean();
         beans.clear();

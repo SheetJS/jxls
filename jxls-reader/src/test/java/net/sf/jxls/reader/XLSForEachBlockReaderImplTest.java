@@ -29,7 +29,7 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        Configuration.getInstance().setUseDefaultValuesForPrimitiveTypes( true );
+//        ReaderConfig.getInstance().setUseDefaultValuesForPrimitiveTypes( true );
     }
 
     public void testRead() throws IOException {

@@ -7,7 +7,7 @@ import java.util.Map;
  * @author Leonid Vysochyn
  */
 public interface XLSBlockReader {
-    void read(XLSRowCursor cursor, Map beans);
+    XLSReadStatus read(XLSRowCursor cursor, Map beans);
 
     int getStartRow();
 

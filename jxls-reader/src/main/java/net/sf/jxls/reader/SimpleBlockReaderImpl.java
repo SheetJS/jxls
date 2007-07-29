@@ -21,6 +21,9 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
     List beanCellMappings = new ArrayList();
     SectionCheck sectionCheck;
 
+    static{
+        ReaderConfig.getInstance();
+    }
 
     public SimpleBlockReaderImpl() {
     }
@@ -36,27 +39,31 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
         this.endRow = endRow;
     }
 
-    public void read(XLSRowCursor cursor, Map beans)  {
+    public XLSReadStatus read(XLSRowCursor cursor, Map beans)  {
+        readStatus.clear();
         final int currentRowNum = cursor.getCurrentRowNum();
         final int rowShift = currentRowNum - startRow;
         BeanCellMapping mapping;
             for (Iterator iterator = beanCellMappings.iterator(); iterator.hasNext();) {
                 mapping = (BeanCellMapping) iterator.next();
-//                Object value;
                 try {
-//                    value = readCellValue(cursor.getSheet(), mapping.getRow() + rowShift, mapping.getCol(), mapping.getPropertyType( beans ));
                     String dataString = readCellString(cursor.getSheet(), mapping.getRow() + rowShift, mapping.getCol() );
                     mapping.populateBean( dataString, beans );
                 } catch (Exception e) {
                     String message = "Can't read cell " + getCellName( mapping, rowShift ) + " on " + cursor.getSheetName() + " spreadsheet";
-                    if( Configuration.getInstance().isSkipErrors() )    {
-                        log.error( message, e);
+                    readStatus.addMessage( new XLSReadMessage(message, e));
+                    if( ReaderConfig.getInstance().isSkipErrors() )    {
+                        if( log.isWarnEnabled() ){
+                            log.warn( message );
+                        }
                     }else{
-                        throw new XLSDataReadException(getCellName( mapping, rowShift ), "Can't read cell " + getCellName( mapping, rowShift ) + " on " + cursor.getSheetName() + " spreadsheet", e );
+                        readStatus.setStatusOK( false );
+                        throw new XLSDataReadException(getCellName( mapping, rowShift ), "Can't read cell " + getCellName( mapping, rowShift ) + " on " + cursor.getSheetName() + " spreadsheet", readStatus);
                     }
                 }
             }
         cursor.setCurrentRowNum( endRow + rowShift );
+        return readStatus;
     }
 
     private String readCellString(HSSFSheet sheet, int rowNum, short cellNum) {
@@ -95,11 +102,6 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
         return dataString;
     }
 
-    private Object readCellValue(HSSFSheet sheet, int rowNum, short cellNum, Class type) {
-        HSSFCell cell = getCell(sheet, rowNum, cellNum);
-        return getCellValue( cell, type );
-    }
-
     private String getCellName( BeanCellMapping mapping, int rowShift ){
         CellReference currentCellRef = new CellReference(mapping.getRow() + rowShift, mapping.getCol());
         return currentCellRef.toString();
@@ -120,50 +122,6 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
 
     public List getMappings() {
         return beanCellMappings;
-    }
-
-    private Object getCellValue(HSSFCell cell, Class type) {
-        if( cell == null ){
-            return null;
-        }
-        Object value = null;
-        if(isDate(type)){
-            value = cell.getDateCellValue();
-        }else{
-            switch (cell.getCellType()) {
-                case HSSFCell.CELL_TYPE_STRING:
-                    value = cell.getStringCellValue();
-                    break;
-                case HSSFCell.CELL_TYPE_NUMERIC:
-                    value = new Double(cell.getNumericCellValue());
-                    // if we expect String type instead of numeric then we converting Double value to String
-                    if( !type.isInstance(value) ){
-                        double doubleValue = ((Double)value).doubleValue();
-                        if( Math.floor( doubleValue ) == doubleValue ){
-                            value = Long.toString(((Double) value).longValue());
-                        }else{
-                            value = value.toString();
-                        }
-                    }
-                    break;
-                case HSSFCell.CELL_TYPE_BOOLEAN:
-                    value = (cell.getBooleanCellValue()) ? Boolean.TRUE : Boolean.FALSE;
-                    break;
-                case HSSFCell.CELL_TYPE_BLANK:
-                    break;
-                case HSSFCell.CELL_TYPE_ERROR:
-                    break;
-                case HSSFCell.CELL_TYPE_FORMULA:
-                    break;
-                default:
-                    break;
-            }
-        }
-        return value;
-    }
-
-    private boolean isDate(Class type) {
-        return type.getName().indexOf("java.util.Date") >=0;
     }
 
     private HSSFCell getCell(HSSFSheet sheet, int rowNum, short cellNum){

@@ -5,12 +5,13 @@
   </properties>
     <body>
         <section name="News">
-            <p><strong>jXLS v.0.9.4 released</strong></p>
+            <p><strong>jXLS v.0.9.5 released</strong></p>
             <p>This release updates:  </p>
             <ul>
-                <li>Provided access to HSSFRow object in XLS template. See <a href="reference/poiaccess.html">POI Objects Access</a> section</li>
-                <li>Method setSpreadsheetsToHide() of XLSTransformer class was renamed to setSpreadsheetsToRemove() to reflect its real purpose</li>
-                <li>Many bug fixes and improvements. </li>
+                <li>Formula support extended to handle default formula values. See <a href="reference/formulas.html">Default Formula Values</a> section</li>
+                <li><code>jxls-reader</code> package was considerably improved. Not it uses Jakarta <code>ConvertUtils</code> class for conversion from Excel cell values into
+                bean properties and automatically handles all the primitive and <code>java.util.Date</code> types. Error handling was improved as well.
+                    See <a href="reference/reader.html">Reading Excel Files</a> section</li>
             </ul>
         </section>
         <section name="Overview">

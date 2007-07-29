@@ -24,6 +24,7 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
     SectionCheck loopBreakCheck;
 
 
+
     public XLSForEachBlockReaderImpl() {
     }
 
@@ -35,8 +36,8 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
         this.varType = varType;
     }
 
-    public void read(XLSRowCursor cursor, Map beans) {
-        try {
+    public XLSReadStatus read(XLSRowCursor cursor, Map beans) {
+        readStatus.clear();
             JexlContext context = JexlHelper.createContext();
             context.setVars(beans);
             ExpressionCollectionParser parser = new ExpressionCollectionParser( context, items + ";", true );
@@ -46,13 +47,27 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
                 readInnerBlocks(cursor, beans);
             }
             cursor.moveBackward();
-        }catch (Exception e) {
-            throw new XLSDataReadException("Can't read XLS in ForEachBlockReader, items = " + items, e);
-        }
+        return readStatus;
+
     }
 
-    private void createNewCollectionItem(Collection itemsCollection, Map beans) throws InstantiationException, IllegalAccessException {
-        Object obj = varType.newInstance();
+
+    private void createNewCollectionItem(Collection itemsCollection, Map beans) {
+        Object obj = null;
+        try {
+            obj = varType.newInstance();
+        }catch (Exception e) {
+            String message = "Can't create a new collection item for " + items + ". varType = " + varType.getName();
+            readStatus.addMessage( new XLSReadMessage(message) );
+            if( !ReaderConfig.getInstance().isSkipErrors() ){
+                readStatus.setStatusOK( false );
+                throw new XLSDataReadException(message, readStatus);
+            }else{
+                if( log.isWarnEnabled() ){
+                    log.warn(message);
+                }
+            }
+        }
         itemsCollection.add(obj);
         beans.put( var, obj );
     }
@@ -60,7 +75,7 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
     private void readInnerBlocks(XLSRowCursor cursor, Map beans) {
         for (int i = 0; i < innerBlockReaders.size(); i++) {
             XLSBlockReader xlsBlockReader = (XLSBlockReader) innerBlockReaders.get(i);
-            xlsBlockReader.read( cursor, beans );
+            readStatus.mergeReadStatus( xlsBlockReader.read( cursor, beans ) );
             cursor.moveForward();
         }
     }
