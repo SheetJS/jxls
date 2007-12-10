@@ -93,7 +93,8 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
 
     private String readStringValue(HSSFCell cell) {
         String value = null;
-        switch (cell.getCellType()) {
+        int cellType= cell==null ? HSSFCell.CELL_TYPE_BLANK : cell.getCellType();
+        switch (cellType) {
             case HSSFCell.CELL_TYPE_STRING:
                 value = cell.getStringCellValue() != null ? cell.getStringCellValue().trim() : null;
                 break;
