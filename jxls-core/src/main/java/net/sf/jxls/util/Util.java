@@ -745,6 +745,12 @@ public final class Util {
             destSheet.getPrintSetup().setLandscape(setup.getLandscape());
             destSheet.getPrintSetup().setPaperSize(setup.getPaperSize());
             destSheet.getPrintSetup().setScale(setup.getScale());
+            destSheet.getPrintSetup().setFitWidth( setup.getFitWidth() );
+            destSheet.getPrintSetup().setFitHeight( setup.getFitHeight() );
+            destSheet.getPrintSetup().setFooterMargin( setup.getFooterMargin() );
+            destSheet.getPrintSetup().setHeaderMargin( setup.getHeaderMargin() );
+            destSheet.getPrintSetup().setPaperSize( setup.getPaperSize() );
+            destSheet.getPrintSetup().setPageStart( setup.getPageStart() );
         }
     }
 
