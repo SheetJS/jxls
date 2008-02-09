@@ -138,7 +138,13 @@ public class BeanCellMapping {
         if( beans.containsKey( beanKey ) ){
             bean = beans.get( beanKey );
             Class dataType = getPropertyType( beans );
-            Object value = ConvertUtils.convert( dataString, dataType );
+//            Object value = ConvertUtils.convert( dataString, dataType );
+            // todo: apply patch from Zeljko Jakovljevic
+            Object value = null;
+            if(dataString != null) { // set only if null is not allowed!
+                value = ConvertUtils.convert( dataString, dataType );
+            }
+            // patch end
             PropertyUtils.setProperty( bean, propertyName, value );
         }else{
             if( log.isWarnEnabled() ){

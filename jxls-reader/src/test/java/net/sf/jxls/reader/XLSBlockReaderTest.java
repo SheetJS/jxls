@@ -58,8 +58,8 @@ public class XLSBlockReaderTest extends TestCase {
         assertEquals( new Double( 3000.0), chief.getPayment() );
         assertEquals( new Double(0.25), chief.getBonus() );
 
-        SimpleDateFormat format = new SimpleDateFormat("d-MMM-yy");
-        Date date = format.parse("20-Dec-76");
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        Date date = format.parse("12/20/1976");
         assertEquals("Date value read error", date, chief.getBirthDate());
 
         mappings.clear();

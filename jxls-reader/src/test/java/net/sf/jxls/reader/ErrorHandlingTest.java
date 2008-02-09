@@ -55,7 +55,7 @@ public class ErrorHandlingTest extends TestCase {
         assertEquals("Date value read error", date, bean.getDateValue());
         assertNotNull(readStatus);
         assertTrue( readStatus.isStatusOK() );
-        assertEquals( "Number of ReadMessage object is incorrect", 3, readStatus.getReadMessages().size());
+        assertEquals( "Number of ReadMessage object is incorrect", 2, readStatus.getReadMessages().size());
     }
 
 }
