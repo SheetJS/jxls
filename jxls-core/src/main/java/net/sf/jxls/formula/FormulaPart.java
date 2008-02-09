@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Represents formula part 
  * @author Leonid Vysochyn
  */
 public class FormulaPart {
@@ -47,6 +48,7 @@ public class FormulaPart {
                 cellRefs.add( cellRef );
             }
         }
+        this.defaultValue = aFormulaPart.defaultValue;
     }
 
 
@@ -134,13 +136,7 @@ public class FormulaPart {
         parts.addAll( pos, rangeFormulaParts );
     }
 
-    public Collection findRefCells() {
-//        Set refCells = new HashSet();
-//        Matcher refCellMatcher = regexCellRefPattern.matcher( formulaPartString );
-//        while( refCellMatcher.find() ){
-//            refCells.add( refCellMatcher.group() );
-//        }
-//        return refCells;
+    public Collection getRefCells() {
         return cellRefs;
     }
 
@@ -154,14 +150,17 @@ public class FormulaPart {
                 formulaPart =  iterator.next();
                 actualFormula += formulaPart.toString();
             }
+
             return actualFormula;
         }
+
+        
     }
 
     public void removeCellRefs( Set cellRefsToRemove ){
         List formulaPartIndexesToRemove = new ArrayList();
         Object prevFormulaPart = null;
-        Object nextFormulaPart = null;
+        Object nextFormulaPart;
         for (int i = 0; i < parts.size(); i++) {
             Object formulaPart = parts.get(i);
             if( cellRefsToRemove.contains( formulaPart ) ){
@@ -183,6 +182,7 @@ public class FormulaPart {
                 }
             }
         }
+        Collections.sort( formulaPartIndexesToRemove );
         int shift = 0;
         for (int i = 0; i < formulaPartIndexesToRemove.size(); i++) {
             int index =  ((Integer) formulaPartIndexesToRemove.get(i)).intValue() ;

@@ -1,6 +1,5 @@
 package net.sf.jxls.formula;
 
-import net.sf.jxls.controller.SheetCellFinder;
 import net.sf.jxls.parser.Cell;
 import net.sf.jxls.transformer.Sheet;
 import org.apache.commons.logging.Log;
@@ -153,7 +152,7 @@ public class Formula {
         Set refCells = new HashSet();
         for (Iterator iterator = formulaParts.iterator(); iterator.hasNext();) {
             FormulaPart formulaPart = (FormulaPart) iterator.next();
-            refCells.addAll( formulaPart.findRefCells() );
+            refCells.addAll( formulaPart.getRefCells() );
         }
         return refCells;
     }
