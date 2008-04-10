@@ -79,12 +79,7 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
                     dataString = cell.getStringCellValue();
                     break;
                 case HSSFCell.CELL_TYPE_NUMERIC:
-                    double value = cell.getNumericCellValue();
-                    if( ((int)value) == value ){
-                        dataString = Integer.toString( (int)value );
-                    }else{
-                        dataString = Double.toString( cell.getNumericCellValue());
-                    }
+                    dataString = readNumericCell(cell);
                     break;
                 case HSSFCell.CELL_TYPE_BOOLEAN:
                     dataString = Boolean.toString( cell.getBooleanCellValue() );
@@ -94,10 +89,24 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
                 case HSSFCell.CELL_TYPE_ERROR:
                     break;
                 case HSSFCell.CELL_TYPE_FORMULA:
+                    // attempt to read formula cell as numeric cell
+                    dataString = readNumericCell(cell);
                     break;
                 default:
                     break;
             }
+        }
+        return dataString;
+    }
+
+    private String readNumericCell(HSSFCell cell) {
+        double value;
+        String dataString;
+        value = cell.getNumericCellValue();
+        if( ((int)value) == value ){
+            dataString = Integer.toString( (int)value );
+        }else{
+            dataString = Double.toString( cell.getNumericCellValue());
         }
         return dataString;
     }
