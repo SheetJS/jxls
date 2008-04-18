@@ -107,14 +107,13 @@ public class SQLTag extends BaseTag {
                         shift.add(new ResultTransformation(shiftNumber, shiftNumber));
                         shift.setTagProcessResult(true);
                         return shift;
-                    } else {
-                        log.warn("Result set for query: " + query + " is empty");
-                        tagContext.getSheetTransformationController().removeBodyRows(body);
-                        shift.add(new ResultTransformation(-1, -body.getNumberOfRows()));
-                        shift.setLastProcessedRow(-1);
-                        shift.setTagProcessResult(true);
-                        return shift;
                     }
+                    log.warn("Result set for query: " + query + " is empty");
+                    tagContext.getSheetTransformationController().removeBodyRows(body);
+                    shift.add(new ResultTransformation(-1, -body.getNumberOfRows()));
+                    shift.setLastProcessedRow(-1);
+                    shift.setTagProcessResult(true);
+                    return shift;
                 } catch (SQLException e) {
                     log.error("Can't execute query " + query, e);
                 }

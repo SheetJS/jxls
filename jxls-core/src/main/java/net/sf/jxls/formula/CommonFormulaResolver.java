@@ -93,9 +93,8 @@ public class CommonFormulaResolver extends BaseFormulaResolver {
         if( refCell != null ){
             if( refCell.indexOf("!") < 0 ){
                 return refCell;
-            }else{
-                return refCell.substring( refCell.indexOf("!") + 1 );
             }
+            return refCell.substring( refCell.indexOf("!") + 1 );
         }
         return null;
     }
@@ -105,9 +104,8 @@ public class CommonFormulaResolver extends BaseFormulaResolver {
             if( refCell.indexOf("!") < 0 ){
                 // no sheet reference found
                 return null;
-            }else{
-                return refCell.substring(0, refCell.indexOf("!") );
             }
+            return refCell.substring(0, refCell.indexOf("!") );
         }
         return null;
     }

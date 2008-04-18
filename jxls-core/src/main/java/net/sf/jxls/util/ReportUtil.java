@@ -92,17 +92,15 @@ public class ReportUtil {
 
     public static boolean shouldSelectCollectionData(Map beans, String select, Configuration configuration) {
         if (select == null) return true;
-        else {
-            try {
-                Expression expr = new Expression(select, beans, configuration);
-                Object obj = expr.evaluate();
-                if (obj instanceof Boolean) return ((Boolean) obj).booleanValue();
-                else return false;
-            }
-            catch (Exception e) {
-                System.err.println("Exception evaluation select '" + select + "': " + e);
-                return false;
-            }
+        try {
+            Expression expr = new Expression(select, beans, configuration);
+            Object obj = expr.evaluate();
+            if (obj instanceof Boolean) return ((Boolean) obj).booleanValue();
+            return false;
+        }
+        catch (Exception e) {
+            System.err.println("Exception evaluation select '" + select + "': " + e);
+            return false;
         }
     }
 

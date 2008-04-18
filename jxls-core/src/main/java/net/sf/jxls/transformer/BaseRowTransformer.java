@@ -63,10 +63,9 @@ public abstract class BaseRowTransformer implements RowTransformer{
             FormulaUtil.updateFormulas(sheet.getHssfSheet(), formulas, listRanges, namedCells, true);
             listRanges.put(rangeName, range);
             return true;
-        } else {
-            listRanges.put(rangeName, range);
-            return false;
         }
+        listRanges.put(rangeName, range);
+        return false;
     }
 
 

@@ -188,15 +188,14 @@ public class ForEachTag extends BaseTag {
             shift.add(new ResultTransformation(shiftNumber, shiftNumber));
             shift.setTagProcessResult(true);
             return shift;
-        } else {
-            log.warn("Collection " + items + " is empty");
-            tagContext.getSheetTransformationController().removeBodyRows(body);
-            ResultTransformation shift = new ResultTransformation(0);
-            shift.add(new ResultTransformation(-1, -body.getNumberOfRows()));
-            shift.setLastProcessedRow(-1);
-            shift.setTagProcessResult(true);
-            return shift;
         }
+        log.warn("Collection " + items + " is empty");
+        tagContext.getSheetTransformationController().removeBodyRows(body);
+        ResultTransformation shift = new ResultTransformation(0);
+        shift.add(new ResultTransformation(-1, -body.getNumberOfRows()));
+        shift.setLastProcessedRow(-1);
+        shift.setTagProcessResult(true);
+        return shift;
     }
 
     private ResultTransformation processOneRowTag(SheetTransformer sheetTransformer) {
@@ -235,16 +234,15 @@ public class ForEachTag extends BaseTag {
             shift.addRightShift((short) shiftNumber);
             shift.setTagProcessResult(true);
             return shift;
-        } else {
-            log.warn("Collection " + items + " is empty");
-            HSSFRow currentRow = tagContext.getSheet().getHssfSheet().getRow(body.getStartRowNum());
-            tagContext.getSheetTransformationController().removeRowCells(currentRow, body.getStartCellNum(), body.getEndCellNum());
-            ResultTransformation shift = new ResultTransformation(0);
-            shift.add( new ResultTransformation((short)-body.getNumberOfColumns(), (short)(-body.getNumberOfColumns() )));
-            shift.setLastProcessedRow(-1);
-            shift.setTagProcessResult(true);
-            return shift;
         }
+        log.warn("Collection " + items + " is empty");
+        HSSFRow currentRow = tagContext.getSheet().getHssfSheet().getRow(body.getStartRowNum());
+        tagContext.getSheetTransformationController().removeRowCells(currentRow, body.getStartCellNum(), body.getEndCellNum());
+        ResultTransformation shift = new ResultTransformation(0);
+        shift.add( new ResultTransformation((short)-body.getNumberOfColumns(), (short)(-body.getNumberOfColumns() )));
+        shift.setLastProcessedRow(-1);
+        shift.setTagProcessResult(true);
+        return shift;
     }
 
     private ResultTransformation processGroupedData(Collection groupedData, Map beans, Block body, SheetTransformer sheetTransformer) {

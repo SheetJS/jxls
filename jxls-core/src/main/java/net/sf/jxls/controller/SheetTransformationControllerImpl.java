@@ -49,9 +49,8 @@ public class SheetTransformationControllerImpl implements SheetTransformationCon
             formulaController.updateWorkbookFormulas( shiftTransformation );
             formulaController.updateWorkbookFormulas( duplicateTransformation );
             return TagBodyHelper.duplicateDown( sheet.getHssfSheet(), block, n );
-        }else{
-            return 0;
         }
+        return 0;
     }
 
     public int duplicateRight(Block block, int n) {
@@ -67,9 +66,8 @@ public class SheetTransformationControllerImpl implements SheetTransformationCon
             formulaController.updateWorkbookFormulas( shiftTransformation );
             formulaController.updateWorkbookFormulas( duplicateTransformation );
             return TagBodyHelper.duplicateRight( sheet.getHssfSheet(), block, n) ;
-        }else{
-            return 0;
         }
+        return 0;
     }
 
     public void removeBorders(Block block) {

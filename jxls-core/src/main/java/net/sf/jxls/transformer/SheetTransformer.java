@@ -256,9 +256,8 @@ public class SheetTransformer {
         List transformers = parseCells(sheet, hssfRow, hssfRow.getFirstCellNum(), hssfRow.getLastCellNum(), beans);
         if( transformers.size() > 0 ){
             return (RowTransformer) transformers.get(0);
-        }else{
-            return null;
         }
+        return null;
     }
 
 
@@ -275,10 +274,9 @@ public class SheetTransformer {
             // update all formulas that can be updated and remove them from formulas list ( ignore all others )
             sheet.addListRange( rangeName, range );
             return true;
-        } else {
-            sheet.addListRange( rangeName, range);
-            return false;
         }
+        sheet.addListRange( rangeName, range);
+        return false;
     }
 
     /**

@@ -104,17 +104,15 @@ public class Block {
         boolean flag = (startRowNum <= rowNum && rowNum <= endRowNum && ((startCellNum < 0 || endCellNum < 0) || (startCellNum <= cellNum && cellNum <= endCellNum)));
         if(flag && !affectedColumns.isEmpty()){
             return affectedColumns.contains( new Short( (short) cellNum) );
-        }else{
-            return flag;
         }
+        return flag;
     }
 
     public boolean contains(Formula formula){
         if( formula.getSheet().getSheetName().equals( sheet.getSheetName() ) ){
             return contains( formula.getRowNum().intValue(), formula.getCellNum().intValue() );
-        }else{
-            return false;
         }
+        return false;
     }
 
     public boolean contains(Point p){
@@ -122,9 +120,8 @@ public class Block {
                 ((startCellNum<0 || endCellNum<0) || (startCellNum <= p.getCol() && p.getCol() <= endCellNum)));
         if(flag && !affectedColumns.isEmpty()){
             return affectedColumns.contains( new Short( p.getCol() ) );
-        }else{
-            return flag;
         }
+        return flag;
     }
 
     public boolean contains(CellRef cellRef){
@@ -133,9 +130,8 @@ public class Block {
                 ((startCellNum<0 || endCellNum<0) || (startCellNum <= cellRef.getColNum() && cellRef.getColNum() <= endCellNum)));
         if(flag && !affectedColumns.isEmpty()){
             return affectedColumns.contains( new Short( cellRef.getColNum() ) );
-        }else{
-            return flag;
         }
+        return flag;
     }
 
     public boolean isAbove(Point p){
@@ -188,8 +184,8 @@ public class Block {
         int result;
         result = startRowNum;
         result = 29 * result + endRowNum;
-        result = 29 * result + (int) startCellNum;
-        result = 29 * result + (int) endCellNum;
+        result = 29 * result + startCellNum;
+        result = 29 * result + endCellNum;
         result = 29 * result + (sheet != null ? sheet.hashCode() : 0);
         return result;
     }

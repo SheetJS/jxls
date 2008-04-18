@@ -69,9 +69,8 @@ public class ShiftTransformation extends BlockTransformation {
         if( obj != null && obj instanceof ShiftTransformation ){
             ShiftTransformation st = (ShiftTransformation) obj;
             return ( super.equals( obj ) && rowShift == st.rowShift && colShift == st.colShift);
-        }else{
-            return false;
         }
+        return false;
     }
 
     public int hashCode() {

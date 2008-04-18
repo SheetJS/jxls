@@ -113,9 +113,8 @@ public class Configuration {
     public String getTagPrefix() {
         if( tagPrefix.length()>0 ){
             return tagPrefix + ":";
-        }else{
-            return tagPrefix;
         }
+        return tagPrefix;
     }
 
     public String getForTagName() {

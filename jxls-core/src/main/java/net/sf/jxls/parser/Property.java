@@ -98,9 +98,8 @@ public class Property {
     public String getFullCollectionName() {
         if (beanName == null) {
             return collectionName;
-        } else {
-            return beanName + "." + collectionName;
         }
+        return beanName + "." + collectionName;
     }
 
     public String getPropertyNameAfterLastDot() {
@@ -136,10 +135,9 @@ public class Property {
 
     public Object getPropertyValue() {
         if( bean instanceof String){
-            return (String)bean;
-        }else{
-            return propertyValue;
+            return bean;
         }
+        return propertyValue;
     }
 
     public void setPropertyValue(Object propertyValue) {

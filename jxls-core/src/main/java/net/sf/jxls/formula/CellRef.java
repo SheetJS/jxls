@@ -134,9 +134,8 @@ public class CellRef {
     String getRefCellName(String refSheetName, String cellName){
         if( refSheetName == null ){
             return cellName.toUpperCase();
-        }else{
-            return refSheetName + "!" + cellName.toUpperCase();
         }
+        return refSheetName + "!" + cellName.toUpperCase();
     }
 
     boolean isColumnRange(List cells) {
@@ -183,9 +182,8 @@ public class CellRef {
         if( refCell != null ){
             if( refCell.indexOf("!") < 0 ){
                 return null;
-            }else{
-                return refCell.substring(0, refCell.indexOf("!") );
             }
+            return refCell.substring(0, refCell.indexOf("!") );
         }
         return null;
     }
@@ -194,9 +192,8 @@ public class CellRef {
         if( refCell != null ){
             if( refCell.indexOf("!") < 0 ){
                 return refCell;
-            }else{
-                return refCell.substring( refCell.indexOf("!") + 1 );
             }
+            return refCell.substring( refCell.indexOf("!") + 1 );
         }
         return null;
     }

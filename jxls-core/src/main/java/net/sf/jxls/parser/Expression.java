@@ -67,10 +67,9 @@ public class Expression {
             if (aggregateFunction != null) {
             	return calculateAggregate(aggregateFunction, aggregateField, ret);
             }
-            else return ret;
-        } else {
-            return expression;
+            return ret;
         }
+        return expression;
     }
 
     private String parseAggregate(String expression)
@@ -96,11 +95,9 @@ public class Expression {
     		}
     		return expression.substring(i+1);
     	}
-    	else {
-    		aggregateFunction = null;
-    		aggregateField = null;
-    		return expression;
-    	}
+        aggregateFunction = null;
+        aggregateField = null;
+        return expression;
     }
     
     private void parse() {
@@ -152,7 +149,7 @@ public class Expression {
     		}
     		return agg.getResult();
     	}
-    	else return list;
+        return list;
     }
     
     public String toString() {

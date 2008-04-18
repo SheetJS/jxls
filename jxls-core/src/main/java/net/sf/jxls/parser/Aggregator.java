@@ -46,7 +46,7 @@ public abstract class Aggregator {
 
         public Object getResult() {
             if (count == 0.0) return null;
-            else return new Double(total / count);
+            return new Double(total / count);
         }
     }
 

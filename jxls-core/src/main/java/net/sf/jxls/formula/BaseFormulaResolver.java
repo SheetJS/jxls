@@ -62,9 +62,8 @@ public abstract class BaseFormulaResolver implements FormulaResolver{
     String getRefCellName(String refSheetName, String cellName){
         if( refSheetName == null ){
             return cellName.toUpperCase();
-        }else{
-            return refSheetName + "!" + cellName.toUpperCase();
         }
+        return refSheetName + "!" + cellName.toUpperCase();
     }
 
     boolean isColumnRange(List cells) {

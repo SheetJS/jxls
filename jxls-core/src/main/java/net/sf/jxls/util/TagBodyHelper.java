@@ -35,9 +35,8 @@ public class TagBodyHelper {
                 }
             }
             return block.getNumberOfRows() * n;
-        }else{
-            return 0;
         }
+        return 0;
     }
 
     public static int duplicateDown( HSSFSheet sheet, Block block, int n, Map formulaCellsToUpdate){
@@ -62,9 +61,8 @@ public class TagBodyHelper {
 //                }
             }
             return block.getNumberOfRows() * n;
-        }else{
-            return 0;
         }
+        return 0;
     }
 
     private static String updateFormula(HSSFSheet sheet, int shiftNumber, int rowNumToUpdate, int colNumToUpdate, List refCellsToUpdate){
@@ -109,9 +107,8 @@ public class TagBodyHelper {
                 }
             }
             return block.getNumberOfColumns() * n;
-        }else{
-            return 0;
         }
+        return 0;
     }
 
     public static void replaceProperty( HSSFSheet sheet, Block block, String oldProperty, String newProperty){

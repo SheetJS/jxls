@@ -99,9 +99,8 @@ public class DuplicateTransformation extends BlockTransformation {
         if( obj != null && obj instanceof DuplicateTransformation ){
             DuplicateTransformation dt = (DuplicateTransformation) obj;
             return ( super.equals( obj ) && dt.duplicateNumber == duplicateNumber);
-        }else{
-            return false;
         }
+        return false;
     }
 
     public int hashCode() {

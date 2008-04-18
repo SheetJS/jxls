@@ -148,16 +148,15 @@ public class FormulaPart {
     public String getActualFormula() {
         if( cellRefs.isEmpty() && defaultValue != null){
             return defaultValue.toString();
-        }else{
-            Object formulaPart;
-            String actualFormula = "";
-            for (Iterator iterator = parts.iterator(); iterator.hasNext();) {
-                formulaPart =  iterator.next();
-                actualFormula += formulaPart.toString();
-            }
-
-            return actualFormula;
         }
+        Object formulaPart;
+        String actualFormula = "";
+        for (Iterator iterator = parts.iterator(); iterator.hasNext();) {
+            formulaPart =  iterator.next();
+            actualFormula += formulaPart.toString();
+        }
+
+        return actualFormula;
 
         
     }

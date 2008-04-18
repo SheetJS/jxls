@@ -69,9 +69,8 @@ public abstract class BlockTransformation {
         if( obj != null && obj instanceof BlockTransformation ){
             BlockTransformation bt = (BlockTransformation) obj;
             return ((block!=null && block.equals( bt.block )) || (block == null && bt.block == null));
-        }else{
-            return false;
         }
+        return false;
     }
 
     public int hashCode() {
@@ -81,8 +80,7 @@ public abstract class BlockTransformation {
     public String toString() {
         if( block != null ){
             return block.toString();
-        }else{
-            return "";
         }
+        return "";
     }
 }

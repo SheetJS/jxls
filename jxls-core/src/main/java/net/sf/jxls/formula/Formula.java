@@ -101,9 +101,8 @@ public class Formula {
     public String getInlineFormula(int n) {
         if (isInline()) {
             return formula.replaceAll(inlineFormulaToken, Integer.toString(n));
-        } else {
-            return formula;
         }
+        return formula;
     }
 
     /**

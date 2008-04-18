@@ -219,9 +219,8 @@ public class CellParser {
                         if( cellValue.matches("</" + configuration.getTagPrefix() + tagName + ">" )){
                             if( count == 0 ){
                                 return hssfCell;
-                            }else{
-                                count--;
                             }
+                            count--;
                         }
                     }
                 }
@@ -239,9 +238,8 @@ public class CellParser {
         if( j == xmlTag.length() ){
             log.warn("can't determine tag name");
             return null;
-        }else{
-            return xmlTag.substring(i, j);
         }
+        return xmlTag.substring(i, j);
     }
 
     private HSSFRow findMatchingPair(String tagName) {
@@ -261,9 +259,8 @@ public class CellParser {
                             if( cellValue.matches("</" + configuration.getTagPrefix() + tagName + ">" )){
                                 if( count == 0 ){
                                     return hssfRow;
-                                }else{
-                                    count--;
                                 }
+                                count--;
                             }
                         }
                     }
