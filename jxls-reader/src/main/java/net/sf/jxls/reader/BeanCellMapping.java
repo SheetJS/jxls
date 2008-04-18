@@ -80,9 +80,8 @@ public class BeanCellMapping {
         int dotIndex = fullPropertyName.indexOf('.');
         if( dotIndex < 0 ){
             throw new IllegalArgumentException("Full property name must contain period. Can't extract bean property name from " + fullPropertyName);
-        }else{
-            return fullPropertyName.substring(dotIndex + 1);
         }
+        return fullPropertyName.substring(dotIndex + 1);
     }
 
     private String extractBeanName(String fullPropertyName) {
@@ -92,9 +91,8 @@ public class BeanCellMapping {
         int dotIndex = fullPropertyName.indexOf('.');
         if( dotIndex < 0 ){
             throw new IllegalArgumentException("Full property name must contain period. Can't extract bean name from " + fullPropertyName);
-        }else{
-            return fullPropertyName.substring(0, dotIndex);
         }
+        return fullPropertyName.substring(0, dotIndex);
     }
 
     public int getRow() {

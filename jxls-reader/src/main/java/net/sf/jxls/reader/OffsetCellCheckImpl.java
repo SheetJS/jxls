@@ -47,18 +47,16 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
         Object obj = getCellValue( cell, value );
         if( value == null ){
             return obj == null;
-        }else{
-            return value.equals( obj );
         }
+        return value.equals( obj );
     }
 
     public boolean isCheckSuccessful(HSSFRow row) {
         if( row == null ){
             return value == null;
-        }else{
-            HSSFCell cell = row.getCell( offset );
-            return isCheckSuccessful( cell );
         }
+        HSSFCell cell = row.getCell( offset );
+        return isCheckSuccessful( cell );
     }
 
     private Object getCellValue(HSSFCell cell, Object obj) {

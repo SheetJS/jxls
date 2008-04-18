@@ -52,9 +52,8 @@ public class XLSRowCursorImpl implements XLSRowCursor {
     public HSSFRow next() {
         if( hasNext() ){
             return sheet.getRow( currentRowNum++ );
-        }else{
-            throw new NoSuchElementException();
         }
+        throw new NoSuchElementException();
     }
 
     public boolean hasNext() {

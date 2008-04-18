@@ -137,9 +137,8 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
         HSSFRow row = sheet.getRow( rowNum );
         if( row == null ){
             return null;
-        }else{
-            return row.getCell( cellNum );
         }
+        return row.getCell( cellNum );
     }
 
 }

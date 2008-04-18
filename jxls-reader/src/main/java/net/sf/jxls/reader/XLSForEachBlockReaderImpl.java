@@ -62,10 +62,9 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
             if( !ReaderConfig.getInstance().isSkipErrors() ){
                 readStatus.setStatusOK( false );
                 throw new XLSDataReadException(message, readStatus);
-            }else{
-                if( log.isWarnEnabled() ){
-                    log.warn(message);
-                }
+            }
+            if( log.isWarnEnabled() ){
+                log.warn(message);
             }
         }
         itemsCollection.add(obj);

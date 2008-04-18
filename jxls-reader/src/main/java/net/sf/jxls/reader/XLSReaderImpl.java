@@ -43,9 +43,8 @@ public class XLSReaderImpl implements XLSReader {
             XLSSheetReader sheetReader = (XLSSheetReader) sheetReaders.get( sheetName );
             sheetReader.setSheetName( sheetName );
             return sheetReader.read( sheet, beans );
-        }else{
-            return null;
         }
+        return null;
     }
 
     public Map getSheetReaders() {

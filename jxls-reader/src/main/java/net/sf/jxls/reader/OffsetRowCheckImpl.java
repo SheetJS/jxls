@@ -62,23 +62,21 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
         HSSFRow row = cursor.getSheet().getRow( offset + cursor.getCurrentRowNum() );
         if( row == null ){
             return cellChecks.isEmpty();
-        }else{
-            return isCheckSuccessful( row );
         }
+        return isCheckSuccessful( row );
     }
 
     private boolean isCellChecksEmpty() {
         if( cellChecks.isEmpty() ){
             return true;
-        }else{
-            for (int i = 0; i < cellChecks.size(); i++) {
-                OffsetCellCheck offsetCellCheck = (OffsetCellCheck) cellChecks.get(i);
-                if( !isCellCheckEmpty(offsetCellCheck) ){
-                    return false;
-                }
-            }
-            return true;
         }
+        for (int i = 0; i < cellChecks.size(); i++) {
+            OffsetCellCheck offsetCellCheck = (OffsetCellCheck) cellChecks.get(i);
+            if( !isCellCheckEmpty(offsetCellCheck) ){
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean isCellCheckEmpty(OffsetCellCheck cellCheck) {
@@ -87,9 +85,8 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
         }
         if( cellCheck.getValue().toString().trim().equals("") ){
             return true;
-        }else{
-            return false;
         }
+        return false;
     }
 
 
@@ -113,16 +110,15 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
     private boolean isCellEmpty(HSSFCell cell) {
         if( cell == null ){
             return true;
-        }else{
-            switch( cell.getCellType() ){
-                case HSSFCell.CELL_TYPE_BLANK:
-                    return true;
-                case HSSFCell.CELL_TYPE_STRING:
-                    String cellValue = cell.getStringCellValue();
-                    return cellValue == null || cellValue.length() == 0 || cellValue.trim().length() == 0;
-                default:
-                    return false;
-            }
+        }
+        switch( cell.getCellType() ){
+            case HSSFCell.CELL_TYPE_BLANK:
+                return true;
+            case HSSFCell.CELL_TYPE_STRING:
+                String cellValue = cell.getStringCellValue();
+                return cellValue == null || cellValue.length() == 0 || cellValue.trim().length() == 0;
+            default:
+                return false;
         }
     }
 }
