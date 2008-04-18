@@ -98,7 +98,9 @@ public class CellRef {
                 range = refCellName + cellRangeSeparator + lastCell.toUpperCase();
                 rangeFormulaParts.add( new CellRef( refCellName, parentFormula ) );
                 rangeFormulaParts.add( cellRangeSeparator );
-                rangeFormulaParts.add( new CellRef( lastCell.toUpperCase(), parentFormula ) );
+                CellRef lastCellRef = new CellRef( lastCell.toUpperCase(), parentFormula );
+                lastCellRef.sheetName = refSheetName;
+                rangeFormulaParts.add( lastCellRef );
             }else{
                 range = buildCommaSeparatedListOfCells(refSheetName, cells );
             }
