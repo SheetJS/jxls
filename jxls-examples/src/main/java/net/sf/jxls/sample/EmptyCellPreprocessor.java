@@ -1,10 +1,10 @@
 package net.sf.jxls.sample;
 
 
-import net.sf.jxls.processor.PropertyPreprocessor;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import net.sf.jxls.processor.PropertyPreprocessor;
 
 /**
  * @author Leonid Vysochin

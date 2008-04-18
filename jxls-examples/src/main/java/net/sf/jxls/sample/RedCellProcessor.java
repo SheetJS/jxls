@@ -1,13 +1,14 @@
 package net.sf.jxls.sample;
 
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import java.util.Map;
+
 import net.sf.jxls.parser.Cell;
-import net.sf.jxls.processor.CellProcessor;
-import net.sf.jxls.parser.Property;
 import net.sf.jxls.parser.Expression;
+import net.sf.jxls.parser.Property;
+import net.sf.jxls.processor.CellProcessor;
 import net.sf.jxls.sample.model.Employee;
 
-import java.util.Map;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 
 /**
  * @author Leonid Vysochyn

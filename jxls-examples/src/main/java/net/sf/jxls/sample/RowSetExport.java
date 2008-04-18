@@ -1,12 +1,16 @@
 package net.sf.jxls.sample;
 
-import org.apache.commons.beanutils.RowSetDynaClass;
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformer.XLSTransformer;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.sf.jxls.transformer.XLSTransformer;
+
+import org.apache.commons.beanutils.RowSetDynaClass;
 
 /**
  * @author Leonid Vysochyn

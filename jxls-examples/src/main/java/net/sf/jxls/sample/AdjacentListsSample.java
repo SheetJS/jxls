@@ -1,13 +1,13 @@
 package net.sf.jxls.sample;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformer.XLSTransformer;
 import net.sf.jxls.sample.model.Department;
 import net.sf.jxls.sample.model.Employee;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
+import net.sf.jxls.transformer.XLSTransformer;
 
 /**
  * @author Leonid Vysochyn

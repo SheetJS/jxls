@@ -1,16 +1,17 @@
 package net.sf.jxls.sample;
 
 
-import net.sf.jxls.transformer.Row;
-import net.sf.jxls.processor.RowProcessor;
-import net.sf.jxls.transformer.RowCollection;
+import java.util.Map;
+
 import net.sf.jxls.parser.Cell;
+import net.sf.jxls.processor.RowProcessor;
 import net.sf.jxls.sample.model.Employee;
+import net.sf.jxls.transformer.Row;
+import net.sf.jxls.transformer.RowCollection;
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
-import java.util.Map;
 
 /**
  * @author Leonid Vysochyn

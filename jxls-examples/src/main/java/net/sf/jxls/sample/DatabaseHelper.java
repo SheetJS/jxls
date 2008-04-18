@@ -1,7 +1,10 @@
 package net.sf.jxls.sample;
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 
 /**

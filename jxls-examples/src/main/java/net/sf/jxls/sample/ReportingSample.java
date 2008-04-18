@@ -1,13 +1,14 @@
 package net.sf.jxls.sample;
 
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformer.XLSTransformer;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sf.jxls.report.ReportManager;
 import net.sf.jxls.report.ReportManagerImpl;
-
-import java.sql.*;
-import java.util.Map;
-import java.util.HashMap;
+import net.sf.jxls.transformer.XLSTransformer;
 
 /**
  * This sample demonstrates reporting capabilities of jXLS

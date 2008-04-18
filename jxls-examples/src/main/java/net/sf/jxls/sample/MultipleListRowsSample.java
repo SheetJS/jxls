@@ -1,15 +1,15 @@
 package net.sf.jxls.sample;
 
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformer.XLSTransformer;
-import net.sf.jxls.sample.model.Department;
-import net.sf.jxls.sample.model.Employee;
-
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.sample.model.Department;
+import net.sf.jxls.sample.model.Employee;
+import net.sf.jxls.transformer.XLSTransformer;
 
 /**
  * @author Leonid Vysochyn

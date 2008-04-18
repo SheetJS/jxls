@@ -1,17 +1,18 @@
 package net.sf.jxls.sample;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sf.jxls.parser.Cell;
 import net.sf.jxls.parser.Expression;
 import net.sf.jxls.parser.Property;
 import net.sf.jxls.processor.CellProcessor;
-import net.sf.jxls.util.Util;
 import net.sf.jxls.sample.model.Employee;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.util.HSSFColor;
+import net.sf.jxls.util.Util;
 
-import java.util.Map;
-import java.util.HashMap;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.util.HSSFColor;
 
 /**
  * WARNING! This class does not work since 0.8.7 jXLS release as there were changes in expression parsing introduced
