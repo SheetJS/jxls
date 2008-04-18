@@ -148,7 +148,7 @@ public class XLSTransformerTest extends TestCase {
     SimpleBean simpleBean2;
     SimpleBean simpleBean3;
     BeanWithList beanWithList;
-    List beans = new ArrayList();
+    List beanList = new ArrayList();
     List itEmployees = new ArrayList();
     BeanWithList listBean1 = new BeanWithList("List bean 1");
     BeanWithList listBean2 = new BeanWithList("List bean 2");
@@ -216,9 +216,9 @@ public class XLSTransformerTest extends TestCase {
         beanWithList = new BeanWithList("Bean With List", new Double(1976.1202));
 
 
-        beans.add(simpleBean1);
-        beans.add(simpleBean2);
-        beans.add(simpleBean3);
+        beanList.add(simpleBean1);
+        beanList.add(simpleBean2);
+        beanList.add(simpleBean3);
 
         listBean1.addBean( simpleBean1 );
         listBean1.addBean( simpleBean2 );
@@ -251,7 +251,7 @@ public class XLSTransformerTest extends TestCase {
         mgrDepartment = department;
 
 
-        beanWithList.setBeans(beans);
+        beanWithList.setBeans(beanList);
 
         propertyMap.put("${bean.name}", simpleBean1.getName());
         propertyMap.put("${bean.doubleValue}", simpleBean1.getDoubleValue());
@@ -1103,10 +1103,6 @@ public class XLSTransformerTest extends TestCase {
     public void testIfTag() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
 
-        SimpleBean simpleBean1 = new SimpleBean(names[0].toString(), (Double) doubleValues[0], (Integer) intValues[0], (Date) dateValues[0]);
-        SimpleBean simpleBean2 = new SimpleBean(names[1].toString(), (Double) doubleValues[1], (Integer) intValues[1], (Date) dateValues[1]);
-        SimpleBean simpleBean3 = new SimpleBean(names[2].toString(), (Double) doubleValues[2], (Integer) intValues[2], (Date) dateValues[2]);
-
         BeanWithList listBean = new BeanWithList("Main bean", new Double(10.0));
         listBean.addBean(simpleBean1);
         listBean.addBean(simpleBean2);
@@ -1432,8 +1428,6 @@ public class XLSTransformerTest extends TestCase {
 
     public void testEmptyBeansExport() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
-
-        SimpleBean simpleBean1 = new SimpleBean(names[0].toString(), (Double) doubleValues[0], (Integer) intValues[0], (Date) dateValues[0]);
 
         BeanWithList listBean = new BeanWithList("Main bean", new Double(10.0));
 
@@ -1870,8 +1864,8 @@ public class XLSTransformerTest extends TestCase {
         // testing empty collection used with jx:forEach grouping 
 //        Collection emptyDepartments = new ArrayList();
         ((Department)departments.get(0)).getStaff().clear();
-//        beans.clear();
-//        beans.put( "departments", emptyDepartments );
+//        beanList.clear();
+//        beanList.put( "departments", emptyDepartments );
         is = new BufferedInputStream(getClass().getResourceAsStream(forGroupByXLS));
         resultWorkbook = transformer.transformXLS(is, beans);
         saveWorkbook( resultWorkbook, forGroupByDestXLS );
