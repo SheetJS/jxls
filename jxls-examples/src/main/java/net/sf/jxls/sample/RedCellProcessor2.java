@@ -52,11 +52,10 @@ public class RedCellProcessor2  implements CellProcessor {
     HSSFCellStyle duplicateStyle( Cell cell, String key ){
         if( rowStyles.containsKey( key ) ){
             return (HSSFCellStyle) rowStyles.get( key );
-        }else{
-            HSSFCellStyle newStyle =  Util.duplicateStyle( cell.getRow().getSheet().getHssfWorkbook(), cell.getHssfCell().getCellStyle() );
-            rowStyles.put( key, newStyle );
-            return newStyle;
         }
+        HSSFCellStyle newStyle =  Util.duplicateStyle( cell.getRow().getSheet().getHssfWorkbook(), cell.getHssfCell().getCellStyle() );
+        rowStyles.put( key, newStyle );
+        return newStyle;
     }
 
 }

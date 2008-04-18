@@ -25,8 +25,7 @@ public class EmptyCellPreprocessor implements PropertyPreprocessor {
     public String processProperty(String propertyTemplateName) {
         if (hiddenProperties.contains(propertyTemplateName)) {
             return "";
-        } else {
-            return null;
         }
+        return null;
     }
 }
