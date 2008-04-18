@@ -1,5 +1,7 @@
 package net.sf.jxls.tag;
 
+import java.util.Map;
+
 import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.controller.SheetTransformationControllerImpl;
 import net.sf.jxls.exception.ParsePropertyException;
@@ -7,11 +9,9 @@ import net.sf.jxls.parser.Expression;
 import net.sf.jxls.parser.ExpressionParser;
 import net.sf.jxls.transformation.ResultTransformation;
 import net.sf.jxls.transformer.SheetTransformer;
-import net.sf.jxls.util.TagBodyHelper;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.Map;
 
 /**
  * jx:if tag implementation

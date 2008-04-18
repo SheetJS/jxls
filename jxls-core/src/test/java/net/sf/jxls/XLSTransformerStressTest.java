@@ -1,21 +1,27 @@
 package net.sf.jxls;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import junit.framework.TestCase;
-
-import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.Random;
-import java.util.Calendar;
-import java.util.Map;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.HashMap;
-import java.io.*;
+import java.util.Map;
+import java.util.Random;
 
+import junit.framework.TestCase;
 import net.sf.jxls.report.ReportManager;
 import net.sf.jxls.report.ReportManagerImpl;
 import net.sf.jxls.transformer.XLSTransformer;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @author Leonid Vysochyn

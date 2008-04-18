@@ -1,8 +1,8 @@
 package net.sf.jxls.bean;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * @author Leonid Vysochyn

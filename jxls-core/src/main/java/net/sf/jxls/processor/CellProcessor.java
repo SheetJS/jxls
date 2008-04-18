@@ -1,8 +1,8 @@
 package net.sf.jxls.processor;
 
-import net.sf.jxls.parser.Cell;
-
 import java.util.Map;
+
+import net.sf.jxls.parser.Cell;
 
 /**
  * Allows dynamic processing of cell in excel workbook

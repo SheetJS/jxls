@@ -1,10 +1,10 @@
 package net.sf.jxls.transformation;
 
+import java.util.List;
+
+import net.sf.jxls.formula.CellRef;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.tag.Point;
-import net.sf.jxls.formula.CellRef;
-
-import java.util.List;
 
 /**
  * This class defines common {@link net.sf.jxls.tag.Block} transformation behaviour

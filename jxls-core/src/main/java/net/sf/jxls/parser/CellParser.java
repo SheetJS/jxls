@@ -1,23 +1,24 @@
 package net.sf.jxls.parser;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.xml.sax.SAXException;
-import net.sf.jxls.util.Util;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Map;
+
+import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.formula.Formula;
+import net.sf.jxls.tag.Block;
 import net.sf.jxls.tag.Tag;
 import net.sf.jxls.tag.TagContext;
-import net.sf.jxls.tag.Block;
-import net.sf.jxls.formula.Formula;
-import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.Configuration;
 import net.sf.jxls.transformer.Row;
+import net.sf.jxls.util.Util;
 
-import java.util.Map;
-import java.io.StringReader;
-import java.io.IOException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.xml.sax.SAXException;
 
 /**
  * Class for parsing excel cell

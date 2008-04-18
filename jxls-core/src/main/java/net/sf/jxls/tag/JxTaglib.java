@@ -1,7 +1,7 @@
 package net.sf.jxls.tag;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Defines mapping between java class files and jx tag names

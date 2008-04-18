@@ -1,12 +1,13 @@
 package net.sf.jxls.transformer;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.util.Region;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sf.jxls.parser.Cell;
 import net.sf.jxls.parser.Property;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.util.Region;
 
 /**
  * Represents single row in excel transformation

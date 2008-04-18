@@ -1,5 +1,11 @@
 package net.sf.jxls.tag;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.parser.Expression;
 import net.sf.jxls.transformation.ResultTransformation;
@@ -8,15 +14,10 @@ import net.sf.jxls.transformer.SheetTransformer;
 import net.sf.jxls.util.GroupData;
 import net.sf.jxls.util.ReportUtil;
 import net.sf.jxls.util.Util;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * jx:forEach tag implementation

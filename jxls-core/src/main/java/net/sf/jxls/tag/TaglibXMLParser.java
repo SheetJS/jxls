@@ -1,15 +1,6 @@
 package net.sf.jxls.tag;
 
-import org.apache.commons.digester.Digester;
-import org.apache.commons.digester.SetNextRule;
-import org.xml.sax.SAXException;
-
 import java.io.InputStream;
-import java.io.IOException;
-import java.util.Set;
-import java.util.Iterator;
-
-import net.sf.jxls.transformer.Configuration;
 
 /**
  * @author Leonid Vysochyn

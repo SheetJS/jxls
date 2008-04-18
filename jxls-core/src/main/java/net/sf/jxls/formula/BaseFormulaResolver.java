@@ -1,16 +1,17 @@
 package net.sf.jxls.formula;
 
-import org.apache.poi.hssf.util.CellReference;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import net.sf.jxls.transformer.Sheet;
-import net.sf.jxls.parser.Cell;
-
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.transformer.Sheet;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.util.CellReference;
 
 /**
  * Base class for {@link FormulaResolver} interface implementations

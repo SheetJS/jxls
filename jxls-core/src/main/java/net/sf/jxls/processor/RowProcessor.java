@@ -1,8 +1,8 @@
 package net.sf.jxls.processor;
 
-import net.sf.jxls.transformer.Row;
-
 import java.util.Map;
+
+import net.sf.jxls.transformer.Row;
 
 /**
  * Allows dynamic processing of rows

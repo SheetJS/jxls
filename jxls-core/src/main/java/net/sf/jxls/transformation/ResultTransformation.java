@@ -1,6 +1,5 @@
 package net.sf.jxls.transformation;
 
-import net.sf.jxls.transformation.BaseTransformation;
 import net.sf.jxls.tag.Block;
 
 /**

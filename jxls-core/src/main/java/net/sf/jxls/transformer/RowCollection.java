@@ -1,12 +1,11 @@
 package net.sf.jxls.transformer;
 
-import net.sf.jxls.parser.Cell;
-import net.sf.jxls.parser.Property;
-import net.sf.jxls.transformer.Row;
-
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.parser.Property;
 
 /**
  * Contains information about collections in a row of XLS template

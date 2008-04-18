@@ -1,10 +1,10 @@
 package net.sf.jxls.tag;
 
+import java.util.Map;
+
+import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.transformer.Sheet;
 import net.sf.jxls.transformer.SheetTransformer;
-import net.sf.jxls.controller.SheetTransformationController;
-
-import java.util.Map;
 
 /**
  * Contains tag related information

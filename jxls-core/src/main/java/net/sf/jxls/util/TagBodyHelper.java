@@ -1,6 +1,10 @@
 package net.sf.jxls.util;
 
+import java.util.List;
+import java.util.Map;
+
 import net.sf.jxls.tag.Block;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -8,9 +12,6 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellReference;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Leonid Vysochyn

@@ -1,12 +1,10 @@
 package net.sf.jxls.controller;
 
-import org.apache.poi.hssf.util.CellReference;
-import net.sf.jxls.controller.SheetCellFinder;
-import net.sf.jxls.controller.WorkbookCellFinder;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+
+import org.apache.poi.hssf.util.CellReference;
 
 /**
  * Simple implementation of {@link net.sf.jxls.controller.WorkbookCellFinder} based on SheetCellFinder mapping to corresponding worksheets

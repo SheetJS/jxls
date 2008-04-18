@@ -1,8 +1,8 @@
 package net.sf.jxls.formula;
 
-import net.sf.jxls.transformation.BlockTransformation;
-
 import java.util.Map;
+
+import net.sf.jxls.transformation.BlockTransformation;
 
 /**
  * @author Leonid Vysochyn

@@ -1,10 +1,10 @@
 package net.sf.jxls.transformer;
 
-import net.sf.jxls.transformation.ResultTransformation;
+import java.util.Map;
+
 import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.tag.Block;
-
-import java.util.Map;
+import net.sf.jxls.transformation.ResultTransformation;
 
 /**
  * Defines row transformation methods

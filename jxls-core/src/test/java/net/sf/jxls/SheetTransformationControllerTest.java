@@ -1,26 +1,30 @@
 package net.sf.jxls;
 
-import junit.framework.TestCase;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import junit.framework.TestCase;
+import net.sf.jxls.controller.SheetTransformationController;
+import net.sf.jxls.controller.SheetTransformationControllerImpl;
+import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformation.DuplicateTransformation;
 import net.sf.jxls.transformation.RemoveTransformation;
 import net.sf.jxls.transformation.ShiftTransformation;
-import net.sf.jxls.controller.SheetTransformationController;
-import net.sf.jxls.controller.SheetTransformationControllerImpl;
 import net.sf.jxls.transformer.Sheet;
 import net.sf.jxls.transformer.Workbook;
-import net.sf.jxls.tag.Block;
-import net.sf.jxls.CellsChecker;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 /**
  * @author Leonid Vysochyn

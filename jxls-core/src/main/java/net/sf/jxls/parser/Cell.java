@@ -1,15 +1,16 @@
 package net.sf.jxls.parser;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.util.CellReference;
-import org.apache.poi.hssf.util.Region;
-import net.sf.jxls.tag.Tag;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sf.jxls.formula.Formula;
+import net.sf.jxls.tag.Tag;
 import net.sf.jxls.transformer.Row;
 import net.sf.jxls.transformer.RowCollection;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.hssf.util.Region;
 
 /**
  * Represents excel cell

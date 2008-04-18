@@ -1,7 +1,7 @@
 package net.sf.jxls.report;
 
-import java.util.List;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @author Leonid Vysochyn

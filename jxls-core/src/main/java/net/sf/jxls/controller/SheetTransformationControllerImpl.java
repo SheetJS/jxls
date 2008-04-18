@@ -1,22 +1,21 @@
 package net.sf.jxls.controller;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import net.sf.jxls.util.Util;
-import net.sf.jxls.util.SheetHelper;
-import net.sf.jxls.util.TagBodyHelper;
-import net.sf.jxls.formula.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sf.jxls.formula.FormulaController;
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformation.DuplicateTransformation;
+import net.sf.jxls.transformation.DuplicateTransformationByColumns;
 import net.sf.jxls.transformation.RemoveTransformation;
 import net.sf.jxls.transformation.ShiftTransformation;
-import net.sf.jxls.transformation.DuplicateTransformationByColumns;
-import net.sf.jxls.controller.SheetTransformationController;
-import net.sf.jxls.tag.Block;
-import net.sf.jxls.tag.Point;
 import net.sf.jxls.transformer.RowCollection;
 import net.sf.jxls.transformer.Sheet;
-import net.sf.jxls.parser.Cell;
+import net.sf.jxls.util.TagBodyHelper;
+import net.sf.jxls.util.Util;
 
-import java.util.*;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 
 /**
  * This class controls and saves all transforming operations on spreadsheet cells.

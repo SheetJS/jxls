@@ -1,14 +1,11 @@
 package net.sf.jxls.transformation;
 
-import net.sf.jxls.transformation.BlockTransformation;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sf.jxls.formula.CellRef;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.tag.Point;
-import net.sf.jxls.formula.CellRef;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.poi.hssf.util.CellReference;
 
 /**
  * Remove transformation

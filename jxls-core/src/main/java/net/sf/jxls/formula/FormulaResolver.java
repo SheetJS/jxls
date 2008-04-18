@@ -1,6 +1,5 @@
 package net.sf.jxls.formula;
 
-import net.sf.jxls.formula.Formula;
 import net.sf.jxls.controller.WorkbookCellFinder;
 
 /**

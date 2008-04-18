@@ -1,13 +1,13 @@
 package net.sf.jxls.report;
 
-import org.apache.commons.beanutils.ResultSetDynaClass;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.AbstractCollection;
 import java.util.Iterator;
+
+import org.apache.commons.beanutils.ResultSetDynaClass;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Allows JDBC ResultSet to be used with XLSTransformer

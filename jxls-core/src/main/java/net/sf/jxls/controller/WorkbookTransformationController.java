@@ -1,9 +1,8 @@
 package net.sf.jxls.controller;
 
-import net.sf.jxls.controller.SheetTransformationController;
-import net.sf.jxls.transformer.Workbook;
-
 import java.util.List;
+
+import net.sf.jxls.transformer.Workbook;
 
 /**
  * Defines interface to control workbook transformations

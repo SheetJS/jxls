@@ -1,12 +1,18 @@
 package net.sf.jxls.parser;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import net.sf.jxls.transformer.Configuration;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.jexl.*;
+import org.apache.commons.jexl.ExpressionFactory;
+import org.apache.commons.jexl.JexlContext;
+import org.apache.commons.jexl.JexlHelper;
 
 
 /**

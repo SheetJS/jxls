@@ -1,9 +1,9 @@
 package net.sf.jxls.formula;
 
-import org.apache.poi.hssf.util.CellReference;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.poi.hssf.util.CellReference;
 
 /**
  * @author Leonid Vysochyn

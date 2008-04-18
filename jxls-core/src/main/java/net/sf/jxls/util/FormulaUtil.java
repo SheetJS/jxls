@@ -1,12 +1,13 @@
 package net.sf.jxls.util;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import net.sf.jxls.formula.Formula;
-
 import java.util.List;
 import java.util.Map;
+
+import net.sf.jxls.formula.Formula;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 
 /**
  * @author Leonid Vysochyn

@@ -1,8 +1,8 @@
 package net.sf.jxls;
 
 import junit.framework.TestCase;
-import net.sf.jxls.transformation.DuplicateTransformation;
 import net.sf.jxls.tag.Block;
+import net.sf.jxls.transformation.DuplicateTransformation;
 import net.sf.jxls.transformer.Sheet;
 
 /**

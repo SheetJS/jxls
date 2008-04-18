@@ -1,14 +1,22 @@
 package net.sf.jxls.util;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.beanutils.BeanPropertyValueEqualsPredicate;
-
-import java.util.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
-import net.sf.jxls.transformer.Configuration;
 import net.sf.jxls.parser.Expression;
+import net.sf.jxls.transformer.Configuration;
+
+import org.apache.commons.beanutils.BeanPropertyValueEqualsPredicate;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * @author Leonid Vysochyn

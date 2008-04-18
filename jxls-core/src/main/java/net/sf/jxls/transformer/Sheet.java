@@ -1,16 +1,14 @@
 package net.sf.jxls.transformer;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import net.sf.jxls.formula.Formula;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sf.jxls.formula.ListRange;
 import net.sf.jxls.parser.Cell;
-import net.sf.jxls.util.SheetHelper;
-import net.sf.jxls.tag.Block;
-import net.sf.jxls.tag.Point;
 
-import java.util.*;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * Represents excel worksheet 

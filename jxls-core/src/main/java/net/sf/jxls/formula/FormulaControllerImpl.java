@@ -1,16 +1,20 @@
 package net.sf.jxls.formula;
 
-import org.apache.poi.hssf.util.CellReference;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import net.sf.jxls.tag.Point;
 import net.sf.jxls.transformation.BlockTransformation;
 import net.sf.jxls.transformation.DuplicateTransformation;
 import net.sf.jxls.transformer.Workbook;
 
-import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 
 /**
  * @author Leonid Vysochyn

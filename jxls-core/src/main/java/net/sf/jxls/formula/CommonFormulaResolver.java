@@ -1,12 +1,10 @@
 package net.sf.jxls.formula;
 
-import net.sf.jxls.formula.BaseFormulaResolver;
-import net.sf.jxls.formula.Formula;
-import net.sf.jxls.controller.WorkbookCellFinder;
-
-import java.util.Set;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
+import net.sf.jxls.controller.WorkbookCellFinder;
 
 /**
  * Implementation of {@link FormulaResolver} interface resolving formulas containing list range and label cell references

@@ -1,20 +1,39 @@
 package net.sf.jxls;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import junit.framework.TestCase;
-import net.sf.jxls.bean.*;
+import net.sf.jxls.bean.Bean;
+import net.sf.jxls.bean.BeanWithList;
+import net.sf.jxls.bean.Column;
+import net.sf.jxls.bean.Department;
+import net.sf.jxls.bean.Employee;
+import net.sf.jxls.bean.Item;
+import net.sf.jxls.bean.MyBean;
+import net.sf.jxls.bean.SimpleBean;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.Configuration;
 import net.sf.jxls.transformer.XLSTransformer;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.Region;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * @author Leonid Vysochyn

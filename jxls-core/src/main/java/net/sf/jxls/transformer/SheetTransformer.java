@@ -1,25 +1,27 @@
 package net.sf.jxls.transformer;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFHeader;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import net.sf.jxls.transformer.ChainTransformer;
-import net.sf.jxls.transformer.CollectionRowTransformer;
-import net.sf.jxls.transformer.RowTransformer;
-import net.sf.jxls.tag.Block;
-import net.sf.jxls.parser.CellParser;
-import net.sf.jxls.parser.Cell;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.controller.SheetTransformationControllerImpl;
 import net.sf.jxls.controller.WorkbookTransformationController;
-import net.sf.jxls.formula.ListRange;
-import net.sf.jxls.processor.RowProcessor;
 import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.formula.ListRange;
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.parser.CellParser;
+import net.sf.jxls.processor.RowProcessor;
+import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformation.ResultTransformation;
 
-import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 
 /**
  * @author Leonid Vysochyn

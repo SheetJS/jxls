@@ -1,10 +1,11 @@
 package net.sf.jxls;
 
-import org.apache.poi.hssf.util.CellReference;
-import net.sf.jxls.controller.SheetCellFinder;
-
 import java.util.List;
 import java.util.Map;
+
+import net.sf.jxls.controller.SheetCellFinder;
+
+import org.apache.poi.hssf.util.CellReference;
 
 /**
  * @author Leonid Vysochyn

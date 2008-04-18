@@ -1,11 +1,11 @@
 package net.sf.jxls.parser;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import net.sf.jxls.parser.Expression;
+import java.util.Map;
+
 import net.sf.jxls.transformer.Configuration;
 
-import java.util.Map;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Expression parser class

@@ -1,13 +1,11 @@
 package net.sf.jxls.tag;
 
-import net.sf.jxls.transformer.Sheet;
+import java.util.HashSet;
+import java.util.Set;
+
 import net.sf.jxls.formula.CellRef;
 import net.sf.jxls.formula.Formula;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import net.sf.jxls.transformer.Sheet;
 
 /**
  * Represents rectangular range of excel cells

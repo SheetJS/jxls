@@ -1,16 +1,28 @@
 package net.sf.jxls;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
 import junit.framework.TestCase;
 import net.sf.jxls.report.ReportManager;
 import net.sf.jxls.report.ReportManagerImpl;
 import net.sf.jxls.transformer.XLSTransformer;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import java.io.*;
-import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @author Leonid Vysochyn

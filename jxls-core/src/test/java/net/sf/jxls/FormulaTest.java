@@ -1,12 +1,11 @@
 package net.sf.jxls;
 
-import junit.framework.TestCase;
-
-import java.util.Set;
 import java.util.Iterator;
+import java.util.Set;
 
-import net.sf.jxls.formula.Formula;
+import junit.framework.TestCase;
 import net.sf.jxls.formula.CellRef;
+import net.sf.jxls.formula.Formula;
 
 /**
  * Test case for Formula class

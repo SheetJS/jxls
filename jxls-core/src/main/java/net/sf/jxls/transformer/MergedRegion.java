@@ -1,7 +1,6 @@
 package net.sf.jxls.transformer;
 
 import org.apache.poi.hssf.util.Region;
-import net.sf.jxls.transformer.RowCollection;
 
 /**
  * Represents merged region

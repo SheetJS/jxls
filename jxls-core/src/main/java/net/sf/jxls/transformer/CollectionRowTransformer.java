@@ -1,15 +1,18 @@
 package net.sf.jxls.transformer;
 
-import net.sf.jxls.util.Util;
-import net.sf.jxls.transformer.BaseRowTransformer;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import net.sf.jxls.controller.SheetTransformationController;
+import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.formula.ListRange;
 import net.sf.jxls.parser.ExpressionCollectionParser;
 import net.sf.jxls.parser.Property;
-import net.sf.jxls.controller.SheetTransformationController;
-import net.sf.jxls.formula.ListRange;
-import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformation.ResultTransformation;
-
-import java.util.*;
+import net.sf.jxls.util.Util;
 
 /**
  * Implementation of {@link RowTransformer} interface for duplicating a collection row

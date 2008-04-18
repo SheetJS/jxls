@@ -1,15 +1,15 @@
 package net.sf.jxls.report;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.beanutils.RowSetDynaClass;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.List;
-import java.util.Map;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.SQLException;
-import java.sql.ResultSet;
 
 /**
  * @author Leonid Vysochyn

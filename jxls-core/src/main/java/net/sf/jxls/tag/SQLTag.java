@@ -1,16 +1,21 @@
 package net.sf.jxls.tag;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.report.ReportManager;
 import net.sf.jxls.transformation.ResultTransformation;
 import net.sf.jxls.transformer.Configuration;
 import net.sf.jxls.transformer.SheetTransformer;
 import net.sf.jxls.util.ReportUtil;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.sql.SQLException;
-import java.util.*;
 
 /**
  * @author Leonid Vysochyn
