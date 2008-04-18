@@ -1,9 +1,9 @@
 package net.sf.jxls.reader;
 
+import java.util.NoSuchElementException;
+
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
-
-import java.util.NoSuchElementException;
 
 /**
  * @author Leonid Vysochyn

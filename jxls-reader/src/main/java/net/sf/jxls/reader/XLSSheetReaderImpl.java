@@ -1,10 +1,10 @@
 package net.sf.jxls.reader;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 
 /**
  * @author Leonid Vysochyn

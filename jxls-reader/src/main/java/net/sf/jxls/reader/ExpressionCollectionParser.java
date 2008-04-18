@@ -1,17 +1,21 @@
 package net.sf.jxls.reader;
 
-import org.apache.commons.jexl.Expression;
-import org.apache.commons.jexl.ExpressionFactory;
-import org.apache.commons.jexl.JexlContext;
-import org.apache.commons.jexl.parser.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.jexl.Expression;
+import org.apache.commons.jexl.ExpressionFactory;
+import org.apache.commons.jexl.JexlContext;
+import org.apache.commons.jexl.parser.ASTIdentifier;
+import org.apache.commons.jexl.parser.ASTReference;
+import org.apache.commons.jexl.parser.Node;
+import org.apache.commons.jexl.parser.Parser;
+import org.apache.commons.jexl.parser.SimpleNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ExpressionCollectionParser {
     protected final Log log = LogFactory.getLog(getClass());

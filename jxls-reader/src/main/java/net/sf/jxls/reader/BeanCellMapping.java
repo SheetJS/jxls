@@ -1,13 +1,13 @@
 package net.sf.jxls.reader;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.util.CellReference;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 
 /**
  * @author Leonid Vysochyn

@@ -1,9 +1,5 @@
 package net.sf.jxls.reader;
 
-import junit.framework.TestCase;
-import net.sf.jxls.reader.sample.SimpleBean;
-import org.xml.sax.SAXException;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import junit.framework.TestCase;
+import net.sf.jxls.reader.sample.SimpleBean;
+
+import org.xml.sax.SAXException;
 
 /**
  * @author Leonid Vysochyn

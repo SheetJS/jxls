@@ -1,9 +1,5 @@
 package net.sf.jxls.reader;
 
-import junit.framework.TestCase;
-import net.sf.jxls.reader.sample.Department;
-import net.sf.jxls.reader.sample.Employee;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import junit.framework.TestCase;
+import net.sf.jxls.reader.sample.Department;
+import net.sf.jxls.reader.sample.Employee;
 
 /**
  * @author Leonid Vysochyn
