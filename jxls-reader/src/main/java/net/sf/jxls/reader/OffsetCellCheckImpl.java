@@ -44,19 +44,21 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
     }
 
     public boolean isCheckSuccessful(HSSFCell cell) {
-        Object obj = getCellValue( cell, value );
-        if( value == null ){
+        Object obj = getCellValue(cell, value);
+        if (value == null) {
             return obj == null;
+        } else {
+            return value.equals(obj);
         }
-        return value.equals( obj );
     }
 
     public boolean isCheckSuccessful(HSSFRow row) {
-        if( row == null ){
+        if (row == null) {
             return value == null;
+        } else {
+            HSSFCell cell = row.getCell(offset);
+            return isCheckSuccessful(cell);
         }
-        HSSFCell cell = row.getCell( offset );
-        return isCheckSuccessful( cell );
     }
 
     private Object getCellValue(HSSFCell cell, Object obj) {
@@ -75,14 +77,14 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
             value = cell.getDateCellValue();
         } else if (obj instanceof Calendar) {
             Calendar c = Calendar.getInstance();
-            c.setTime( cell.getDateCellValue() );
+            c.setTime(cell.getDateCellValue());
             value = c;
-        } else if (obj instanceof Boolean){
-            if( cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN ){
+        } else if (obj instanceof Boolean) {
+            if (cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN) {
                 value = (cell.getBooleanCellValue()) ? Boolean.TRUE : Boolean.FALSE;
-            }else if( cell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
-                value = Boolean.valueOf( cell.getStringCellValue() );
-            }else{
+            } else if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+                value = Boolean.valueOf(cell.getStringCellValue());
+            } else {
                 value = Boolean.FALSE;
             }
         }
@@ -91,8 +93,8 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
 
     private String readStringValue(HSSFCell cell) {
         String value = null;
-        int cellType= cell==null ? HSSFCell.CELL_TYPE_BLANK : cell.getCellType();
-        switch (cellType) {
+        if (cell == null) return null; // ZJ
+        switch (cell.getCellType()) {
             case HSSFCell.CELL_TYPE_STRING:
                 value = cell.getStringCellValue() != null ? cell.getStringCellValue().trim() : null;
                 break;

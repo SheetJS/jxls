@@ -20,21 +20,24 @@ public class BeanCellMapping {
     String propertyName;
     String beanKey;
     String cell;
-    static{
+    String type = null;
+    boolean nullAllowed = false;
+
+    static {
         ReaderConfig.getInstance();
     }
 
     public BeanCellMapping(int rowNum, short cellNum, String fullPropertyName) {
         this.row = rowNum;
         this.col = cellNum;
-        this.beanKey = extractBeanName( fullPropertyName );
-        this.propertyName = extractPropertyName( fullPropertyName );
+        this.beanKey = extractBeanName(fullPropertyName);
+        this.propertyName = extractPropertyName(fullPropertyName);
     }
 
     public BeanCellMapping(String cell, String fullPropertyName) {
-        setCell( cell );
-        this.beanKey = extractBeanName( fullPropertyName );
-        this.propertyName = extractPropertyName( fullPropertyName );
+        setCell(cell);
+        this.beanKey = extractBeanName(fullPropertyName);
+        this.propertyName = extractPropertyName(fullPropertyName);
     }
 
     public BeanCellMapping(int rowNum, short cellNum, String beanKey, String propertyName) {
@@ -45,15 +48,13 @@ public class BeanCellMapping {
     }
 
     public BeanCellMapping(String cell, String beanKey, String propertyName) {
-        setCell( cell );
+        setCell(cell);
         this.beanKey = beanKey;
         this.propertyName = propertyName;
     }
 
     public BeanCellMapping() {
     }
-
-
 
 
     public String getBeanKey() {
@@ -69,30 +70,32 @@ public class BeanCellMapping {
     }
 
     public void setFullPropertyName(String fullPropertyName) {
-        this.beanKey = extractBeanName( fullPropertyName );
-        this.propertyName = extractPropertyName( fullPropertyName );
+        this.beanKey = extractBeanName(fullPropertyName);
+        this.propertyName = extractPropertyName(fullPropertyName);
     }
 
     private String extractPropertyName(String fullPropertyName) {
-        if( fullPropertyName == null ){
+        if (fullPropertyName == null) {
             return null;
         }
         int dotIndex = fullPropertyName.indexOf('.');
-        if( dotIndex < 0 ){
+        if (dotIndex < 0) {
             throw new IllegalArgumentException("Full property name must contain period. Can't extract bean property name from " + fullPropertyName);
+        } else {
+            return fullPropertyName.substring(dotIndex + 1);
         }
-        return fullPropertyName.substring(dotIndex + 1);
     }
 
     private String extractBeanName(String fullPropertyName) {
-        if( fullPropertyName == null ){
+        if (fullPropertyName == null) {
             return null;
         }
         int dotIndex = fullPropertyName.indexOf('.');
-        if( dotIndex < 0 ){
+        if (dotIndex < 0) {
             throw new IllegalArgumentException("Full property name must contain period. Can't extract bean name from " + fullPropertyName);
+        } else {
+            return fullPropertyName.substring(0, dotIndex);
         }
-        return fullPropertyName.substring(0, dotIndex);
     }
 
     public int getRow() {
@@ -131,36 +134,57 @@ public class BeanCellMapping {
         this.propertyName = propertyName;
     }
 
-    public void populateBean(String dataString, Map beans) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isNullAllowed() {
+        return nullAllowed;
+    }
+
+    public void setNullAllowed(boolean nullAllowed) {
+        this.nullAllowed = nullAllowed;
+    }
+
+    public void populateBean(String dataString, Map beans) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
         Object bean;
-        if( beans.containsKey( beanKey ) ){
-            bean = beans.get( beanKey );
-            Class dataType = getPropertyType( beans );
-//            Object value = ConvertUtils.convert( dataString, dataType );
-            // todo: apply patch from Zeljko Jakovljevic
+        if (beans.containsKey(beanKey)) {
+            bean = beans.get(beanKey);
+            Class dataType = getPropertyType(beans);
+
             Object value = null;
-            if(dataString != null) { // set only if null is not allowed!
-                value = ConvertUtils.convert( dataString, dataType );
+            if (!(nullAllowed && dataString == null)) { // set only if null is not allowed!
+                value = ConvertUtils.convert(dataString, dataType);
             }
-            // patch end
-            PropertyUtils.setProperty( bean, propertyName, value );
-        }else{
-            if( log.isWarnEnabled() ){
+
+            PropertyUtils.setProperty(bean, propertyName, value);
+        } else {
+            if (log.isWarnEnabled()) {
                 log.warn("Can't find bean under the key=" + beanKey);
             }
         }
     }
 
-    public Class getPropertyType(Map beans) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    // Added feature to set type by type-attribute in XML
+    public Class getPropertyType(Map beans) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
         Object bean;
-        if( beans.containsKey( beanKey ) ){
-            bean = beans.get( beanKey );
-            return PropertyUtils.getPropertyType(bean, propertyName);
+        if (beans.containsKey(beanKey)) {
+            bean = beans.get(beanKey);
+            // ZJ
+            if (type == null) {
+                return PropertyUtils.getPropertyType(bean, propertyName);
+            } else {
+                return Class.forName(type);
+            }
         }
         return Object.class;
     }
 
-    public String getCellName(){
+    public String getCellName() {
         CellReference cellRef = new CellReference(row, col);
         return cellRef.toString();
     }
