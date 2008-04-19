@@ -39,6 +39,7 @@ public class ForEachTag extends BaseTag {
 
     private String items;
     private String var;
+    private String varStatus;
 
     private String itemsKey;
     private String collectionPropertyName;
@@ -89,6 +90,13 @@ public class ForEachTag extends BaseTag {
         this.groupBy = groupBy;
     }
 
+    public String getVarStatus() {
+        return varStatus;
+    }
+
+    public void setVarStatus(String varStatus) {
+        this.varStatus = varStatus;
+    }
 
     public void init(TagContext tagContext) {
         super.init(tagContext);
@@ -292,11 +300,17 @@ public class ForEachTag extends BaseTag {
         ResultTransformation shift = new ResultTransformation(0);
         int startRowNum;
         int endRowNum;
+        int index = 0;
         ResultTransformation processResult;
         int k = 0;
-        for (Iterator iterator = c2.iterator(); iterator.hasNext();) {
+        LoopStatus status = new LoopStatus();
+        if( varStatus != null ){
+            beans.put( varStatus, status );
+        }
+        for (Iterator iterator = c2.iterator(); iterator.hasNext(); index++) {
             Object o = iterator.next();
             beans.put(var, o);
+            status.setIndex( index );
 //                    if (ReportUtil.shouldSelectCollectionData(beans, select, configuration)) {
                 try {
                     startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
@@ -308,6 +322,9 @@ public class ForEachTag extends BaseTag {
                     throw new RuntimeException("Can't parse property", e);
                 }
 //                    }
+        }
+        if( varStatus != null ){
+            beans.remove( varStatus );
         }
         return shift;
     }

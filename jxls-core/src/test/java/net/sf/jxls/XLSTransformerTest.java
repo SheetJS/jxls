@@ -116,6 +116,9 @@ public class XLSTransformerTest extends TestCase {
     public static final String employeeNotesDestXLS = "target/employeeNotes_output.xls";
     public static final String employeeNotesRusDestXLS = "target/employeeNotesRus_output.xls";
 
+    public static final String varStatusXLS = "/templates/varstatus.xls";
+    public static final String varStatusDestXLS = "/target/varstatus_output.xls";
+
     public static final String forifTagOneRowXLS = "/templates/foriftagOneRow.xls";
     public static final String forifTagOneRowDestXLS = "target/foriftagOneRow_output.xls";
 
@@ -142,6 +145,9 @@ public class XLSTransformerTest extends TestCase {
 
     public static final String forGroupByXLS = "/templates/forgroup.xls";
     public static final String forGroupByDestXLS = "target/forgroup_output.xls";
+
+    public static final String outlineXLS = "/templates/outline.xls";
+    public static final String outlineDestXLS = "target/outline_output.xls";
 
 
     SimpleBean simpleBean1;
@@ -1476,7 +1482,55 @@ public class XLSTransformerTest extends TestCase {
 
         is.close();
         saveWorkbook(resultWorkbook, employeeNotesDestXLS);
+    }
 
+    public void testVarStatusAttrInForEach() throws IOException, ParsePropertyException {
+        Map beans = new HashMap();
+        beans.put("employees", itEmployees);
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream( varStatusXLS ));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        is = new BufferedInputStream(getClass().getResourceAsStream(varStatusXLS));
+        POIFSFileSystem fs = new POIFSFileSystem(is);
+        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+
+        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Map props = new HashMap();
+        CellsChecker checker = new CellsChecker(props);
+        checker.checkListCells( sourceSheet, 3, resultSheet, 2, (short)0, new Object[]{ new Integer(0), new Integer(1), new Integer(2), new Integer(3), new Integer(4)} );
+        is.close();
+        saveWorkbook(resultWorkbook, varStatusDestXLS);
+    }
+
+    /*
+     * This sample demonstrates a problem with formulas applied to jx:forEach tag
+     * values nested in jx:outline tag. Basically jx:outline rows are removed during transformation
+     * so as a result for the formula we have something like this: SUM(B3;B4;B5;B6;B7)
+     * This restricts usage of formulas in this case becase the number of values passed to the formulas
+     * in this way is restricted by Excel. So logically we need to transform formulas arguments
+     * into a range like B3:B7. This is not currently possible with jXLS
+     * TODO: fix this issue with formulas in the future
+     */
+    public void atestOutlineInForEach() throws IOException, ParsePropertyException {
+        Map beans = new HashMap();
+        beans.put("employees", itEmployees);
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream( outlineXLS ));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+//        is = new BufferedInputStream(getClass().getResourceAsStream(outlineXLS));
+//        POIFSFileSystem fs = new POIFSFileSystem(is);
+//        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+
+//        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
+//        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+//        Map props = new HashMap();
+//        CellsChecker checker = new CellsChecker(props);
+//        checker.checkListCells( sourceSheet, 3, resultSheet, 2, (short)0, new Object[]{ new Integer(0), new Integer(1), new Integer(2), new Integer(3), new Integer(4)} );
+//        is.close();
+        saveWorkbook(resultWorkbook, outlineDestXLS);
     }
 
     public void testExtendedEncodingExport() throws IOException, ParsePropertyException {

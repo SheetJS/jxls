@@ -1,35 +1,22 @@
 package net.sf.jxls.util;
 
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.transformer.Row;
+import net.sf.jxls.transformer.RowCollection;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.util.Region;
+import org.apache.poi.hssf.util.CellReference;
+
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import net.sf.jxls.parser.Cell;
-import net.sf.jxls.transformer.Row;
-import net.sf.jxls.transformer.RowCollection;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFooter;
-import org.apache.poi.hssf.usermodel.HSSFHeader;
-import org.apache.poi.hssf.usermodel.HSSFPrintSetup;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.Region;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * This class contains many utility methods used by jXLS framework
@@ -783,6 +770,87 @@ public final class Util {
                 0,
                 resultWorkbook.getSheetAt(sheetNum).getLastRowNum()
         );
+    }
+
+    protected static final String regexCellRef = "[a-zA-Z]+[0-9]+";
+    protected static final Pattern regexCellRefPattern = Pattern.compile( regexCellRef );
+    protected static final String regexCellCharPart = "[0-9]+";
+    protected static final String regexCellDigitPart = "[a-zA-Z]+";
+    protected static  String cellRangeSeparator = ":";
+
+    public static boolean isColumnRange(List cells) {
+        String firstCell = (String) cells.get( 0 );
+        boolean isColumnRange = true;
+        if( firstCell != null && firstCell.length() > 0 ){
+            String firstCellCharPart = firstCell.split(regexCellCharPart)[0];
+            String firstCellDigitPart = firstCell.split(regexCellDigitPart)[1];
+            int cellNumber = Integer.parseInt( firstCellDigitPart );
+            String nextCell, cellCharPart, cellDigitPart;
+            for (int i = 1; i < cells.size() && isColumnRange; i++) {
+                nextCell = (String) cells.get(i);
+                cellCharPart = nextCell.split( regexCellCharPart )[0];
+                cellDigitPart = nextCell.split( regexCellDigitPart )[1];
+                if( !firstCellCharPart.equalsIgnoreCase( cellCharPart ) || Integer.parseInt(cellDigitPart) != ++cellNumber ){
+                    isColumnRange = false;
+                }
+            }
+        }
+        return isColumnRange;
+    }
+
+    public static boolean isRowRange(List cells) {
+        String firstCell = (String) cells.get( 0 );
+        boolean isRowRange = true;
+        if( firstCell != null && firstCell.length() > 0 ){
+            String firstCellDigitPart = firstCell.split(regexCellDigitPart)[1];
+            String nextCell, cellDigitPart;
+            CellReference cellRef = new CellReference( firstCell );
+            int cellNumber = cellRef.getCol();
+            for (int i = 1; i < cells.size() && isRowRange; i++) {
+                nextCell = (String) cells.get(i);
+                cellDigitPart = nextCell.split( regexCellDigitPart )[1];
+                cellRef = new CellReference( nextCell );
+                if( !firstCellDigitPart.equalsIgnoreCase( cellDigitPart ) || cellRef.getCol() != ++cellNumber ){
+                    isRowRange = false;
+                }
+            }
+        }
+        return isRowRange;
+    }
+
+    public static String buildCommaSeparatedListOfCells(String refSheetName, List cells) {
+        String listOfCells = "";
+        for (int i = 0; i < cells.size() - 1; i++) {
+            String cell = (String) cells.get(i);
+            listOfCells += getRefCellName(refSheetName, cell) + ",";
+        }
+        listOfCells += getRefCellName( refSheetName, (String) cells.get( cells.size() - 1 ));
+        return listOfCells;
+    }
+
+    public static String detectCellRange(String refSheetName, List cells) {
+        if( cells == null || cells.isEmpty() ){
+            return "";
+        }
+        String firstCell = (String) cells.get( 0 );
+        String range = firstCell;
+        if( firstCell != null && firstCell.length() > 0 ){
+            if( isRowRange(cells) || isColumnRange(cells) ){
+                String lastCell = (String) cells.get( cells.size() - 1 );
+                range = getRefCellName(refSheetName, firstCell) + cellRangeSeparator + lastCell.toUpperCase();
+            }else{
+                range = buildCommaSeparatedListOfCells(refSheetName, cells );
+            }
+        }
+        return range;
+    }
+
+    public static String getRefCellName(String refSheetName, String cellName){
+        if( refSheetName == null ){
+            return cellName.toUpperCase();
+        }else{
+            return refSheetName + "!" + cellName.toUpperCase();
+        }
     }
 
 
