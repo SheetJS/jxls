@@ -32,7 +32,7 @@
       <item name="Custom Processor" href="reference/customprocessor.html"/>
       <item name="JDBC ResultSet" href="reference/resultset.html"/>
       <item name="XLS Reader" href="reference/reader.html"/>
-      <item name="Version Compatibility" href="reference/compatibility.html"/>
+      <!--<item name="Version Compatibility" href="reference/compatibility.html"/>-->
     </menu>
     <menu name="Samples">
       <item name="Tags Sample" href="samples/tagsample.html"/>
