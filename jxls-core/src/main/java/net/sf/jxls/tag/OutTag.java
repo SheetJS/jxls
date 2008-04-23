@@ -13,6 +13,7 @@ import net.sf.jxls.transformer.SheetTransformer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 
@@ -60,8 +61,8 @@ public class OutTag extends BaseTag {
         return tagContext;
     }
 
-    public void init(TagContext tagContext) {
-        this.tagContext = tagContext;
+    public void init(TagContext context) {
+        this.tagContext = context;
     }
 
     public ResultTransformation process(SheetTransformer sheetTransformer) {
@@ -88,7 +89,7 @@ public class OutTag extends BaseTag {
                                 
                                 Object value = new Expression(expr, tagContext.getBeans(), configuration).evaluate();
                                 if (value == null) {
-                                    cell.setCellValue("");
+                                    cell.setCellValue(new HSSFRichTextString(""));
                                 } else if (value instanceof Double) {
                                     cell.setCellValue(((Double) value).doubleValue());
                                 } else if (value instanceof BigDecimal) {
@@ -108,7 +109,7 @@ public class OutTag extends BaseTag {
                                         fixedValue = fixedValue.replaceAll("\r\n", "\n");
                                     }
                                     cell.setEncoding( HSSFCell.ENCODING_UTF_16 );
-                                    cell.setCellValue(fixedValue);
+                                    cell.setCellValue(new HSSFRichTextString(fixedValue));
                                 }
                             }
                         }

@@ -38,9 +38,9 @@ public class IfTag extends BaseTag {
         this.test = test;
     }
 
-    public void init(TagContext tagContext) {
-        super.init(tagContext);
-        ExpressionParser exprParser = new ExpressionParser( test, tagContext.getBeans(), tagContext.getSheet().getConfiguration() );
+    public void init(TagContext context) {
+        super.init(context);
+        ExpressionParser exprParser = new ExpressionParser( test, context.getBeans(), context.getSheet().getConfiguration() );
         Expression testExpr = exprParser.parse();
         try {
             testResult = (Boolean) testExpr.evaluate();

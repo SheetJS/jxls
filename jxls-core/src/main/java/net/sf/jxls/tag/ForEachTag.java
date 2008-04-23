@@ -98,13 +98,13 @@ public class ForEachTag extends BaseTag {
         this.varStatus = varStatus;
     }
 
-    public void init(TagContext tagContext) {
-        super.init(tagContext);
-        configuration = tagContext.getSheet().getConfiguration();
+    public void init(TagContext context) {
+        super.init(context);
+        configuration = context.getSheet().getConfiguration();
         parseItemsProperty();
         parseSelectProperty();
-        if (tagContext.getBeans().containsKey(itemsKey)) {
-            Object itemsObject = tagContext.getBeans().get(itemsKey);
+        if (context.getBeans().containsKey(itemsKey)) {
+            Object itemsObject = context.getBeans().get(itemsKey);
             if (collectionPropertyName != null) {
                 itemsCollection = (Collection) Util.getProperty(itemsObject, collectionPropertyName);
             } else {

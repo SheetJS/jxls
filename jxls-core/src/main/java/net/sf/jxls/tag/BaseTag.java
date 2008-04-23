@@ -16,8 +16,8 @@ public abstract class BaseTag implements Tag{
         return "<" + getName() + ">";
     }
 
-    public void init(TagContext tagContext) {
-        this.tagContext = tagContext;
+    public void init(TagContext context) {
+        this.tagContext = context;
     }
 
     public TagContext getTagContext() {
