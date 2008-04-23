@@ -34,8 +34,6 @@ public class TagBodyHelperTest extends TestCase {
 
     public void testDuplicateDown() throws IOException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
-        TagBodyHelper helper = new TagBodyHelper();
-
         POIFSFileSystem fs = new POIFSFileSystem(is);
         HSSFWorkbook workbook = new HSSFWorkbook(fs);
         HSSFSheet sheet = workbook.getSheetAt( 0 );
@@ -57,8 +55,6 @@ public class TagBodyHelperTest extends TestCase {
 
     public void testReplaceProperty() throws IOException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(grouping1XLS));
-        TagBodyHelper helper = new TagBodyHelper();
-
         POIFSFileSystem fs = new POIFSFileSystem(is);
         HSSFWorkbook workbook = new HSSFWorkbook(fs);
         HSSFSheet sheet = workbook.getSheetAt( 0 );
