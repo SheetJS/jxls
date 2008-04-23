@@ -76,6 +76,7 @@ public class FormulaPart {
             String part = formula.substring(end, refCellMatcher.start());
             part = adjustFormulaPartForCellIndex(cellRef, part);
             parts.add(part);
+            //FIXME fix the range bug on the following line: the later cell reference in "sheet2!C1:C10" will point to the current sheet, not sheet2
             cellRef = new CellRef( refCellMatcher.group(), this );
             parts.add( cellRef );
             cellRefs.add( cellRef );
