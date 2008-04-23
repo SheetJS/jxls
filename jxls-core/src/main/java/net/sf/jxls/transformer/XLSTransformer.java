@@ -298,10 +298,10 @@ public class XLSTransformer {
 //            exposePOIObjects( workbook,  beanParams );
 //            workbookTransformationController = new WorkbookTransformationControllerImpl( workbook );
 
-            SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
+//            SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
 //            final String templateSheetName = "InternalTemplateSheetName";
             // todo refactoring required
-            int sheetNumber = 1;
+//            int sheetNumber = 1;
             for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
                 final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
                 if (!isSpreadsheetToRemove(spreadsheetName)) {
