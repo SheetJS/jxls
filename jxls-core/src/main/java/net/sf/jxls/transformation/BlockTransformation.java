@@ -11,19 +11,13 @@ import net.sf.jxls.tag.Point;
  * @author Leonid Vysochyn
  */
 public abstract class BlockTransformation {
-
     protected Block block;
-
-    String sheetName;
 
     /**
      * @param block - defines transformation {@link net.sf.jxls.tag.Block}
      */
     protected BlockTransformation(Block block) {
         this.block = block;
-        if( block!=null ){
-            sheetName = block.getSheet().getSheetName();
-        }
     }
 
 

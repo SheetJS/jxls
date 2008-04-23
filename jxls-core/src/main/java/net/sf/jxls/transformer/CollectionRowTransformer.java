@@ -63,7 +63,7 @@ public class CollectionRowTransformer extends BaseRowTransformer {
         try {
             SimpleRowTransformer simpleRowTransformer = new SimpleRowTransformer(row, cellProcessors, configuration);
             simpleRowTransformer.transform(stc, sheetTransformer, beans );
-            resultTransformation = processRowCollections(stc, sheetTransformer, row, beans );
+            resultTransformation = processRowCollections(stc, sheetTransformer, beans );
             sheetTransformer.groupRows( row.getSheet() );
         } catch (ParsePropertyException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -75,13 +75,12 @@ public class CollectionRowTransformer extends BaseRowTransformer {
     /**
      * Processes a row containing collection properties
      * @param sheetTransformationController - {@link SheetTransformationController} for given sheet
-     * @param row  Information about row
-     * @param beans Beans to apply
      * @param sheetTransformer - {@link SheetTransformer} to use when processing Row Collections
+     * @param beans Beans to apply
      * @return number to SHIFT all other rows in template
      * @throws net.sf.jxls.exception.ParsePropertyException
      */
-    ResultTransformation processRowCollections(SheetTransformationController sheetTransformationController, SheetTransformer sheetTransformer, Row row, Map beans) throws ParsePropertyException {
+    ResultTransformation processRowCollections(SheetTransformationController sheetTransformationController, SheetTransformer sheetTransformer, Map beans) throws ParsePropertyException {
         int maxShiftNumber = 0;
 
         int rowNum = row.getHssfRow().getRowNum();

@@ -28,32 +28,32 @@ public class DuplicateTransformationByColumns extends BlockTransformation{
     }
 
     public List transformCell(Point p) {
-        List cells;
+        List resultCells;
         if( block.contains( p ) ){
-            cells = new ArrayList();
+            resultCells = new ArrayList();
             Point rp = p;
-            cells.add( p );
+            resultCells.add( p );
             for( int i = 0; i < duplicateNumber; i++){
-                cells.add( rp = rp.shift( 0, block.getNumberOfColumns()));
+                resultCells.add( rp = rp.shift( 0, block.getNumberOfColumns()));
             }
         }else{
-            cells = new ArrayList();
-            cells.add( p );
+            resultCells = new ArrayList();
+            resultCells.add( p );
         }
-        return cells;
+        return resultCells;
     }
 
     public String getDuplicatedCellRef(String sheetName, String cell, int duplicateBlock){
         CellReference cellRef = new CellReference(cell);
-        int rowNum = cellRef.getRow();
-        short colNum = cellRef.getCol();
+        int row = cellRef.getRow();
+        short col = cellRef.getCol();
         String refSheetName = cellRef.getSheetName();
         String resultCellRef = cell;
         if( block.getSheet().getSheetName().equalsIgnoreCase( refSheetName ) || (refSheetName == null && block.getSheet().getSheetName().equalsIgnoreCase( sheetName ))){
             // sheet check passed
-            if( block.contains( rowNum, colNum ) && duplicateNumber >= 1 && duplicateNumber >= duplicateBlock){
-                colNum += block.getNumberOfColumns() * duplicateBlock;
-                resultCellRef = cellToString( rowNum, colNum, refSheetName );
+            if( block.contains( row, col ) && duplicateNumber >= 1 && duplicateNumber >= duplicateBlock){
+                col += block.getNumberOfColumns() * duplicateBlock;
+                resultCellRef = cellToString( row, col, refSheetName );
             }
         }
         return resultCellRef;
@@ -76,9 +76,9 @@ public class DuplicateTransformationByColumns extends BlockTransformation{
         return cells;
     }
 
-    public String cellToString(int rowNum, int colNum, String sheetName){
+    public String cellToString(int row, int col, String sheetName){
         String cellname;
-        CellReference cellReference = new CellReference( rowNum, colNum );
+        CellReference cellReference = new CellReference( row, col );
         if( sheetName != null ){
             cellname = sheetName + "!" + cellReference.toString();
         }else{

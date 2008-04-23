@@ -70,10 +70,10 @@ public class ExpressionCollectionParser {
         
         for (Iterator itr = references.iterator(); itr.hasNext();) {
             node = (Node) itr.next();
-            String collectionExpression = findCollectionProperties(jexlContext, node);
-            if (collectionExpression != null) {
-                if (!collectionExpression.endsWith(COLLECTION_REFERENCE_SUFFIX)) {
-                    this.collectionExpression = collectionExpression;
+            String newExpression = findCollectionProperties(jexlContext, node);
+            if (newExpression != null) {
+                if (!newExpression.endsWith(COLLECTION_REFERENCE_SUFFIX)) {
+                    this.collectionExpression = newExpression;
                 }
                 break;
             }

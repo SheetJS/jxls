@@ -164,13 +164,13 @@ public class CellRef {
         if( firstCell != null && firstCell.length() > 0 ){
             String firstCellDigitPart = firstCell.split(CellRef.regexCellDigitPart)[1];
             String nextCell, cellDigitPart;
-            CellReference cellRef = new CellReference( firstCell );
-            int cellNumber = cellRef.getCol();
+            CellReference cellReference = new CellReference( firstCell );
+            int cellNumber = cellReference.getCol();
             for (int i = 1; i < cells.size() && isRowRange; i++) {
                 nextCell = (String) cells.get(i);
                 cellDigitPart = nextCell.split( CellRef.regexCellDigitPart )[1];
-                cellRef = new CellReference( nextCell );
-                if( !firstCellDigitPart.equalsIgnoreCase( cellDigitPart ) || cellRef.getCol() != ++cellNumber ){
+                cellReference = new CellReference( nextCell );
+                if( !firstCellDigitPart.equalsIgnoreCase( cellDigitPart ) || cellReference.getCol() != ++cellNumber ){
                     isRowRange = false;
                 }
             }

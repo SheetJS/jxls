@@ -116,12 +116,12 @@ public class CellsChecker extends Assert {
         assertEquals("Formula is incorrect", formula, destCell.getCellFormula());
     }
 
-    void checkFormulaCell(HSSFSheet srcSheet, int srcRowNum, HSSFSheet destSheet, int destRowNum, short cellNum, String formula, boolean ignoreStyle) {
+    void checkFormulaCell(HSSFSheet srcSheet, int srcRowNum, HSSFSheet destSheet, int destRowNum, short cellNum, String formula, boolean ignoreCellStyle) {
         HSSFRow srcRow = srcSheet.getRow(srcRowNum);
         HSSFCell srcCell = srcRow.getCell(cellNum);
         HSSFRow destRow = destSheet.getRow(destRowNum);
         HSSFCell destCell = destRow.getCell(cellNum);
-        if( !ignoreStyle ){
+        if( !ignoreCellStyle ){
             checkCellStyle(srcCell.getCellStyle(), destCell.getCellStyle());
         }
         assertEquals("Result Cell is not a formula", destCell.getCellType(), HSSFCell.CELL_TYPE_FORMULA);

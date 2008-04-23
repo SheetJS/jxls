@@ -72,11 +72,11 @@ public class Expression {
         return expression;
     }
 
-    private String parseAggregate(String expression)
+    private String parseAggregate(String expr)
     {
-    	int i = expression.indexOf(":");
+    	int i = expr.indexOf(":");
     	if (i >= 0) {
-    		String aggregate = expression.substring(0, i);
+    		String aggregate = expr.substring(0, i);
     		if (aggregate.length() == 0) {
     			aggregateFunction = null;
     			aggregateField = null;
@@ -93,11 +93,11 @@ public class Expression {
     				aggregateField = "c1";
     			}
     		}
-    		return expression.substring(i+1);
+    		return expr.substring(i+1);
     	}
         aggregateFunction = null;
         aggregateField = null;
-        return expression;
+        return expr;
     }
     
     private void parse() {

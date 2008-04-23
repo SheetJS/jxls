@@ -161,13 +161,13 @@ public class FormulaPart {
         
     }
 
-    public void removeCellRefs( Set cellRefsToRemove ){
+    public void removeCellRefs( Set cellRefsToBeRemoved ){
         List formulaPartIndexesToRemove = new ArrayList();
         Object prevFormulaPart = null;
         Object nextFormulaPart;
         for (int i = 0; i < parts.size(); i++) {
             Object formulaPart = parts.get(i);
-            if( cellRefsToRemove.contains( formulaPart ) ){
+            if( cellRefsToBeRemoved.contains( formulaPart ) ){
                 formulaPartIndexesToRemove.add( new Integer( i ) );
                 if( i > 0 ){
                     prevFormulaPart = parts.get( i - 1 );
@@ -193,7 +193,7 @@ public class FormulaPart {
             parts.remove( index - shift );
             shift++;
         }
-        cellRefs.removeAll( cellRefsToRemove );
+        cellRefs.removeAll( cellRefsToBeRemoved );
     }
 
     public void updateReplacedRefCellsCollection(){

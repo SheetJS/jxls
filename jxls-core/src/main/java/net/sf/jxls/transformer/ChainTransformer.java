@@ -58,7 +58,7 @@ public class ChainTransformer{
             //rowTransformer
             Row row = rowTransformer.getRow();
             row.setParentRow( parentRow );
-            applyRowProcessors(sheet, row );
+            applyRowProcessors(row );
 //            Util.writeToFile("beforeTransformBlock.xls", sheet.getHssfWorkbook());
             resultTransformation.add( rowTransformer.transform(stc, sheetTransformer, beans ) );
 //            Util.writeToFile("afterTransformBlock.xls", sheet.getHssfWorkbook());
@@ -69,10 +69,9 @@ public class ChainTransformer{
 
     /**
      * Applies all registered RowProcessors to a row
-     * @param sheet - {@link Sheet} object containing the row 
      * @param row - {@link net.sf.jxls.transformer.Row} object with row information
      */
-    private void applyRowProcessors(Sheet sheet, Row row) {
+    private void applyRowProcessors(Row row) {
         for (int i = 0; i < rowProcessors.size(); i++) {
             RowProcessor rowProcessor = (RowProcessor) rowProcessors.get(i);
             rowProcessor.processRow(row, sheet.getNamedCells());
