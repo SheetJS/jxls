@@ -28,6 +28,7 @@ import net.sf.jxls.util.Util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -470,12 +471,12 @@ public class XLSTransformer {
                     for (short j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
                         HSSFCell cell = hssfRow.getCell(j);
                         if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-                            String value = cell.getStringCellValue();
+                            String value = cell.getRichStringCellValue().getString();
                             for (int k = 0; k < propertyPreprocessors.size(); k++) {
                                 PropertyPreprocessor propertyPreprocessor = (PropertyPreprocessor) propertyPreprocessors.get(k);
                                 String newValue = propertyPreprocessor.processProperty(value);
                                 if (newValue != null) {
-                                    cell.setCellValue(newValue);
+                                    cell.setCellValue(new HSSFRichTextString(newValue));
                                 }
                             }
                         }
@@ -515,7 +516,7 @@ public class XLSTransformer {
                     for (short j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
                         HSSFCell cell = hssfRow.getCell(j);
                         if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-                            String value = cell.getStringCellValue();
+                            String value = cell.getRichStringCellValue().getString();
                             //if any from columnPropertyNamesToHide is substring of cell value, than hide column
                             for (int prptIndx = 0; prptIndx < columnPropertyNamesToHide.length; prptIndx++) {
                                 if (value != null && value.indexOf(columnPropertyNamesToHide[prptIndx]) != -1) {

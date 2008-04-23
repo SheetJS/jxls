@@ -54,7 +54,7 @@ public class CellParser {
         if (cell.getHssfCell() != null) {
             try {
                 if( cell.getHssfCell().getCellType() == HSSFCell.CELL_TYPE_STRING ){
-                    cell.setHssfCellValue(cell.getHssfCell().getStringCellValue());
+                    cell.setHssfCellValue(cell.getHssfCell().getRichStringCellValue().getString());
                     parseCellValue( beans);
                 }
             } catch (ParsePropertyException e) {
@@ -67,8 +67,8 @@ public class CellParser {
     }
 
     public Formula parseCellFormula(){
-        if( cell.getHssfCell() != null && (cell.getHssfCell().getCellType() == HSSFCell.CELL_TYPE_STRING) && cell.getHssfCell().getStringCellValue()!=null){
-            cell.setHssfCellValue( cell.getHssfCell().getStringCellValue() );
+        if( cell.getHssfCell() != null && (cell.getHssfCell().getCellType() == HSSFCell.CELL_TYPE_STRING)) {
+            cell.setHssfCellValue( cell.getHssfCell().getRichStringCellValue().getString() );
             if( cell.getHssfCellValue().startsWith(configuration.getStartFormulaToken()) && cell.getHssfCellValue().lastIndexOf(configuration.getEndFormulaToken()) > 0 ){
                 parseFormula();
             }
@@ -212,7 +212,7 @@ public class CellParser {
             for(short j = (short) (cell.getHssfCell().getCellNum() + 1); j <= hssfRow.getLastCellNum(); j++){
                 HSSFCell hssfCell = hssfRow.getCell( j );
                 if( hssfCell != null && hssfCell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
-                    String cellValue = hssfCell.getStringCellValue();
+                    String cellValue = hssfCell.getRichStringCellValue().getString();
                     if( cellValue.matches("<" + configuration.getTagPrefix() + tagName + "\\b.*")){
                         count++;
                     }else{
@@ -252,7 +252,7 @@ public class CellParser {
                 for(short j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++){
                     HSSFCell hssfCell = hssfRow.getCell( j );
                     if( hssfCell != null && hssfCell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
-                        String cellValue = hssfCell.getStringCellValue();
+                        String cellValue = hssfCell.getRichStringCellValue().getString();
                         if( cellValue.matches("<" + configuration.getTagPrefix() + tagName + "\\b.*")){
                             count++;
                         }else{

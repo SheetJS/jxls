@@ -108,7 +108,6 @@ public class OutTag extends BaseTag {
                                     if (fixedValue != null) {
                                         fixedValue = fixedValue.replaceAll("\r\n", "\n");
                                     }
-                                    cell.setEncoding( HSSFCell.ENCODING_UTF_16 );
                                     cell.setCellValue(new HSSFRichTextString(fixedValue));
                                 }
                             }

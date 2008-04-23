@@ -211,11 +211,11 @@ public class CellsChecker extends Assert {
     private void checkCellValue(HSSFCell sourceCell, HSSFCell destCell) {
         switch (sourceCell.getCellType()) {
             case HSSFCell.CELL_TYPE_STRING:
-                if (propertyMap.containsKey(sourceCell.getStringCellValue())) {
-                    assertEquals("Property value was set incorrectly", propertyMap.get(sourceCell.getStringCellValue()), getCellValue(destCell, propertyMap.get(sourceCell.getStringCellValue())) );
+                if (propertyMap.containsKey(sourceCell.getRichStringCellValue().getString())) {
+                    assertEquals("Property value was set incorrectly", propertyMap.get(sourceCell.getRichStringCellValue().getString()), getCellValue(destCell, propertyMap.get(sourceCell.getRichStringCellValue().getString())) );
                 } else {
                     assertEquals("Cell type is not the same", sourceCell.getCellType(), destCell.getCellType());
-                    assertEquals("Cell values are not the same", sourceCell.getStringCellValue(), destCell.getStringCellValue());
+                    assertEquals("Cell values are not the same", sourceCell.getRichStringCellValue().getString(), destCell.getRichStringCellValue().getString());
                 }
                 break;
             case HSSFCell.CELL_TYPE_NUMERIC:
@@ -238,7 +238,7 @@ public class CellsChecker extends Assert {
                 assertEquals("Cell type is not the same", sourceCell.getCellType(), destCell.getCellType());
                 break;
             default:
-                fail("Unknown cell type, code=" + sourceCell.getCellType() + ", value=" + sourceCell.getStringCellValue());
+                fail("Unknown cell type, code=" + sourceCell.getCellType() + ", value=" + sourceCell.getRichStringCellValue().getString());
                 break;
         }
     }
@@ -246,7 +246,7 @@ public class CellsChecker extends Assert {
     private Object getCellValue(HSSFCell cell, Object obj) {
         Object value = null;
         if (obj instanceof String) {
-            value = cell.getStringCellValue();
+            value = cell.getRichStringCellValue().getString();
         } else if (obj instanceof Double) {
             value = new Double(cell.getNumericCellValue());
         } else if (obj instanceof BigDecimal) {
@@ -265,7 +265,7 @@ public class CellsChecker extends Assert {
             if( cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN ){
                 value = (cell.getBooleanCellValue()) ? Boolean.TRUE : Boolean.FALSE;
             }else if( cell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
-                value = Boolean.valueOf( cell.getStringCellValue() );
+                value = Boolean.valueOf( cell.getRichStringCellValue().getString() );
             }else{
                 value = Boolean.FALSE;
             }

@@ -11,6 +11,7 @@ import net.sf.jxls.parser.Expression;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 
 /**
  * Cell transformation class
@@ -37,13 +38,12 @@ public class CellTransformer {
                     if (cell.getFormula() == null) {
                             if( cell.getExpressions().size() == 0 ){
                                 if( cell.getMetaInfo() !=null ){
-                                    cell.getHssfCell().setEncoding( HSSFCell.ENCODING_UTF_16 );
-                                    cell.getHssfCell().setCellValue( cell.getStringCellValue() );
+                                    cell.getHssfCell().setCellValue(new HSSFRichTextString(cell.getStringCellValue()));
                                 }
                             }else if (cell.getExpressions().size() == 1) {
                                 Object value = ((Expression) cell.getExpressions().get(0)).evaluate();
                                 if (value == null) {
-                                    cell.getHssfCell().setCellValue("");
+                                    cell.getHssfCell().setCellValue(new HSSFRichTextString(""));
                                     cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
                                 } else if (value instanceof Double) {
                                     cell.getHssfCell().setCellValue(((Double) value).doubleValue());
@@ -63,11 +63,10 @@ public class CellTransformer {
                                     if (fixedValue != null) {
                                         fixedValue = fixedValue.replaceAll("\r\n", "\n");
                                     }
-                                    cell.getHssfCell().setEncoding( HSSFCell.ENCODING_UTF_16 );
                                     if( fixedValue.length() == 0 ){
                                         cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
                                     }else{
-                                        cell.getHssfCell().setCellValue(fixedValue);
+                                        cell.getHssfCell().setCellValue(new HSSFRichTextString(fixedValue));
                                     }
                                 }
                             } else {
@@ -80,12 +79,7 @@ public class CellTransformer {
                                             value += propValue.toString();
                                         }
                                     }
-                                    cell.getHssfCell().setEncoding( HSSFCell.ENCODING_UTF_16 );
-                                    if( value == null || value.length() == 0){
-                                        cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
-                                    }else{
-                                        cell.getHssfCell().setCellValue(value);
-                                    }
+                                    setCellValue(cell, value);
                                 }
                             }
                     }
@@ -102,17 +96,20 @@ public class CellTransformer {
                             value += configuration.getStartExpressionToken() + expr.getExpression() + configuration.getEndExpressionToken();
                         }
                     }
-                    cell.getHssfCell().setEncoding( HSSFCell.ENCODING_UTF_16 );
-                    if( value == null || value.length() == 0){
-                        cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
-                    }else{
-                        cell.getHssfCell().setCellValue(value);
-                    }
+                    setCellValue(cell, value);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
             log.debug("Can't parse expression");
+        }
+    }
+
+    private void setCellValue(Cell cell, String value) {
+        if (value == null || value.length() == 0) {
+            cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
+        } else {
+            cell.getHssfCell().setCellValue(new HSSFRichTextString(value));
         }
     }
 
@@ -123,7 +120,7 @@ public class CellTransformer {
             if (cell.getCollectionName() != null) {
         // simple copy of inline formula template
         // it will be processed when individual rows are processed
-                cell.getHssfCell().setCellValue( cell.getStringCellValue() );
+                cell.getHssfCell().setCellValue(new HSSFRichTextString(cell.getStringCellValue()));
             } else {
         // processing of inline formulaString template
                 String formulaString = formula.getInlineFormula(cell.getRow().getHssfRow().getRowNum() + 1);

@@ -27,6 +27,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFooter;
 import org.apache.poi.hssf.usermodel.HSSFHeader;
 import org.apache.poi.hssf.usermodel.HSSFPrintSetup;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -72,9 +73,9 @@ public final class Util {
     private static void removeRowCollectionPropertyFromCell(HSSFCell cell, String collectionName) {
         String regex = "[-+*/().A-Za-z_0-9\\s]*";
         if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-            String cellValue = cell.getStringCellValue();
+            String cellValue = cell.getRichStringCellValue().getString();
             String strToReplace = "\\$\\{" + regex + collectionName.replaceAll("\\.", "\\\\.") + "\\." + regex + "\\}";
-            cell.setCellValue( cellValue.replaceAll( strToReplace, "") );
+            cell.setCellValue(new HSSFRichTextString(cellValue.replaceAll( strToReplace, "")));
         }
     }
 
@@ -147,10 +148,10 @@ public final class Util {
 
     private static void prepareCollectionPropertyInCellForDuplication(HSSFCell cell, String collectionName, String collectionItemName) {
         if( cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
-            String cellValue = cell.getStringCellValue();
+            String cellValue = cell.getRichStringCellValue().getString();
             String newValue = replaceCollectionProperty( cellValue, collectionName, collectionItemName );
 //            String newValue = cellValue.replaceFirst(collectionName, collectionItemName);
-            cell.setCellValue(newValue);
+            cell.setCellValue(new HSSFRichTextString(newValue));
         }
     }
 
@@ -313,7 +314,7 @@ public final class Util {
         destCell.setCellStyle(srcCell.getCellStyle());
         switch (srcCell.getCellType()) {
             case HSSFCell.CELL_TYPE_STRING:
-                destCell.setCellValue(srcCell.getStringCellValue());
+                destCell.setCellValue(srcCell.getRichStringCellValue());
                 break;
             case HSSFCell.CELL_TYPE_NUMERIC:
                 destCell.setCellValue(srcCell.getNumericCellValue());
@@ -479,10 +480,9 @@ public final class Util {
         if( copyStyle ){
             newCell.setCellStyle(oldCell.getCellStyle());
         }
-        newCell.setEncoding( oldCell.getEncoding() );
         switch (oldCell.getCellType()) {
             case HSSFCell.CELL_TYPE_STRING:
-                newCell.setCellValue(oldCell.getStringCellValue());
+                newCell.setCellValue(oldCell.getRichStringCellValue());
                 break;
             case HSSFCell.CELL_TYPE_NUMERIC:
                 newCell.setCellValue(oldCell.getNumericCellValue());
@@ -508,11 +508,10 @@ public final class Util {
         if( copyStyle ){
             newCell.setCellStyle(oldCell.getCellStyle());
         }
-        newCell.setEncoding( oldCell.getEncoding() );
         switch (oldCell.getCellType()) {
             case HSSFCell.CELL_TYPE_STRING:
-                String oldValue = oldCell.getStringCellValue();
-                newCell.setCellValue(oldValue!=null?oldValue.replaceAll(expressionToReplace, expressionReplacement):null);
+                String oldValue = oldCell.getRichStringCellValue().getString();
+                newCell.setCellValue(new HSSFRichTextString(oldValue.replaceAll(expressionToReplace, expressionReplacement)));
                 break;
             case HSSFCell.CELL_TYPE_NUMERIC:
                 newCell.setCellValue(oldCell.getNumericCellValue());
@@ -738,7 +737,7 @@ public final class Util {
     public static void updateCellValue( HSSFSheet sheet, int rowNum, short colNum, String cellValue){
         HSSFRow hssfRow  = sheet.getRow( rowNum );
         HSSFCell hssfCell = hssfRow.getCell( colNum );
-        hssfCell.setCellValue( cellValue );
+        hssfCell.setCellValue(new HSSFRichTextString(cellValue));
     }
 
     public static void copyPageSetup(HSSFSheet destSheet, HSSFSheet srcSheet) {

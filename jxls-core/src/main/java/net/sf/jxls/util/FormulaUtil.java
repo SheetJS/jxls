@@ -6,6 +6,7 @@ import java.util.Map;
 import net.sf.jxls.formula.Formula;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 
@@ -30,7 +31,7 @@ public class FormulaUtil {
                 hssfCell.setCellFormula(formulaString);
             } else {
                 if (!ignoreUnresolved) {
-                    hssfCell.setCellValue("");
+                    hssfCell.setCellValue(new HSSFRichTextString(""));
                     formulas.remove(i--);
                 }
             }

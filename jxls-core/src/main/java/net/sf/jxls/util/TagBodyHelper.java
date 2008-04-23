@@ -1,6 +1,5 @@
 package net.sf.jxls.util;
 
-import java.util.List;
 import java.util.Map;
 
 import net.sf.jxls.tag.Block;
@@ -8,10 +7,10 @@ import net.sf.jxls.tag.Block;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellReference;
 
 /**
  * @author Leonid Vysochyn
@@ -65,27 +64,6 @@ public class TagBodyHelper {
         return 0;
     }
 
-    private static String updateFormula(HSSFSheet sheet, int shiftNumber, int rowNumToUpdate, int colNumToUpdate, List refCellsToUpdate){
-        HSSFRow hssfRow = sheet.getRow( rowNumToUpdate );
-        HSSFCell hssfCell = hssfRow.getCell( (short) colNumToUpdate );
-        String rawFormula = hssfCell.getStringCellValue();
-        for (int i = 0; i < refCellsToUpdate.size(); i++) {
-            String refCell = (String) refCellsToUpdate.get(i);
-            String newRefCell = getUpdatedRefCell( refCell, shiftNumber );
-            rawFormula = rawFormula.replaceAll( "(?<!\\!)" + refCell, newRefCell );
-        }
-        hssfCell.setCellValue( rawFormula );
-        return rawFormula;
-    }
-
-    private static String getUpdatedRefCell(String refCell, int rowShiftNumber) {
-        CellReference cellReference = new CellReference( refCell );
-        int rowNum = cellReference.getRow();
-        rowNum += rowShiftNumber;
-        cellReference = new CellReference( rowNum, cellReference.getCol());
-        return cellReference.toString();
-    }
-
     public static int duplicateRight( HSSFSheet sheet, Block block, int n ){
         if( n > 0 ){
             Util.shiftCellsRight( sheet, block.getStartRowNum(), block.getEndRowNum(), (short) (block.getEndCellNum() + 1) , (short) (block.getNumberOfColumns()*n));
@@ -127,9 +105,9 @@ public class TagBodyHelper {
 
     private static void replacePropertyInCell(HSSFCell cell, String oldProperty, String newProperty) {
         if( cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
-            String cellValue = cell.getStringCellValue();
+            String cellValue = cell.getRichStringCellValue().getString();
             String newValue = cellValue.replaceAll( oldProperty, newProperty);
-            cell.setCellValue(newValue);
+            cell.setCellValue(new HSSFRichTextString(newValue));
         }
     }
 
@@ -212,7 +190,7 @@ public class TagBodyHelper {
 
     static void clearCell(HSSFCell cell) {
         if( cell!=null ){
-            cell.setCellValue("");
+            cell.setCellValue(new HSSFRichTextString(""));
             cell.setCellType( HSSFCell.CELL_TYPE_BLANK );
         }
     }
@@ -228,13 +206,13 @@ public class TagBodyHelper {
         if( row!=null ){
             for( short i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++ ){
                 HSSFCell cell = row.getCell( i );
-                if( cell!=null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING && cell.getStringCellValue().matches("\\$\\[.*?\\]")){
-                    String cellValue = cell.getStringCellValue();
+                if( cell!=null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING && cell.getRichStringCellValue().getString().matches("\\$\\[.*?\\]")){
+                    String cellValue = cell.getRichStringCellValue().getString();
                     String[] parts = cellValue.split("\\$\\[.*?\\]");
                     String newCellValue = parts[0];
                     newCellValue = newCellValue.replaceAll("#", Integer.toString(row.getRowNum() + 1) );
 
-                    cell.setCellValue( newCellValue );
+                    cell.setCellValue(new HSSFRichTextString(newCellValue));
                 }
             }
         }
