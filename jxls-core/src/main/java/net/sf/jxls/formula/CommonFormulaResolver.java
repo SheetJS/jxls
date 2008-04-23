@@ -121,7 +121,7 @@ public class CommonFormulaResolver extends BaseFormulaResolver {
     }
 
     public void setLeftReplacementMarker(String leftReplacementMarker) {
-        this.leftReplacementMarker = leftReplacementMarker;
+        CommonFormulaResolver.leftReplacementMarker = leftReplacementMarker;
     }
 
     public String getRightReplacementMarker() {
@@ -129,7 +129,7 @@ public class CommonFormulaResolver extends BaseFormulaResolver {
     }
 
     public void setRightReplacementMarker(String rightReplacementMarker) {
-        this.rightReplacementMarker = rightReplacementMarker;
+        CommonFormulaResolver.rightReplacementMarker = rightReplacementMarker;
     }
 
 }

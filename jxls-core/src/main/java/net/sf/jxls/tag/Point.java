@@ -62,13 +62,21 @@ public class Point {
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         final Point point = (Point) o;
 
-        if (col != point.col) return false;
-        if (row != point.row) return false;
+        if (col != point.col) {
+            return false;
+        }
+        if (row != point.row) {
+            return false;
+        }
 
         return true;
     }
@@ -76,7 +84,7 @@ public class Point {
     public int hashCode() {
         int result;
         result = row;
-        result = 29 * result + (int) col;
+        result = 29 * result + col;
         return result;
     }
 }

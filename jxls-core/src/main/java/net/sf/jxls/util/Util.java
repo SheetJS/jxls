@@ -1,22 +1,37 @@
 package net.sf.jxls.util;
 
-import net.sf.jxls.parser.Cell;
-import net.sf.jxls.transformer.Row;
-import net.sf.jxls.transformer.RowCollection;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.Region;
-import org.apache.poi.hssf.util.CellReference;
-
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
+
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.transformer.Row;
+import net.sf.jxls.transformer.RowCollection;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFooter;
+import org.apache.poi.hssf.usermodel.HSSFHeader;
+import org.apache.poi.hssf.usermodel.HSSFPrintSetup;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.hssf.util.Region;
 
 /**
  * This class contains many utility methods used by jXLS framework
@@ -848,9 +863,8 @@ public final class Util {
     public static String getRefCellName(String refSheetName, String cellName){
         if( refSheetName == null ){
             return cellName.toUpperCase();
-        }else{
-            return refSheetName + "!" + cellName.toUpperCase();
         }
+        return refSheetName + "!" + cellName.toUpperCase();
     }
 
 

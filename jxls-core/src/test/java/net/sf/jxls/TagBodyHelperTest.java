@@ -41,7 +41,7 @@ public class TagBodyHelperTest extends TestCase {
         HSSFSheet sheet = workbook.getSheetAt( 0 );
         int lastRowNum = sheet.getLastRowNum();
         Block block = new Block(null, 1, 3);
-        helper.duplicateDown( sheet, block, 2);
+        TagBodyHelper.duplicateDown( sheet, block, 2);
 
         assertEquals("Last Row Number is incorrect", lastRowNum + 3 * 2, sheet.getLastRowNum());
 
@@ -64,7 +64,7 @@ public class TagBodyHelperTest extends TestCase {
         HSSFSheet sheet = workbook.getSheetAt( 0 );
         int lastRowNum = sheet.getLastRowNum();
         Block block = new Block(null, 0, 4);
-        helper.replaceProperty( sheet, block, "mainBean.beans", "item");
+        TagBodyHelper.replaceProperty( sheet, block, "mainBean.beans", "item");
 
         assertEquals("Last Row Number is incorrect", lastRowNum, sheet.getLastRowNum());
 

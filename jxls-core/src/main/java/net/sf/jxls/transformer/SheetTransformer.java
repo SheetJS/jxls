@@ -48,7 +48,7 @@ public class SheetTransformer {
 
     private List rowProcessors = new ArrayList();
 
-    private List transformers = new ArrayList();
+    private List ownTransformers = new ArrayList();
 
 
     /**
@@ -90,7 +90,7 @@ public class SheetTransformer {
                         Row row = rowTransformer.getRow();
                         applyRowProcessors(sheet, row );
                         ResultTransformation processResult = rowTransformer.transform(stc, this, beans);
-                        transformers.add( rowTransformer );
+                        ownTransformers.add( rowTransformer );
                         if( !processResult.isTagProcessResult() ){
                             i += processResult.getNextRowShift();
                         }else{

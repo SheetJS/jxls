@@ -25,8 +25,6 @@ public class CollectionRowTransformer extends BaseRowTransformer {
      */
     private Configuration configuration;
 
-    private List rowProcessors = new ArrayList();
-
     /**
      * {@link net.sf.jxls.processor.CellProcessor} cell processors
      */
@@ -50,20 +48,12 @@ public class CollectionRowTransformer extends BaseRowTransformer {
         this.fixedSizeCollections = fixedSizeCollections;
         this.cellProcessors = cellProcessors;
         this.configuration = configuration;
-        this.rowProcessors = rowProcessors;
         this.row = row;
     }
-
-//    public CollectionRowTransformer(Row row, Set fixedSizeCollections) {
-//        this.fixedSizeCollections = fixedSizeCollections;
-//        this.row = row;
-//    }
 
     public ResultTransformation getTransformationResult() {
         return resultTransformation;
     }
-
-
 
     void addRowCollection( RowCollection rowCollection ){
         rowCollections.add( rowCollection );

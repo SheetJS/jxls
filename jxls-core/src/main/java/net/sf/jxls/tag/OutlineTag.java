@@ -62,8 +62,4 @@ public class OutlineTag extends BaseTag{
         hssfSheet.groupRow( startRowNum, endRowNum );
         hssfSheet.setRowGroupCollapsed( startRowNum, !detail);
     }
-
-    private ResultTransformation processOneRowTag(SheetTransformer sheetTransformer) {
-        return new ResultTransformation();
-    }
 }

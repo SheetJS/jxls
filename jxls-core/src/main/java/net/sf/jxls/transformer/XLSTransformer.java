@@ -52,8 +52,6 @@ public class XLSTransformer {
 
 //    private Map taglibs = new HashMap();
 
-    private final String TAGLIB_DEFINITION_FILE = "jxls-core-taglib.xml";
-
 
     /**
      * Registers Property Preprocessor that will be applied before main template transformation
@@ -504,7 +502,9 @@ public class XLSTransformer {
      * @param workbook - {@link HSSFWorkbook} to hide columns in
      */
     private void hideColumnsByPropertyName(HSSFWorkbook workbook) {
-        if (columnPropertyNamesToHide == null) return;
+        if (columnPropertyNamesToHide == null) {
+            return;
+        }
         for (int sheet_no = 0; sheet_no < workbook.getNumberOfSheets(); sheet_no++) {
             HSSFSheet sheet = workbook.getSheetAt(sheet_no);
             //for all rows
@@ -586,8 +586,9 @@ public class XLSTransformer {
 
     protected String getSpreadsheetToReName(String name) {
         final String newName = (String) spreadsheetsToRename.get(name);
-        if (newName != null)
+        if (newName != null) {
             return newName;
+        }
         return name;
     }
 

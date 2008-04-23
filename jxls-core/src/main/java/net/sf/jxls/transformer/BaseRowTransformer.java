@@ -23,11 +23,6 @@ public abstract class BaseRowTransformer implements RowTransformer{
     protected final Log log = LogFactory.getLog(getClass());
 
     /**
-     * {@link net.sf.jxls.transformer.Configuration} class
-     */
-    private Configuration configuration;
-
-    /**
      * This list is used to store formula cells information while processing template file
      */
     private List formulas = new ArrayList();
