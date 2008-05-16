@@ -76,7 +76,7 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
         if( cell != null ){
             switch (cell.getCellType()) {
                 case HSSFCell.CELL_TYPE_STRING:
-                    dataString = cell.getStringCellValue();
+                    dataString = cell.getRichStringCellValue().getString();
                     break;
                 case HSSFCell.CELL_TYPE_NUMERIC:
                     dataString = readNumericCell(cell);

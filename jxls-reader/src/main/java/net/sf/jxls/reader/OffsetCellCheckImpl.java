@@ -83,7 +83,7 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
             if (cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN) {
                 value = (cell.getBooleanCellValue()) ? Boolean.TRUE : Boolean.FALSE;
             } else if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-                value = Boolean.valueOf(cell.getStringCellValue());
+                value = Boolean.valueOf(cell.getRichStringCellValue().getString());
             } else {
                 value = Boolean.FALSE;
             }
@@ -96,7 +96,7 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
         if (cell == null) return null; // ZJ
         switch (cell.getCellType()) {
             case HSSFCell.CELL_TYPE_STRING:
-                value = cell.getStringCellValue() != null ? cell.getStringCellValue().trim() : null;
+                value = cell.getRichStringCellValue().getString().trim();
                 break;
             case HSSFCell.CELL_TYPE_NUMERIC:
                 value = Double.toString(cell.getNumericCellValue()).trim();

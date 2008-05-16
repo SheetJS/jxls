@@ -4,8 +4,9 @@ package net.sf.jxls.reader;
  * @author Leonid Vysochyn
  */
 public class XLSDataReadException extends RuntimeException{
+	private static final long serialVersionUID = 1L;
 
-    String cellName;
+	String cellName;
 
     XLSReadStatus readStatus;
 

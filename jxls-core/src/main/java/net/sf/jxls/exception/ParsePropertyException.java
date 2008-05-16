@@ -6,7 +6,9 @@ package net.sf.jxls.exception;
  * @author Leonid Vysochyn
  */
 public class ParsePropertyException extends RuntimeException {
-    public ParsePropertyException() {
+	private static final long serialVersionUID = 1L;
+
+	public ParsePropertyException() {
     }
 
     public ParsePropertyException(String message) {

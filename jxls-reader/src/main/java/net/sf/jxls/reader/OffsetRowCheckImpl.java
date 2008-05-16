@@ -115,7 +115,7 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
             case HSSFCell.CELL_TYPE_BLANK:
                 return true;
             case HSSFCell.CELL_TYPE_STRING:
-                String cellValue = cell.getStringCellValue();
+                String cellValue = cell.getRichStringCellValue().getString();
                 return cellValue == null || cellValue.length() == 0 || cellValue.trim().length() == 0;
             default:
                 return false;

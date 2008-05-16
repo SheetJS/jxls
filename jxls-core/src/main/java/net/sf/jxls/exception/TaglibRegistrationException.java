@@ -4,7 +4,9 @@ package net.sf.jxls.exception;
  * @author Leonid Vysochyn
  */
 public class TaglibRegistrationException extends RuntimeException{
-    public TaglibRegistrationException(String message) {
+	private static final long serialVersionUID = 1L;
+
+	public TaglibRegistrationException(String message) {
         super(message);
     }
 
