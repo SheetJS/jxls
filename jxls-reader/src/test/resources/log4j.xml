@@ -21,7 +21,7 @@
 
    
     <logger name="net.sf.jxls">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
     </logger>
 
     <root>
