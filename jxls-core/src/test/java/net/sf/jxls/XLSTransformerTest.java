@@ -154,6 +154,9 @@ public class XLSTransformerTest extends TestCase {
     public static final String selectXLS = "/templates/select.xls";
     public static final String selectDestXLS = "/templates/select_output.xls";
 
+    public static final String outTagOneRowXLS = "/templates/outtaginonerow.xls";
+    public static final String outTagOneRowDestXLS = "/templates/outtaginonerow_output.xls";
+
 
     SimpleBean simpleBean1;
     SimpleBean simpleBean2;
@@ -2010,10 +2013,31 @@ public class XLSTransformerTest extends TestCase {
             String empName = cell.getRichStringCellValue().getString();
             assertEquals("Selected employees are incorrect", selectedEmployees[i], empName);
         }
-
         is.close();
-
         saveWorkbook(resultWorkbook, selectDestXLS);
+    }
+
+    public void testOutTagInOneRow(){
+        Map beans = new HashMap();
+        List employees = itDepartment.getStaff();
+        beans.put("employees", employees);
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(outTagOneRowXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        transformer.setJexlInnerCollectionsAccess(true);
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        HSSFSheet sheet = resultWorkbook.getSheetAt(0);
+        int index = 0;
+        for (int i = 0; i < employees.size(); i++) {
+            Employee employee = (Employee) employees.get(i);
+            if( employee.getPayment().doubleValue() > 2000 ){
+                HSSFRow row = sheet.getRow(index);
+                index++;
+                assertNotNull("Row must not be null", row);
+                assertEquals("Employee names are not equal", employee.getName(), row.getCell((short)0).getRichStringCellValue().getString());
+                assertEquals("Employee payments are not equal", employee.getPayment().doubleValue(), row.getCell((short)1).getNumericCellValue(), 1e-6);
+                assertEquals("Employee bonuses are not equal", employee.getBonus().doubleValue(), row.getCell((short)2).getNumericCellValue(), 1e-6);
+            }
+        }
     }
 
 

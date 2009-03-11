@@ -10,9 +10,9 @@
             </p>
             <p>The following bugs were fixed</p>
             <ul>
-                <li>Remove log4j.xml from jxls-reader.jar</li>
-                <li>select attribute on ForEach ignored on single row for each</li>
-                <li>fixed an error with parsing Timestamp value</li>
+                <li>Remove log4j.xml from jxls-reader.jar - ID: 2012767 </li>
+                <li>select attribute on ForEach ignored on single row for each - ID: 2018513</li>
+                <li>Parsing expressions that contain colons - ID: 1960357</li>
                 <li>deprecated POI methods replaced</li>
                 <li>code refactoring</li>
                 <li>minor bug-fixes</li>
