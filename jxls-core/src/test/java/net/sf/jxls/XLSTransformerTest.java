@@ -32,6 +32,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.util.Region;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
@@ -148,6 +150,9 @@ public class XLSTransformerTest extends TestCase {
 
     public static final String outlineXLS = "/templates/outline.xls";
     public static final String outlineDestXLS = "target/outline_output.xls";
+
+    public static final String selectXLS = "/templates/select.xls";
+    public static final String selectDestXLS = "/templates/select_output.xls";
 
 
     SimpleBean simpleBean1;
@@ -1988,6 +1993,27 @@ public class XLSTransformerTest extends TestCase {
         checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 2, baBonuses);
         is.close();
         saveWorkbook( resultWorkbook, poiobjectsDestXLS);
+    }
+
+    public void testForEachSelect() throws IOException {
+        Map beans = new HashMap();
+        String[] selectedEmployees = new String[]{"Oleg", "Neil", "John"};
+        List employees = itDepartment.getStaff();
+        beans.put("employees", employees);
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(selectXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        HSSFSheet sheet = resultWorkbook.getSheetAt(0);
+        HSSFRow row = sheet.getRow(0);
+        for(int i = 0; i < selectedEmployees.length; i++){
+            HSSFCell cell = row.getCell((short)i);
+            String empName = cell.getRichStringCellValue().getString();
+            assertEquals("Selected employees are incorrect", selectedEmployees[i], empName);
+        }
+
+        is.close();
+
+        saveWorkbook(resultWorkbook, selectDestXLS);
     }
 
 

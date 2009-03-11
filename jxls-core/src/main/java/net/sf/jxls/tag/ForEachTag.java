@@ -216,8 +216,12 @@ public class ForEachTag extends BaseTag {
             ResultTransformation shift = new ResultTransformation();
             shift.setLastProcessedRow(-1);
             if (groupBy == null || groupBy.length() == 0) {
-                shiftNumber += tagContext.getSheetTransformationController().duplicateRight(body, itemsCollection.size() - 1);
-                processCollectionItemsOneRow(beans, body, shift, sheetTransformer);
+//                shiftNumber += tagContext.getSheetTransformationController().duplicateRight(body, itemsCollection.size() - 1);
+//                processCollectionItemsOneRow(beans, body, shift, sheetTransformer);
+                Collection collectionToProcess = selectCollectionDataToProcess(beans);
+                shiftNumber += tagContext.getSheetTransformationController().duplicateRight(body, collectionToProcess.size() - 1);
+                processCollectionItemsOneRow(collectionToProcess, beans, body, shift, sheetTransformer);
+
             } else {
                 try {
                     Collection groupedData = ReportUtil.groupCollectionData(itemsCollection, groupBy, groupOrder, select, configuration);
@@ -329,9 +333,11 @@ public class ForEachTag extends BaseTag {
         return shift;
     }
 
-    private void processCollectionItemsOneRow(Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) {
+//    private void processCollectionItemsOneRow(Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) {
+    private void processCollectionItemsOneRow(Collection c2, Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) {        
         int k = 0;
-        for (Iterator iterator = itemsCollection.iterator(); iterator.hasNext();) {
+//        for (Iterator iterator = itemsCollection.iterator(); iterator.hasNext();) {
+          for (Iterator iterator = c2.iterator(); iterator.hasNext();) {
             Object o = iterator.next();
             beans.put(var, o);
             try {

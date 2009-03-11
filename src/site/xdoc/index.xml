@@ -8,9 +8,10 @@
             <p>
                 <strong>jXLS v.0.9.7 released</strong>
             </p>
-            <p>Changes:</p>
+            <p>The following bugs were fixed</p>
             <ul>
-                <li>log4j.xml file was removed from jxls-reader jar</li>
+                <li>Remove log4j.xml from jxls-reader.jar</li>
+                <li>select attribute on ForEach ignored on single row for each</li>
                 <li>fixed an error with parsing Timestamp value</li>
                 <li>deprecated POI methods replaced</li>
                 <li>code refactoring</li>
