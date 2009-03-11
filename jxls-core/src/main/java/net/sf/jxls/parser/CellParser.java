@@ -154,6 +154,7 @@ public class CellParser {
                         curValue = curValue.substring(k+1, curValue.length());
                     }else{
                         cell.getExpressions().add( new Expression(curValue, configuration) );
+                        curValue = "";
                     }
                 }else{
                     if( curValue.length()!=cell.getHssfCellValue().length() ){

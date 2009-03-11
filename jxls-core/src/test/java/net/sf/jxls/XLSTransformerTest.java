@@ -2017,7 +2017,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, selectDestXLS);
     }
 
-    public void testOutTagInOneRow(){
+    public void testOutTagInOneRow() throws IOException {
         Map beans = new HashMap();
         List employees = itDepartment.getStaff();
         beans.put("employees", employees);
@@ -2038,6 +2038,24 @@ public class XLSTransformerTest extends TestCase {
                 assertEquals("Employee bonuses are not equal", employee.getBonus().doubleValue(), row.getCell((short)2).getNumericCellValue(), 1e-6);
             }
         }
+        is.close();
+    }
+
+    public void testSyntaxError() throws IOException {
+        Map beans = new HashMap();
+        beans.put("value", "A Test");
+        beans.put("value2", "Second value");
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream("/templates/syntaxerror.xls"));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        HSSFSheet sheet = resultWorkbook.getSheetAt(0);
+        HSSFRow row = sheet.getRow(0);
+        HSSFCell cell = row.getCell((short)0);
+        assertEquals("Incorrect cell value", "${value", cell.getRichStringCellValue().getString());
+        row = sheet.getRow(1);
+        cell = row.getCell((short)0);
+        assertEquals("Incorrect cell value", "Second value", cell.getRichStringCellValue().getString());
+        is.close();
     }
 
 
