@@ -6,13 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +24,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 public class SQLReportingTest extends TestCase {
 
     public static final String report = "/templates/report.xls";
+    public static final String reportTimestamp = "/templates/reportTimestamp.xls";
     public static final String reportDest = "target/report_output.xls";
+    public static final String reportTimestampDest = "target/reportTimestamp_output.xls";
 
     public static final String CREATE_EMPLOYEE_TABLE = "CREATE TABLE employee (\n" +
             "  name varchar(20) default NULL,\n" +
@@ -38,6 +34,7 @@ public class SQLReportingTest extends TestCase {
             "  payment double default NULL,\n" +
             "  bonus double default NULL,\n" +
             "  birthDate date default NULL,\n" +
+            "  birthTimestamp timestamp default 'now',\n" +
             "  id int NOT NULL PRIMARY KEY, \n" +
             "  depid int,  FOREIGN KEY (depid) REFERENCES department (id) " +
             ");";
@@ -47,9 +44,9 @@ public class SQLReportingTest extends TestCase {
             "id int NOT NULL PRIMARY KEY );";
 
     public static final String INSERT_EMPLOYEE = "INSERT INTO employee\n" +
-            "  (name, age, payment, bonus, birthDate, depid, id)\n" +
+            "  (name, age, payment, bonus, birthDate, birthTimestamp, depid, id)\n" +
             "VALUES\n" +
-            "  (?, ?, ?, ?, ?, ?, ? );";
+            "  (?, ?, ?, ?, ?, ?, ?, ? );";
     public static final String INSERT_DEPARTMENT = "INSERT INTO department (name, id) VALUES (?, ?)";
 
     String[] depNames = new String []{"IT", "HR", "BA"};
@@ -70,6 +67,11 @@ public class SQLReportingTest extends TestCase {
             {"1968-08-22", "1971-10-16", "1979-03-21", "1974-12-05"},
             {"1976-12-02", "1981-05-25", "1983-06-17"}
             };
+    String[][] birthTimestamps = new String[][] { {"2004-06-22 10:33:11.840", "2005-06-22 11:30:11.840", "2007-08-02 11:23:10.100", "1998-10-15 05:10:11.200", "1980-01-05 07:10:12.600"},
+            {"1999-02-27 10:33:11.840", "2001-04-20 19:30:11.840", "2002-08-02 11:23:10.100", "1997-10-15 05:10:11.200"},
+            {"1990-02-27 40:33:11.440", "1978-04-20 10:30:11.840", "2009-08-02 11:23:10.100"}
+
+    };
 
     Connection conn;
 
@@ -95,8 +97,10 @@ public class SQLReportingTest extends TestCase {
                 insertStmt.setDouble(4, employeeBonuses[i][j]);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
                 insertStmt.setDate(5, new Date( sdf.parse( employeeBirthDates[i][j]).getTime() ) );
-                insertStmt.setInt(6, n - 1);
-                insertStmt.setInt(7, k++);
+                SimpleDateFormat tdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.SSS");
+                insertStmt.setTimestamp(6, new Timestamp( tdf.parse( birthTimestamps[i][j] ).getTime()));
+                insertStmt.setInt(7, n - 1);
+                insertStmt.setInt(8, k++);
                 insertStmt.executeUpdate();
             }
         }
@@ -125,6 +129,20 @@ public class SQLReportingTest extends TestCase {
         is.close();
         // todo
         saveWorkbook( resultWorkbook, reportDest );
+    }
+    
+    public void testSelectTimestamp() throws IOException {
+        Map beans = new HashMap();
+        ReportManager rm = new ReportManagerImpl( conn, beans );
+        beans.put("rm", rm);
+
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(reportTimestamp));
+        XLSTransformer transformer = new XLSTransformer();
+//        transformer.setJexlInnerCollectionsAccess( true );
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        // todo
+        saveWorkbook( resultWorkbook, reportTimestampDest );
     }
 
 

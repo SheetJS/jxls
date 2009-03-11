@@ -20,6 +20,9 @@ import org.apache.commons.jexl.JexlHelper;
  * @author Leonid Vysochyn
  */
 public class Expression {
+
+    public static final String aggregateSeparator = "[a-zA-Z()]+[0-9]*:";
+
     String expression;
     String rawExpression;
     String aggregateFunction;
@@ -74,8 +77,9 @@ public class Expression {
 
     private String parseAggregate(String expr)
     {
+        String[] aggregateParts = expr.split(aggregateSeparator, 2);
     	int i = expr.indexOf(":");
-    	if (i >= 0) {
+    	if (aggregateParts.length >= 2 && i >= 0) {
     		String aggregate = expr.substring(0, i);
     		if (aggregate.length() == 0) {
     			aggregateFunction = null;
