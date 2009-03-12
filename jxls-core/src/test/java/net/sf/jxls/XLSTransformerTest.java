@@ -99,8 +99,6 @@ public class XLSTransformerTest extends TestCase {
     public static final String iftagXLS = "/templates/iftag.xls";
     public static final String iftagDestXLS = "target/iftag_output.xls";
 
-    public static final String forifTag2XLS = "/templates/foriftag2.xls";
-    public static final String forifTag2DestXLS = "target/foriftag2_output.xls";
 
     public static final String poiobjectsXLS = "/templates/poiobjects.xls";
     public static final String poiobjectsDestXLS = "target/poiobjects_output.xls";
@@ -1160,73 +1158,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook( resultWorkbook, iftagDestXLS);
     }
 
-    public void testForIfTag2() throws IOException, ParsePropertyException {
-        Map beans = new HashMap();
-        beans.put( "departments", departments );
-        beans.put("depUrl", "http://www.somesite.com");
 
-        Configuration config = new Configuration();
-        config.setMetaInfoToken("\\\\");
-
-        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTag2XLS));
-        XLSTransformer transformer = new XLSTransformer( config );
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
-        is.close();
-        is = new BufferedInputStream(getClass().getResourceAsStream(forifTag2XLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
-
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
-        assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
-//        assertEquals("Last Row Number is incorrect", 11, resultSheet.getLastRowNum());
-
-        Map props = new HashMap();
-        props.put("${department.name}", "IT");
-        props.put("${depUrl}", "http://www.somesite.com");
-        CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 0, 3);
-        checker.checkListCells(sourceSheet, 5, resultSheet, 3, (short) 0, itEmployeeNames);
-        checker.checkListCells(sourceSheet, 5, resultSheet, 3, (short) 1, itPayments);
-        checker.checkListCells(sourceSheet, 5, resultSheet, 3, (short) 2, itBonuses);
-//todo:        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 3, (short)3, "B4*(1+C4)");
-//todo:        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 4, (short)3, "B5*(1+C5)");
-//todo:        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 7, (short)3, "B8*(1+C8)");
-      //        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 8, (short)1, "SUM(B4:B8)");
-          //        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 6, (short)3, "SUM(D4:D8)");
-        props.clear();
-        props.put("${department.name}", "HR");
-        props.put("${depUrl}", "http://www.somesite.com");
-        checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 9, 3);
-        props.clear();
-        checker.checkListCells(sourceSheet, 5, resultSheet, 12, (short) 0, hrEmployeeNames);
-        checker.checkListCells(sourceSheet, 5, resultSheet, 12, (short) 1, hrPayments);
-        checker.checkListCells(sourceSheet, 5, resultSheet, 12, (short) 2, hrBonuses);
-//todo        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 12, (short)3, "B13*(1+C13)");
-//todo        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 13, (short)3, "B14*(1+C14)");
-//todo        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 15, (short)3, "B16*(1+C16)");
-//        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 16, (short)1, "SUM(B13:B16)");
-//        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 16, (short)3, "SUM(D13:D16)");
-        props.clear();
-        props.put("${department.name}", "BA");
-        props.put("${depUrl}", "http://www.somesite.com");
-        checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 17, 3);
-        props.clear();
-        checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 0, baEmployeeNames);
-        checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 1, baPayments);
-        checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 2, baBonuses);
-        //todo:
-//        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 20, (short)3, "B21*(1+C21)");
-//        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 21, (short)3, "B22*(1+C22)");
-//        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 22, (short)3, "B23*(1+C23)");
-//        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 23, (short)1, "SUM(B21:B23)");
-//        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 23, (short)3, "SUM(D21:D23)");
-
-        is.close();
-        saveWorkbook( resultWorkbook, forifTag2DestXLS);
-    }
 
     public void testForIfTag3() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
