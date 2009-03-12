@@ -6,7 +6,7 @@
     <body>
         <section name="News">
             <p>
-                <strong>jXLS v.0.9.7 released</strong>
+                <strong>jXLS v.0.9.6.1 released</strong>
             </p>
             <p>The following bugs were fixed</p>
             <ul>
@@ -19,7 +19,7 @@
                 <li>code refactoring</li>
                 <li>minor bug-fixes</li>
             </ul>
-            <p>A work on enterprise version of jXLS started.</p>
+            <p><strong>A work on enterprise version of jXLS started</strong></p>
             <p>The following features are planned:</p>
             <ul>
                 <li>compatibility with the latest POI versions (which means also Office 2007
@@ -31,6 +31,7 @@
                 <li>better support for expanding collections by columns</li>
                 <li>more flexible Excel reader module</li>
                 <li>better support for generating charts</li>
+                <li>complete architecture rework</li>
             </ul>
         </section>
         <section name="Overview">
