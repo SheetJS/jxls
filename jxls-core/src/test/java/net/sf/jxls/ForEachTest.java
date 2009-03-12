@@ -502,6 +502,7 @@ public class ForEachTest extends TestCase {
         Map beans = new HashMap();
         List employees = itDepartment.getStaff();
         beans.put("employees", employees);
+        beans.put("emp", employees.get(0));
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(outTagOneRowXLS));
         XLSTransformer transformer = new XLSTransformer();
         transformer.setJexlInnerCollectionsAccess(true);
@@ -519,6 +520,11 @@ public class ForEachTest extends TestCase {
                 assertEquals("Employee bonuses are not equal", employee.getBonus().doubleValue(), row.getCell((short)2).getNumericCellValue(), 1e-6);
             }
         }
+        HSSFRow row = sheet.getRow( index );
+        Employee employee = (Employee) employees.get(0);
+        assertEquals("Employee names are not equal", employee.getName(), row.getCell((short)0).getRichStringCellValue().getString());
+        assertEquals("Employee payments are not equal", employee.getPayment().doubleValue(), row.getCell((short)1).getNumericCellValue(), 1e-6);
+        assertEquals("Employee bonuses are not equal", employee.getBonus().doubleValue(), row.getCell((short)2).getNumericCellValue(), 1e-6);
         is.close();
     }
 

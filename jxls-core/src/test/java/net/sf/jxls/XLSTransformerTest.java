@@ -16,14 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 import junit.framework.TestCase;
-import net.sf.jxls.bean.Bean;
-import net.sf.jxls.bean.BeanWithList;
-import net.sf.jxls.bean.Column;
-import net.sf.jxls.bean.Department;
-import net.sf.jxls.bean.Employee;
-import net.sf.jxls.bean.Item;
-import net.sf.jxls.bean.MyBean;
-import net.sf.jxls.bean.SimpleBean;
+import net.sf.jxls.bean.*;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.Configuration;
 import net.sf.jxls.transformer.XLSTransformer;
@@ -1615,6 +1608,20 @@ public class XLSTransformerTest extends TestCase {
         row = sheet.getRow(1);
         cell = row.getCell((short)0);
         assertEquals("Incorrect cell value", "Second value", cell.getRichStringCellValue().getString());
+        is.close();
+    }
+
+    public void testBeanNameTheSameAsMemberName() throws IOException {
+        Map beans = new HashMap();
+        TestNumber testNumber = new TestNumber(10);
+        beans.put("test", testNumber);
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream("/templates/beandata.xls"));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        HSSFSheet sheet = resultWorkbook.getSheetAt(0);
+        HSSFRow row = sheet.getRow(0);
+        HSSFCell cell = row.getCell((short)0);
+        assertEquals("Incorrect cell value", testNumber.getTestNumber(), (int)cell.getNumericCellValue());
         is.close();
     }
 
