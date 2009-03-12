@@ -17,7 +17,6 @@
                 <li>cannot use more than one &lt;jx:out expr=".."/&gt; in one row  - ID: 1924313 </li>
                 <li>deprecated POI methods replaced</li>
                 <li>code refactoring</li>
-                <li>minor bug-fixes</li>
             </ul>
             <p><strong>A work on enterprise version of jXLS started</strong></p>
             <p>The following features are planned:</p>
