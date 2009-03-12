@@ -33,6 +33,7 @@
                 <li>better support for generating charts</li>
                 <li>complete architecture rework</li>
             </ul>
+            <p>Standard jXLS version will continue to be supported and developed as usual</p>
         </section>
         <section name="Overview">
             <p>jXLS is small and easy-to-use Java library for generating Excel files using XLS templates. Also jXLS can

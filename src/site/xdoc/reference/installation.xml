@@ -27,7 +27,7 @@
             </p>
 			<ul>
 				<li>
-					<a href="http://jakarta.apache.org/poi/">POI 2.5.1</a> or higher
+					<a href="http://jakarta.apache.org/poi/">POI 2.5.x or 3.0.x</a> 
 				</li>
 				<li>
 					<a href="http://jakarta.apache.org/commons/beanutils/">Commons BeanUtils</a>
@@ -45,6 +45,7 @@
 					<a href="http://jakarta.apache.org/commons/digester/">Commons Digester</a>
 				</li>
 			</ul>
+            <p><strong>Note:</strong>Current version of jXLS is incompatible with POI of version higher than 3.0.2</p>
 		</section>
 
 	</body>
