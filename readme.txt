@@ -16,7 +16,7 @@ If you use Maven 2 to build your application you can specify required jXLS modul
 
 The following Jakarta libraries are also required to be on your classpath.
 
-    * POI 2.5.1 or higher
+    * POI 2.5.x or 3.0.x
     * Commons BeanUtils
     * Commons Collections
     * Commons JEXL
