@@ -332,5 +332,14 @@ for (int i = 0; i &lt; row.getCells().size(); i++) {
             <p>Method <code>copyStyle(..)</code> is rather simple and just copies cell style from one cell to another.
             See <a href="../samples/dynamicstylesample.html">Row Style sample</a> for the actual code.</p>
     </section>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-7339856-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
     </body>
 </document>

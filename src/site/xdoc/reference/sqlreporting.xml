@@ -92,5 +92,14 @@
             <p>Also you can see how it is possible to use single quotes inside SQL query if needed.</p>
             <p>See usage sample in the <a href="../samples/reportsample.html#parameterizedquerieswithquotes">Reporting sample</a> section</p>
         </section>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-7339856-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
     </body>
 </document>
