@@ -9,6 +9,7 @@ import net.sf.jxls.bean.Employee;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
 import java.util.*;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -475,6 +476,22 @@ public class ForEachTest extends TestCase {
         ((Department)departments.get(0)).getStaff().clear();
         is = new BufferedInputStream(getClass().getResourceAsStream(forGroupByXLS));
         resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+    }
+
+    public void testForEachSelectWhenConditionIsNotMet() throws IOException {
+        Map beans = new HashMap();
+        List employees = itDepartment.getStaff();
+        beans.put("employees", employees);
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream("/templates/select2.xls"));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        HSSFSheet sheet = resultWorkbook.getSheetAt(0);
+        assertEquals( "Number of rows is incorrect", 1, sheet.getLastRowNum());
+        HSSFRow row = sheet.getRow(1);
+        HSSFCell cell = row.getCell((short)0);
+        String empName = cell.getRichStringCellValue().getString();
+        assertEquals("Cell value is incorrect", "Last line", empName);
         is.close();
 
     }

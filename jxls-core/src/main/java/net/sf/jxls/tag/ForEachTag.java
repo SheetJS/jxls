@@ -162,14 +162,17 @@ public class ForEachTag extends BaseTag {
             return processOneRowTag(sheetTransformer);
         }
         int shiftNumber = 0;
-        if (itemsCollection != null && !itemsCollection.isEmpty()) {
+        Map beans = tagContext.getBeans();
+        Collection collectionToProcess = null;
+        if (groupBy == null || groupBy.length() == 0) {
+            collectionToProcess = selectCollectionDataToProcess(beans);
+        }
+        if (itemsCollection != null && !itemsCollection.isEmpty() && (collectionToProcess == null || !collectionToProcess.isEmpty())) {
             tagContext.getSheetTransformationController().removeBorders(body);
             shiftNumber += -2; // due to the borders
             ResultTransformation shift = new ResultTransformation(0);
-            Map beans = tagContext.getBeans();
 
             if (groupBy == null || groupBy.length() == 0) {
-                Collection collectionToProcess = selectCollectionDataToProcess(beans);
                 shiftNumber += tagContext.getSheetTransformationController().duplicateDown(body, collectionToProcess.size() - 1);
                 shift = processCollectionItems(collectionToProcess, beans, body, sheetTransformer);
             } else {
@@ -209,16 +212,17 @@ public class ForEachTag extends BaseTag {
     private ResultTransformation processOneRowTag(SheetTransformer sheetTransformer) {
         Block body = tagContext.getTagBody();
         int shiftNumber = 0;
-        if (itemsCollection != null && !itemsCollection.isEmpty()) {
+        Map beans = tagContext.getBeans();
+        Collection collectionToProcess = null;
+        if (groupBy == null || groupBy.length() == 0) {
+            collectionToProcess = selectCollectionDataToProcess(beans);
+        }
+        if (itemsCollection != null && !itemsCollection.isEmpty() && (collectionToProcess == null || !collectionToProcess.isEmpty())) {
             tagContext.getSheetTransformationController().removeLeftRightBorders(body);
             shiftNumber += -2;
-            Map beans = tagContext.getBeans();
             ResultTransformation shift = new ResultTransformation();
             shift.setLastProcessedRow(-1);
             if (groupBy == null || groupBy.length() == 0) {
-//                shiftNumber += tagContext.getSheetTransformationController().duplicateRight(body, itemsCollection.size() - 1);
-//                processCollectionItemsOneRow(beans, body, shift, sheetTransformer);
-                Collection collectionToProcess = selectCollectionDataToProcess(beans);
                 shiftNumber += tagContext.getSheetTransformationController().duplicateRight(body, collectionToProcess.size() - 1);
                 processCollectionItemsOneRow(collectionToProcess, beans, body, shift, sheetTransformer);
 
@@ -315,7 +319,6 @@ public class ForEachTag extends BaseTag {
             Object o = iterator.next();
             beans.put(var, o);
             status.setIndex( index );
-//                    if (ReportUtil.shouldSelectCollectionData(beans, select, configuration)) {
                 try {
                     startRowNum = body.getStartRowNum() + shift.getLastRowShift() + body.getNumberOfRows() * k++;
                     endRowNum = startRowNum + body.getNumberOfRows() - 1;
@@ -325,7 +328,6 @@ public class ForEachTag extends BaseTag {
                     log.error("Can't parse property ", e);
                     throw new RuntimeException("Can't parse property", e);
                 }
-//                    }
         }
         if( varStatus != null ){
             beans.remove( varStatus );
@@ -333,10 +335,8 @@ public class ForEachTag extends BaseTag {
         return shift;
     }
 
-//    private void processCollectionItemsOneRow(Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) {
-    private void processCollectionItemsOneRow(Collection c2, Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) {        
+    private void processCollectionItemsOneRow(Collection c2, Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) {
         int k = 0;
-//        for (Iterator iterator = itemsCollection.iterator(); iterator.hasNext();) {
           for (Iterator iterator = c2.iterator(); iterator.hasNext();) {
             Object o = iterator.next();
             beans.put(var, o);
