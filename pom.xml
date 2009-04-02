@@ -70,9 +70,9 @@
     </mailingList>
   </mailingLists>
     <scm>
-        <connection>scm:svn:https://jxls.svn.sourceforge.net/svnroot/jxls/tags/jxls-0.9.4</connection>
-        <developerConnection>scm:svn:https://jxls.svn.sourceforge.net/svnroot/jxls/tags/jxls-0.9.4</developerConnection>
-        <url>http://jxls.svn.sourceforge.net/viewvc/jxls/tags/jxls-0.9.4</url>
+        <connection>scm:svn:https://jxls.svn.sourceforge.net/svnroot/jxls/trunk</connection>
+        <developerConnection>scm:svn:https://jxls.svn.sourceforge.net/svnroot/jxls/trunk</developerConnection>
+        <url>http://jxls.svn.sourceforge.net/viewvc/jxls/trunk</url>
     </scm>
   <issueManagement>
     <system>SourceForge Tracker</system>
@@ -110,14 +110,6 @@
     </site>
   </distributionManagement>
 
-    <!--<distributionManagement>-->
-        <!--<repository>-->
-            <!--<id>jxls-repository</id>-->
-            <!--<name>jXLS Repository</name>-->
-            <!--<url>file://${basedir}/target/deploy</url>-->
-        <!--</repository>-->
-    <!--</distributionManagement>-->
-
     <repositories>
         <repository>
             <id>sourceforge.net</id>
@@ -151,8 +143,6 @@
         <reportSets>
           <reportSet>
             <reports>
-              <!--<report>dependencies</report>-->
-              <!--<report>project-team</report>-->
               <report>mailing-list</report>
               <report>license</report>
               <report>scm</report>
