@@ -97,7 +97,6 @@ public class XLSTransformerTest extends TestCase {
     public static final String poiobjectsDestXLS = "target/poiobjects_output.xls";
 
 
-
     public static final String employeeNotesXLS = "/templates/employeeNotes.xls";
     public static final String employeeNotesDestXLS = "target/employeeNotes_output.xls";
     public static final String employeeNotesRusDestXLS = "target/employeeNotesRus_output.xls";
@@ -130,7 +129,6 @@ public class XLSTransformerTest extends TestCase {
     public static final String outlineDestXLS = "target/outline_output.xls";
 
 
-
     SimpleBean simpleBean1;
     SimpleBean simpleBean2;
     SimpleBean simpleBean3;
@@ -152,23 +150,23 @@ public class XLSTransformerTest extends TestCase {
             new Integer(16), new Integer(17)};
 
 
-    String[] itEmployeeNames = new String[] {"Elsa", "Oleg", "Neil", "Maria", "John"};
-    String[] hrEmployeeNames = new String[] {"Olga", "Helen", "Keith", "Cat"};
-    String[] baEmployeeNames = new String[] {"Denise", "LeAnn", "Natali"};
-    String[] mgrEmployeeNames = new String[] {"Sean", "John", "Joerg"};
+    String[] itEmployeeNames = new String[]{"Elsa", "Oleg", "Neil", "Maria", "John"};
+    String[] hrEmployeeNames = new String[]{"Olga", "Helen", "Keith", "Cat"};
+    String[] baEmployeeNames = new String[]{"Denise", "LeAnn", "Natali"};
+    String[] mgrEmployeeNames = new String[]{"Sean", "John", "Joerg"};
 
-    Double[] itPayments = new Double[] {new Double(1500), new Double(2300), new Double(2500), new Double(1700), new Double(2800)};
-    Double[] hrPayments = new Double[] {new Double(1400), new Double(2100), new Double(1800), new Double(1900)};
-    Double[] baPayments = new Double[] {new Double(2400), new Double(2200), new Double(2600)};
-    Double[] mgrPayments = new Double[] {null, new Double(6000), null};
-    Double[] itBonuses = new Double[] {new Double(0.15), new Double(0.25), new Double(0.00), new Double(0.15), new Double(0.20)};
-    Double[] hrBonuses = new Double[] {new Double(0.20), new Double(0.10), new Double(0.15), new Double(0.15)};
-    Double[] baBonuses = new Double[] {new Double(0.20), new Double(0.15), new Double(0.10)};
-    Double[] mgrBonuses = new Double[] {new Double(0.20), null, new Double(0.20)};
-    Integer[] itAges = new Integer[] {new Integer(34), new Integer(30), new Integer(25), new Integer(25), new Integer(35)};
-    Integer[] hrAges = new Integer[] {new Integer(26), new Integer(28), new Integer(26), new Integer(26)};
-    Integer[] baAges = new Integer[] {new Integer(30), new Integer(30), new Integer(30)};
-    Integer[] mgrAges = new Integer[] {null, new Integer(35), null};
+    Double[] itPayments = new Double[]{new Double(1500), new Double(2300), new Double(2500), new Double(1700), new Double(2800)};
+    Double[] hrPayments = new Double[]{new Double(1400), new Double(2100), new Double(1800), new Double(1900)};
+    Double[] baPayments = new Double[]{new Double(2400), new Double(2200), new Double(2600)};
+    Double[] mgrPayments = new Double[]{null, new Double(6000), null};
+    Double[] itBonuses = new Double[]{new Double(0.15), new Double(0.25), new Double(0.00), new Double(0.15), new Double(0.20)};
+    Double[] hrBonuses = new Double[]{new Double(0.20), new Double(0.10), new Double(0.15), new Double(0.15)};
+    Double[] baBonuses = new Double[]{new Double(0.20), new Double(0.15), new Double(0.10)};
+    Double[] mgrBonuses = new Double[]{new Double(0.20), null, new Double(0.20)};
+    Integer[] itAges = new Integer[]{new Integer(34), new Integer(30), new Integer(25), new Integer(25), new Integer(35)};
+    Integer[] hrAges = new Integer[]{new Integer(26), new Integer(28), new Integer(26), new Integer(26)};
+    Integer[] baAges = new Integer[]{new Integer(30), new Integer(30), new Integer(30)};
+    Integer[] mgrAges = new Integer[]{null, new Integer(35), null};
     List departments = new ArrayList();
     Department mgrDepartment, itDepartment;
 
@@ -188,13 +186,13 @@ public class XLSTransformerTest extends TestCase {
         simpleBean2 = new SimpleBean(names[1].toString(), (Double) doubleValues[1], (Integer) intValues[1], (Date) dateValues[1]);
         simpleBean3 = new SimpleBean(names[2].toString(), (Double) doubleValues[2], (Integer) intValues[2], (Date) dateValues[2]);
 
-        listBean2.addBean( new SimpleBean(names2[0].toString(), (Double) doubleValues2[0], (Integer) intValues2[0]) );
-        listBean2.addBean( new SimpleBean(names2[1].toString(), (Double) doubleValues2[1], (Integer) intValues2[1]) );
-        listBean2.addBean( new SimpleBean(names2[2].toString(), (Double) doubleValues2[2], (Integer) intValues2[2]) );
-        listBean2.addBean( new SimpleBean(names2[3].toString(), (Double) doubleValues2[3], (Integer) intValues2[3]) );
-        listBean2.addBean( new SimpleBean(names2[4].toString(), (Double) doubleValues2[4], (Integer) intValues2[4]) );
-        listBean2.addBean( new SimpleBean(names2[5].toString(), (Double) doubleValues2[5], (Integer) intValues2[5]) );
-        listBean2.addBean( new SimpleBean(names2[6].toString(), (Double) doubleValues2[6], (Integer) intValues2[6]) );
+        listBean2.addBean(new SimpleBean(names2[0].toString(), (Double) doubleValues2[0], (Integer) intValues2[0]));
+        listBean2.addBean(new SimpleBean(names2[1].toString(), (Double) doubleValues2[1], (Integer) intValues2[1]));
+        listBean2.addBean(new SimpleBean(names2[2].toString(), (Double) doubleValues2[2], (Integer) intValues2[2]));
+        listBean2.addBean(new SimpleBean(names2[3].toString(), (Double) doubleValues2[3], (Integer) intValues2[3]));
+        listBean2.addBean(new SimpleBean(names2[4].toString(), (Double) doubleValues2[4], (Integer) intValues2[4]));
+        listBean2.addBean(new SimpleBean(names2[5].toString(), (Double) doubleValues2[5], (Integer) intValues2[5]));
+        listBean2.addBean(new SimpleBean(names2[6].toString(), (Double) doubleValues2[6], (Integer) intValues2[6]));
 
         simpleBean1.setOther(simpleBean2);
         simpleBean2.setOther(simpleBean3);
@@ -207,33 +205,33 @@ public class XLSTransformerTest extends TestCase {
         beanList.add(simpleBean2);
         beanList.add(simpleBean3);
 
-        listBean1.addBean( simpleBean1 );
-        listBean1.addBean( simpleBean2 );
-        listBean1.addBean( simpleBean3 );
+        listBean1.addBean(simpleBean1);
+        listBean1.addBean(simpleBean2);
+        listBean1.addBean(simpleBean3);
 
         Department department = new Department("IT");
-        for(int i = 0; i < itEmployeeNames.length; i++){
+        for (int i = 0; i < itEmployeeNames.length; i++) {
             Employee employee = new Employee(itEmployeeNames[i], itAges[i], itPayments[i], itBonuses[i]);
-            employee.setNotes( generateNotes(employee.getName()) );
-            department.addEmployee( employee );
-            itEmployees.add( employee );
+            employee.setNotes(generateNotes(employee.getName()));
+            department.addEmployee(employee);
+            itEmployees.add(employee);
         }
         itDepartment = department;
-        departments.add( department );
+        departments.add(department);
         department = new Department("HR");
-        for(int i = 0; i < hrEmployeeNames.length; i++){
-            department.addEmployee( new Employee(hrEmployeeNames[i], hrAges[i], hrPayments[i], hrBonuses[i]) );
+        for (int i = 0; i < hrEmployeeNames.length; i++) {
+            department.addEmployee(new Employee(hrEmployeeNames[i], hrAges[i], hrPayments[i], hrBonuses[i]));
         }
-        departments.add( department );
+        departments.add(department);
         department = new Department("BA");
-        for(int i = 0; i < baEmployeeNames.length; i++){
-            department.addEmployee( new Employee(baEmployeeNames[i], baAges[i], baPayments[i], baBonuses[i]) );
+        for (int i = 0; i < baEmployeeNames.length; i++) {
+            department.addEmployee(new Employee(baEmployeeNames[i], baAges[i], baPayments[i], baBonuses[i]));
         }
-        departments.add( department );
+        departments.add(department);
 
         department = new Department("MGR");
-        for(int i = 0; i < mgrEmployeeNames.length; i++){
-            department.addEmployee( new Employee(mgrEmployeeNames[i], mgrAges[i], mgrPayments[i], mgrBonuses[i]) );
+        for (int i = 0; i < mgrEmployeeNames.length; i++) {
+            department.addEmployee(new Employee(mgrEmployeeNames[i], mgrAges[i], mgrPayments[i], mgrBonuses[i]));
         }
         mgrDepartment = department;
 
@@ -254,16 +252,16 @@ public class XLSTransformerTest extends TestCase {
 
         for (int i = 0; i < amounts.length; i++) {
             int amount = amounts[i];
-            amountBeans.add( new SimpleBean( amount ) );
+            amountBeans.add(new SimpleBean(amount));
         }
 
     }
 
     protected List generateNotes(String name) {
-        Random r = new Random( System.currentTimeMillis() );
+        Random r = new Random(System.currentTimeMillis());
         int n = 1 + r.nextInt(7);
         List notes = new ArrayList();
-        for(int i = 0 ; i < n; i++){
+        for (int i = 0; i < n; i++) {
             notes.add("Note " + i + " for " + name);
         }
         return notes;
@@ -343,7 +341,7 @@ public class XLSTransformerTest extends TestCase {
         Map beans = new HashMap();
         beans.put("listBean", beanWithList);
         beans.put("departments", departments);
-        beans.put( "t1", amountBeans );
+        beans.put("t1", amountBeans);
         //todo comment this line to work on #VALUE! formula cell problem
 //        simpleBean3.setOther( simpleBean1 );
 
@@ -358,7 +356,7 @@ public class XLSTransformerTest extends TestCase {
         HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
         HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
-//        assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum() + beanWithList.getBeans().size() - 1, resultSheet.getLastRowNum());
+        checkRowHeightIsPositive(resultSheet.getRow(43));
 
         Map props = new HashMap();
         props.put("${listBean.name}", beanWithList.getName());
@@ -378,50 +376,65 @@ public class XLSTransformerTest extends TestCase {
 
         checker.checkFormulaCell(sourceSheet, 4, resultSheet, 6, (short) 4, "SUM(E4:E6)");
 
-        checker.checkFormulaCell( sourceSheet, 8, resultSheet, 10, (short) 1, "SUM(B4:B6)");
-        checker.checkFormulaCell( sourceSheet, 8, resultSheet, 10, (short) 2, "SUM(C4:C6)");
-        checker.checkFormulaCell( sourceSheet, 8, resultSheet, 10, (short) 4, "SUM(E4:E6)");
+        checker.checkFormulaCell(sourceSheet, 8, resultSheet, 10, (short) 1, "SUM(B4:B6)");
+        checker.checkFormulaCell(sourceSheet, 8, resultSheet, 10, (short) 2, "SUM(C4:C6)");
+        checker.checkFormulaCell(sourceSheet, 8, resultSheet, 10, (short) 4, "SUM(E4:E6)");
         checker.checkFormulaCell(sourceSheet, 10, resultSheet, 12, (short) 1, "MAX(B7,C7)");
 
-        checker.checkFormulaCell( sourceSheet, 20, resultSheet, 23, (short)1, "SUM(B19:B23)");
-        checker.checkFormulaCell( sourceSheet, 20, resultSheet, 32, (short)1, "SUM(B29:B32)");
-        checker.checkFormulaCell( sourceSheet, 20, resultSheet, 40, (short)1, "SUM(B38:B40)");
+        checker.checkFormulaCell(sourceSheet, 20, resultSheet, 23, (short) 1, "SUM(B19:B23)");
+        checker.checkFormulaCell(sourceSheet, 20, resultSheet, 32, (short) 1, "SUM(B29:B32)");
+        checker.checkFormulaCell(sourceSheet, 20, resultSheet, 40, (short) 1, "SUM(B38:B40)");
 
-        checker.checkFormulaCell( sourceSheet, 20, resultSheet, 23, (short)3, "SUM(D19:D23)");
-        checker.checkFormulaCell( sourceSheet, 20, resultSheet, 32, (short)3, "SUM(D29:D32)");
-        checker.checkFormulaCell( sourceSheet, 20, resultSheet, 40, (short)3, "SUM(D38:D40)");
+        checker.checkFormulaCell(sourceSheet, 20, resultSheet, 23, (short) 3, "SUM(D19:D23)");
+        checker.checkFormulaCell(sourceSheet, 20, resultSheet, 32, (short) 3, "SUM(D29:D32)");
+        checker.checkFormulaCell(sourceSheet, 20, resultSheet, 40, (short) 3, "SUM(D38:D40)");
 
-        checker.checkFormulaCell( sourceSheet, 22, resultSheet, 41, (short)1, "SUM(B24,B33,B41)");
-        checker.checkFormulaCell( sourceSheet, 22, resultSheet, 41, (short)3, "SUM(D24,D33,D41)");
+        checker.checkFormulaCell(sourceSheet, 22, resultSheet, 41, (short) 1, "SUM(B24,B33,B41)");
+        checker.checkFormulaCell(sourceSheet, 22, resultSheet, 41, (short) 3, "SUM(D24,D33,D41)");
 
-        checker.checkFormulaCell( sourceSheet, 18, resultSheet, 18, (short)3, "B19*(1+C19)");
-        checker.checkFormulaCell( sourceSheet, 18, resultSheet, 22, (short)3, "B23*(1+C23)");
-        checker.checkFormulaCell( sourceSheet, 18, resultSheet, 28, (short)3, "B29*(1+C29)");
-        checker.checkFormulaCell( sourceSheet, 19, resultSheet, 31, (short)3, "B32*(1+C32)");
-        checker.checkFormulaCell( sourceSheet, 19, resultSheet, 37, (short)3, "B38*(1+C38)");
-        checker.checkFormulaCell( sourceSheet, 19, resultSheet, 39, (short)3, "B40*(1+C40)");
+        checker.checkFormulaCell(sourceSheet, 18, resultSheet, 18, (short) 3, "B19*(1+C19)");
+        checker.checkFormulaCell(sourceSheet, 18, resultSheet, 22, (short) 3, "B23*(1+C23)");
+        checker.checkFormulaCell(sourceSheet, 18, resultSheet, 28, (short) 3, "B29*(1+C29)");
+        checker.checkFormulaCell(sourceSheet, 19, resultSheet, 31, (short) 3, "B32*(1+C32)");
+        checker.checkFormulaCell(sourceSheet, 19, resultSheet, 37, (short) 3, "B38*(1+C38)");
+        checker.checkFormulaCell(sourceSheet, 19, resultSheet, 39, (short) 3, "B40*(1+C40)");
 
-        checker.checkFormulaCell( sourceSheet, 24, resultSheet, 43, (short)1, "'Sheet 2'!B55");
+        checker.checkFormulaCell(sourceSheet, 24, resultSheet, 43, (short) 1, "'Sheet 2'!B55");
 
-        sourceSheet = sourceWorkbook.getSheetAt( 1 );
-        resultSheet = resultWorkbook.getSheetAt( 1 );
-        checker.checkFormulaCell( sourceSheet, 0, resultSheet, 0, (short)1, "SUM(Sheet1!B4:B6)");
-        checker.checkFormulaCell( sourceSheet, 0, resultSheet, 0, (short)2, "SUM(Sheet1!C4:C6)");
-        checker.checkFormulaCell( sourceSheet, 0, resultSheet, 0, (short)4, "SUM(Sheet1!E4:E6)");
-        checker.checkFormulaCell( sourceSheet, 2, resultSheet, 2, (short)1, "MAX(Sheet1!B7,Sheet1!C7)");
-        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 4, (short)1, "Sheet1!B13");
+        sourceSheet = sourceWorkbook.getSheetAt(1);
+        resultSheet = resultWorkbook.getSheetAt(1);
+        checker.checkFormulaCell(sourceSheet, 0, resultSheet, 0, (short) 1, "SUM(Sheet1!B4:B6)");
+        checker.checkFormulaCell(sourceSheet, 0, resultSheet, 0, (short) 2, "SUM(Sheet1!C4:C6)");
+        checker.checkFormulaCell(sourceSheet, 0, resultSheet, 0, (short) 4, "SUM(Sheet1!E4:E6)");
+        checker.checkFormulaCell(sourceSheet, 2, resultSheet, 2, (short) 1, "MAX(Sheet1!B7,Sheet1!C7)");
+        checker.checkFormulaCell(sourceSheet, 4, resultSheet, 4, (short) 1, "Sheet1!B13");
 
-        checker.checkFormulaCell( sourceSheet, 15, resultSheet, 24, (short)1, "SUM(B10,B13,B16,B19,B22)");
-        checker.checkFormulaCell( sourceSheet, 15, resultSheet, 40, (short)1, "SUM(B29,B32,B35,B38)");
-        checker.checkFormulaCell( sourceSheet, 15, resultSheet, 53, (short)1, "SUM(B45,B48,B51)");
+        checker.checkFormulaCell(sourceSheet, 15, resultSheet, 24, (short) 1, "SUM(B10,B13,B16,B19,B22)");
+        checker.checkFormulaCell(sourceSheet, 15, resultSheet, 40, (short) 1, "SUM(B29,B32,B35,B38)");
+        checker.checkFormulaCell(sourceSheet, 15, resultSheet, 53, (short) 1, "SUM(B45,B48,B51)");
 
-        checker.checkFormulaCell( sourceSheet, 18, resultSheet, 55, (short)1, "Sheet1!D24");
-        checker.checkFormulaCell( sourceSheet, 19, resultSheet, 56, (short)1, "Sheet1!D33");
-        checker.checkFormulaCell( sourceSheet, 20, resultSheet, 57, (short)1, "Sheet1!D41");
+        checker.checkFormulaCell(sourceSheet, 18, resultSheet, 55, (short) 1, "Sheet1!D24");
+        checker.checkFormulaCell(sourceSheet, 19, resultSheet, 56, (short) 1, "Sheet1!D33");
+        checker.checkFormulaCell(sourceSheet, 20, resultSheet, 57, (short) 1, "Sheet1!D41");
+
+        resultSheet = resultWorkbook.getSheetAt(1);
         // todo Create checks for "Sheet 3"
 
         is.close();
         saveWorkbook(resultWorkbook, formulasDestXLS);
+    }
+
+    private void checkRowHeightsArePositive(HSSFSheet sheet) {
+        for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
+            HSSFRow row = sheet.getRow(i);
+            if (row != null) {
+                checkRowHeightIsPositive(row);
+            }
+        }
+    }
+
+    private void checkRowHeightIsPositive(HSSFRow row) {
+        assertTrue("Row height is negative for row num = " + row.getRowNum(), row.getHeight() >= 0);
     }
 
     public void testMultipleListRows() throws IOException, ParsePropertyException {
@@ -514,18 +527,18 @@ public class XLSTransformerTest extends TestCase {
         checker = new CellsChecker(props);
         checker.checkRows(sourceSheet, resultSheet, 3, 11, 4);
 
-        assertEquals( "Incorrect number of merged regions", 9, resultSheet.getNumMergedRegions() );
-        assertTrue( "Merged Region not found", isMergedRegion( resultSheet, new Region(3, (short)0, 3, (short)2) ) );
-        assertTrue( "Merged Region not found", isMergedRegion( resultSheet, new Region(7, (short)0, 7, (short)2) ) );
-        assertTrue( "Merged Region not found", isMergedRegion( resultSheet, new Region(11, (short)0, 11, (short)2) ) );
+        assertEquals("Incorrect number of merged regions", 9, resultSheet.getNumMergedRegions());
+        assertTrue("Merged Region not found", isMergedRegion(resultSheet, new Region(3, (short) 0, 3, (short) 2)));
+        assertTrue("Merged Region not found", isMergedRegion(resultSheet, new Region(7, (short) 0, 7, (short) 2)));
+        assertTrue("Merged Region not found", isMergedRegion(resultSheet, new Region(11, (short) 0, 11, (short) 2)));
 
-        assertTrue( "Merged Region not found", isMergedRegion( resultSheet, new Region(4, (short)1, 4, (short)2) ) );
-        assertTrue( "Merged Region not found", isMergedRegion( resultSheet, new Region(8, (short)1, 8, (short)2) ) );
-        assertTrue( "Merged Region not found", isMergedRegion( resultSheet, new Region(12, (short)1, 12, (short)2) ) );
+        assertTrue("Merged Region not found", isMergedRegion(resultSheet, new Region(4, (short) 1, 4, (short) 2)));
+        assertTrue("Merged Region not found", isMergedRegion(resultSheet, new Region(8, (short) 1, 8, (short) 2)));
+        assertTrue("Merged Region not found", isMergedRegion(resultSheet, new Region(12, (short) 1, 12, (short) 2)));
 
-        assertTrue( "Merged Region not found", isMergedRegion( resultSheet, new Region(5, (short)1, 6, (short)2) ) );
-        assertTrue( "Merged Region not found", isMergedRegion( resultSheet, new Region(9, (short)1, 10, (short)2) ) );
-        assertTrue( "Merged Region not found", isMergedRegion( resultSheet, new Region(13, (short)1, 14, (short)2) ) );
+        assertTrue("Merged Region not found", isMergedRegion(resultSheet, new Region(5, (short) 1, 6, (short) 2)));
+        assertTrue("Merged Region not found", isMergedRegion(resultSheet, new Region(9, (short) 1, 10, (short) 2)));
+        assertTrue("Merged Region not found", isMergedRegion(resultSheet, new Region(13, (short) 1, 14, (short) 2)));
 
         is.close();
         saveWorkbook(resultWorkbook, mergeMultipleListRowsDestXLS);
@@ -626,19 +639,19 @@ public class XLSTransformerTest extends TestCase {
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 0, names);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 1, intValues);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 3, doubleValues);
-        assertEquals( "Incorrect number of merged regions", 3, resultSheet.getNumMergedRegions() );
-        assertTrue( "Merged Region (3,1,3,2) not found", isMergedRegion( resultSheet, new Region(3, (short)1, 3, (short)2) ) );
-        assertTrue( "Merged Region (4,1,4,2) not found", isMergedRegion( resultSheet, new Region(4, (short)1, 4, (short)2) ) );
-        assertTrue( "Merged Region (5,1,5,2) not found", isMergedRegion( resultSheet, new Region(5, (short)1, 5, (short)2) ) );
+        assertEquals("Incorrect number of merged regions", 3, resultSheet.getNumMergedRegions());
+        assertTrue("Merged Region (3,1,3,2) not found", isMergedRegion(resultSheet, new Region(3, (short) 1, 3, (short) 2)));
+        assertTrue("Merged Region (4,1,4,2) not found", isMergedRegion(resultSheet, new Region(4, (short) 1, 4, (short) 2)));
+        assertTrue("Merged Region (5,1,5,2) not found", isMergedRegion(resultSheet, new Region(5, (short) 1, 5, (short) 2)));
 
         is.close();
         saveWorkbook(resultWorkbook, mergeCellsListDestXLS);
     }
 
-    protected static boolean isMergedRegion(HSSFSheet sheet, Region region){
-        for(int i = 0; i < sheet.getNumMergedRegions(); i++){
-            Region mgdRegion = sheet.getMergedRegionAt( i );
-            if( mgdRegion.equals( region ) ){
+    protected static boolean isMergedRegion(HSSFSheet sheet, Region region) {
+        for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
+            Region mgdRegion = sheet.getMergedRegionAt(i);
+            if (mgdRegion.equals(region)) {
                 return true;
             }
 //            log.info("(" + mgdRegion.getRowFrom() + ", " + mgdRegion.getColumnFrom() + ", " + mgdRegion.getRowTo() + ", " + mgdRegion.getColumnTo() + ")");
@@ -733,9 +746,9 @@ public class XLSTransformerTest extends TestCase {
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 0, itEmployeeNames);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 1, itPayments);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 2, itBonuses);
-        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 3, (short)3, "B4*(1+C4)");
-        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 4, (short)3, "B5*(1+C5)");
-        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 7, (short)3, "B8*(1+C8)");
+        checker.checkFormulaCell(sourceSheet, 3, resultSheet, 3, (short) 3, "B4*(1+C4)");
+        checker.checkFormulaCell(sourceSheet, 3, resultSheet, 4, (short) 3, "B5*(1+C5)");
+        checker.checkFormulaCell(sourceSheet, 3, resultSheet, 7, (short) 3, "B8*(1+C8)");
 //        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 8, (short)1, "SUM(B4:B8)");
 //        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 6, (short)3, "SUM(D4:D8)");
         props.clear();
@@ -747,9 +760,9 @@ public class XLSTransformerTest extends TestCase {
         checker.checkListCells(sourceSheet, 3, resultSheet, 12, (short) 0, hrEmployeeNames);
         checker.checkListCells(sourceSheet, 3, resultSheet, 12, (short) 1, hrPayments);
         checker.checkListCells(sourceSheet, 3, resultSheet, 12, (short) 2, hrBonuses);
-        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 12, (short)3, "B13*(1+C13)");
-        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 13, (short)3, "B14*(1+C14)");
-        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 15, (short)3, "B16*(1+C16)");
+        checker.checkFormulaCell(sourceSheet, 3, resultSheet, 12, (short) 3, "B13*(1+C13)");
+        checker.checkFormulaCell(sourceSheet, 3, resultSheet, 13, (short) 3, "B14*(1+C14)");
+        checker.checkFormulaCell(sourceSheet, 3, resultSheet, 15, (short) 3, "B16*(1+C16)");
 //        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 16, (short)1, "SUM(B13:B16)");
 //        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 16, (short)3, "SUM(D13:D16)");
         props.clear();
@@ -761,11 +774,11 @@ public class XLSTransformerTest extends TestCase {
         checker.checkListCells(sourceSheet, 3, resultSheet, 20, (short) 0, baEmployeeNames);
         checker.checkListCells(sourceSheet, 3, resultSheet, 20, (short) 1, baPayments);
         checker.checkListCells(sourceSheet, 3, resultSheet, 20, (short) 2, baBonuses);
-        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 20, (short)3, "B21*(1+C21)");
-        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 21, (short)3, "B22*(1+C22)");
-        checker.checkFormulaCell( sourceSheet, 3, resultSheet, 22, (short)3, "B23*(1+C23)");
-        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 23, (short)1, "SUM(B21:B23)");
-        checker.checkFormulaCell( sourceSheet, 4, resultSheet, 23, (short)3, "SUM(D21:D23)");
+        checker.checkFormulaCell(sourceSheet, 3, resultSheet, 20, (short) 3, "B21*(1+C21)");
+        checker.checkFormulaCell(sourceSheet, 3, resultSheet, 21, (short) 3, "B22*(1+C22)");
+        checker.checkFormulaCell(sourceSheet, 3, resultSheet, 22, (short) 3, "B23*(1+C23)");
+        checker.checkFormulaCell(sourceSheet, 4, resultSheet, 23, (short) 1, "SUM(B21:B23)");
+        checker.checkFormulaCell(sourceSheet, 4, resultSheet, 23, (short) 3, "SUM(D21:D23)");
 
         saveWorkbook(resultWorkbook, grouping3DestXLS);
     }
@@ -869,21 +882,21 @@ public class XLSTransformerTest extends TestCase {
         listPropMap.put("[${listBean.beans.name}]", "[" + beanWithList.getName() + "]");
         checker = new CellsChecker(listPropMap);
         checker.checkListCells(sourceSheet, 6, resultSheet, 6, (short) 0,
-                new String[]{ "[" +((SimpleBean)beanWithList.getBeans().get(0)).getName() + "]",
-                        "[" + ((SimpleBean)beanWithList.getBeans().get(1)).getName() + "]",
-                        "[" + ((SimpleBean)beanWithList.getBeans().get(2)).getName() + "]" });
+                new String[]{"[" + ((SimpleBean) beanWithList.getBeans().get(0)).getName() + "]",
+                        "[" + ((SimpleBean) beanWithList.getBeans().get(1)).getName() + "]",
+                        "[" + ((SimpleBean) beanWithList.getBeans().get(2)).getName() + "]"});
         checker.checkListCells(sourceSheet, 6, resultSheet, 6, (short) 1,
-                new String[]{((SimpleBean)beanWithList.getBeans().get(0)).getDoubleValue() + " yeah",
-                        ((SimpleBean)beanWithList.getBeans().get(1)).getDoubleValue() + " yeah",
-                        ((SimpleBean)beanWithList.getBeans().get(2)).getDoubleValue() + " yeah" });
+                new String[]{((SimpleBean) beanWithList.getBeans().get(0)).getDoubleValue() + " yeah",
+                        ((SimpleBean) beanWithList.getBeans().get(1)).getDoubleValue() + " yeah",
+                        ((SimpleBean) beanWithList.getBeans().get(2)).getDoubleValue() + " yeah"});
 
         checker.checkListCells(sourceSheet, 6, resultSheet, 6, (short) 2,
-                new String[]{((SimpleBean)beanWithList.getBeans().get(0)).getName() + " : " + ((SimpleBean)beanWithList.getBeans().get(0)).getDoubleValue() + "!",
-                        ((SimpleBean)beanWithList.getBeans().get(1)).getName() + " : " + ((SimpleBean)beanWithList.getBeans().get(1)).getDoubleValue() + "!",
-                        ((SimpleBean)beanWithList.getBeans().get(2)).getName() + " : " + ((SimpleBean)beanWithList.getBeans().get(2)).getDoubleValue() + "!" });
+                new String[]{((SimpleBean) beanWithList.getBeans().get(0)).getName() + " : " + ((SimpleBean) beanWithList.getBeans().get(0)).getDoubleValue() + "!",
+                        ((SimpleBean) beanWithList.getBeans().get(1)).getName() + " : " + ((SimpleBean) beanWithList.getBeans().get(1)).getDoubleValue() + "!",
+                        ((SimpleBean) beanWithList.getBeans().get(2)).getName() + " : " + ((SimpleBean) beanWithList.getBeans().get(2)).getDoubleValue() + "!"});
 
         is.close();
-        saveWorkbook( resultWorkbook, severalPropertiesInCellDestXLS);
+        saveWorkbook(resultWorkbook, severalPropertiesInCellDestXLS);
     }
 
     public void testParallelTablesExport() throws IOException, ParsePropertyException {
@@ -906,9 +919,9 @@ public class XLSTransformerTest extends TestCase {
         Map listPropMap = new HashMap();
         listPropMap.put("${listBean.name}", beanWithList.getName());
         listPropMap.put("Name: ${bean.name}", "Name: " + simpleBean2.getName());
-        listPropMap.put("${bean.doubleValue}", simpleBean2.getDoubleValue() );
-        listPropMap.put("Merged - ${bean.intValue}", "Merged - " + simpleBean2.getIntValue() );
-        listPropMap.put("${bean.intValue}", simpleBean2.getIntValue() );
+        listPropMap.put("${bean.doubleValue}", simpleBean2.getDoubleValue());
+        listPropMap.put("Merged - ${bean.intValue}", "Merged - " + simpleBean2.getIntValue());
+        listPropMap.put("${bean.intValue}", simpleBean2.getIntValue());
 
         CellsChecker checker = new CellsChecker(listPropMap);
         checker.checkRows(sourceSheet, resultSheet, 0, 0, 3);
@@ -921,15 +934,15 @@ public class XLSTransformerTest extends TestCase {
         checker.checkFormulaCell(sourceSheet, 4, resultSheet, 4, (short) 4, "D5+F5", true);
         checker.checkFormulaCell(sourceSheet, 5, resultSheet, 5, (short) 4, "D6+F6", true);
 
-        checker.checkSection( sourceSheet, resultSheet, 0, 0, (short)0, (short)1, 7, true, true);
-        checker.checkSection( sourceSheet, resultSheet, 0, 0, (short)6, (short)7, 14, true, true);
+        checker.checkSection(sourceSheet, resultSheet, 0, 0, (short) 0, (short) 1, 7, true, true);
+        checker.checkSection(sourceSheet, resultSheet, 0, 0, (short) 6, (short) 7, 14, true, true);
 
-        assertEquals( "Incorrect number of merged regions", 2, resultSheet.getNumMergedRegions() );
-        assertTrue( "Merged Region (4,0,4,1) not found", isMergedRegion( resultSheet, new Region(4, (short)0, 4, (short)1) ) );
-        assertTrue( "Merged Region (3,6,3,7) not found", isMergedRegion( resultSheet, new Region(3, (short)6, 3, (short)7) ) );
+        assertEquals("Incorrect number of merged regions", 2, resultSheet.getNumMergedRegions());
+        assertTrue("Merged Region (4,0,4,1) not found", isMergedRegion(resultSheet, new Region(4, (short) 0, 4, (short) 1)));
+        assertTrue("Merged Region (3,6,3,7) not found", isMergedRegion(resultSheet, new Region(3, (short) 6, 3, (short) 7)));
 
         is.close();
-        saveWorkbook( resultWorkbook, parallelTablesDestXLS);
+        saveWorkbook(resultWorkbook, parallelTablesDestXLS);
     }
 
     public void testSeveralListsInRowExport() throws IOException, ParsePropertyException {
@@ -956,23 +969,23 @@ public class XLSTransformerTest extends TestCase {
         listPropMap.put("Name: ${list2.name}", "Name: " + listBean2.getName());
         // static tables check
         listPropMap.put("Name: ${bean.name}", "Name: " + simpleBean2.getName());
-        listPropMap.put("${bean.doubleValue}", simpleBean2.getDoubleValue() );
-        listPropMap.put("Merged - ${bean.intValue}", "Merged - " + simpleBean2.getIntValue() );
-        listPropMap.put("${bean.intValue}", simpleBean2.getIntValue() );
-        listPropMap.put("Name: ${staticBean.name}", "Name: " + simpleBean1.getName() );
-        listPropMap.put("${staticBean.intValue}", simpleBean1.getIntValue() );
-        listPropMap.put("${staticBean.doubleValue}", simpleBean1.getDoubleValue() );
+        listPropMap.put("${bean.doubleValue}", simpleBean2.getDoubleValue());
+        listPropMap.put("Merged - ${bean.intValue}", "Merged - " + simpleBean2.getIntValue());
+        listPropMap.put("${bean.intValue}", simpleBean2.getIntValue());
+        listPropMap.put("Name: ${staticBean.name}", "Name: " + simpleBean1.getName());
+        listPropMap.put("${staticBean.intValue}", simpleBean1.getIntValue());
+        listPropMap.put("${staticBean.doubleValue}", simpleBean1.getDoubleValue());
 
         CellsChecker checker = new CellsChecker(listPropMap);
         checker.checkRows(sourceSheet, resultSheet, 0, 0, 3);
 
-        checker.checkSection( sourceSheet, resultSheet, 0, 0, (short)0, (short)1, 7, true, true);
-        checker.checkSection( sourceSheet, resultSheet, 0, 0, (short)7, (short)8, 8, true, true);
-        checker.checkSection( sourceSheet, resultSheet, 0, 0, (short)13, (short)14, 10, true, true);
+        checker.checkSection(sourceSheet, resultSheet, 0, 0, (short) 0, (short) 1, 7, true, true);
+        checker.checkSection(sourceSheet, resultSheet, 0, 0, (short) 7, (short) 8, 8, true, true);
+        checker.checkSection(sourceSheet, resultSheet, 0, 0, (short) 13, (short) 14, 10, true, true);
 
-        checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 2, new String[]{"Name: " + names[0], "Name: " + names[1], "Name: " + names[2]} );
+        checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 2, new String[]{"Name: " + names[0], "Name: " + names[1], "Name: " + names[2]});
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 3, new String[]{names[0] + " - " + names[0] + " : " + intValues[0],
-                names[1] + " - " + names[1] + " : " + intValues[1],names[2] + " - " + names[2] + " : " + intValues[2] });
+                names[1] + " - " + names[1] + " : " + intValues[1], names[2] + " - " + names[2] + " : " + intValues[2]});
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 5, doubleValues);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 12, intValues);
 //
@@ -982,8 +995,8 @@ public class XLSTransformerTest extends TestCase {
 
         checker.checkFormulaCell(sourceSheet, 4, resultSheet, 6, (short) 5, "SUM(F4:F6)");
 
-        checker.checkListCells( sourceSheet, 3, resultSheet, 3, (short)10, doubleValues2);
-        checker.checkListCells( sourceSheet, 3, resultSheet, 3, (short)11, intValues2);
+        checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 10, doubleValues2);
+        checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 11, intValues2);
 
         checker.checkFormulaCell(sourceSheet, 3, resultSheet, 3, (short) 9, "K4+L4");
         checker.checkFormulaCell(sourceSheet, 4, resultSheet, 4, (short) 9, "K5+L5", true);
@@ -992,18 +1005,18 @@ public class XLSTransformerTest extends TestCase {
         checker.checkFormulaCell(sourceSheet, 4, resultSheet, 10, (short) 9, "SUM(J4:J10)");
         checker.checkFormulaCell(sourceSheet, 4, resultSheet, 10, (short) 11, "SUM(L4:L10)");
 
-        assertEquals( "Incorrect number of merged regions", 6, resultSheet.getNumMergedRegions() );
-        assertTrue( "Merged Region (4,0,4,1) not found", isMergedRegion( resultSheet, new Region(4, (short)0, 4, (short)1) ) );
-        assertTrue( "Merged Region (3,7,3,8) not found", isMergedRegion( resultSheet, new Region(3, (short)7, 3, (short)8) ) );
-        assertTrue( "Merged Region (3,13,3,14) not found", isMergedRegion( resultSheet, new Region(3, (short)13, 3, (short)14) ) );
+        assertEquals("Incorrect number of merged regions", 6, resultSheet.getNumMergedRegions());
+        assertTrue("Merged Region (4,0,4,1) not found", isMergedRegion(resultSheet, new Region(4, (short) 0, 4, (short) 1)));
+        assertTrue("Merged Region (3,7,3,8) not found", isMergedRegion(resultSheet, new Region(3, (short) 7, 3, (short) 8)));
+        assertTrue("Merged Region (3,13,3,14) not found", isMergedRegion(resultSheet, new Region(3, (short) 13, 3, (short) 14)));
 
-        assertTrue( "Merged Region (3,3,3,4) not found", isMergedRegion( resultSheet, new Region(3, (short)3, 3, (short)4) ) );
-        assertTrue( "Merged Region (4,3,4,4) not found", isMergedRegion( resultSheet, new Region(4, (short)3, 4, (short)4) ) );
-        assertTrue( "Merged Region (5,3,5,4) not found", isMergedRegion( resultSheet, new Region(5, (short)3, 5, (short)4) ) );
+        assertTrue("Merged Region (3,3,3,4) not found", isMergedRegion(resultSheet, new Region(3, (short) 3, 3, (short) 4)));
+        assertTrue("Merged Region (4,3,4,4) not found", isMergedRegion(resultSheet, new Region(4, (short) 3, 4, (short) 4)));
+        assertTrue("Merged Region (5,3,5,4) not found", isMergedRegion(resultSheet, new Region(5, (short) 3, 5, (short) 4)));
 
 
         is.close();
-        saveWorkbook( resultWorkbook, severalListsInRowDestXLS );
+        saveWorkbook(resultWorkbook, severalListsInRowDestXLS);
     }
 
     public void testFixedSizeCollections() throws IOException, ParsePropertyException {
@@ -1011,7 +1024,7 @@ public class XLSTransformerTest extends TestCase {
         beans.put("employee", itEmployees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(fixedSizeListXLS));
         XLSTransformer transformer = new XLSTransformer();
-        transformer.markAsFixedSizeCollection( "employee" );
+        transformer.markAsFixedSizeCollection("employee");
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(fixedSizeListXLS));
@@ -1028,9 +1041,9 @@ public class XLSTransformerTest extends TestCase {
         checker = new CellsChecker(props);
         checker.checkRows(sourceSheet, resultSheet, 0, 0, 2);
 
-        checker.checkFixedListCells( sourceSheet, 2, resultSheet, 2, (short)0, itEmployeeNames);
-        checker.checkFixedListCells( sourceSheet, 2, resultSheet, 2, (short)1, itPayments);
-        checker.checkFixedListCells( sourceSheet, 2, resultSheet, 2, (short)2, itBonuses);
+        checker.checkFixedListCells(sourceSheet, 2, resultSheet, 2, (short) 0, itEmployeeNames);
+        checker.checkFixedListCells(sourceSheet, 2, resultSheet, 2, (short) 1, itPayments);
+        checker.checkFixedListCells(sourceSheet, 2, resultSheet, 2, (short) 2, itBonuses);
 
         is.close();
         saveWorkbook(resultWorkbook, fixedSizeListDestXLS);
@@ -1057,7 +1070,7 @@ public class XLSTransformerTest extends TestCase {
         props.put("Name: ${bean.name}", "Name: " + simpleBean1.getName());
         props.put("${bean.other.name} - ${bean.doubleValue*2},${(bean.other.intValue + bean.doubleValue)/0.5}",
                 simpleBean1.getOther().getName() +
-                " - " + simpleBean1.getDoubleValue().doubleValue()*2 + "," + (simpleBean1.getOther().getIntValue().intValue() + simpleBean1.getDoubleValue().doubleValue())/0.5);
+                        " - " + simpleBean1.getDoubleValue().doubleValue() * 2 + "," + (simpleBean1.getOther().getIntValue().intValue() + simpleBean1.getDoubleValue().doubleValue()) / 0.5);
         props.put("${10*bean.doubleValue + 2.55}", new Double(simpleBean1.getDoubleValue().doubleValue() * 10 + 2.55));
         CellsChecker checker = new CellsChecker(props);
         checker.checkRows(sourceSheet, resultSheet, sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum(), 6);
@@ -1066,25 +1079,25 @@ public class XLSTransformerTest extends TestCase {
         listPropMap.put("[${listBean.beans.name}]", "[" + beanWithList.getName() + "]");
         checker = new CellsChecker(listPropMap);
         checker.checkListCells(sourceSheet, 6, resultSheet, 6, (short) 0,
-                new String[]{ "[" +((SimpleBean)beanWithList.getBeans().get(0)).getName() + "]",
-                        "[" + ((SimpleBean)beanWithList.getBeans().get(1)).getName() + "]",
-                        "[" + ((SimpleBean)beanWithList.getBeans().get(2)).getName() + "]" });
+                new String[]{"[" + ((SimpleBean) beanWithList.getBeans().get(0)).getName() + "]",
+                        "[" + ((SimpleBean) beanWithList.getBeans().get(1)).getName() + "]",
+                        "[" + ((SimpleBean) beanWithList.getBeans().get(2)).getName() + "]"});
         checker.checkListCells(sourceSheet, 6, resultSheet, 6, (short) 1,
-                new String[]{(((SimpleBean)beanWithList.getBeans().get(0)).getDoubleValue().doubleValue()*10.2)/10 + 1.567 + " yeah",
-                        (((SimpleBean)beanWithList.getBeans().get(1)).getDoubleValue().doubleValue()*10.2)/10 + 1.567 + " yeah",
-                        (((SimpleBean)beanWithList.getBeans().get(2)).getDoubleValue().doubleValue()*10.2)/10 + 1.567 + " yeah" });
+                new String[]{(((SimpleBean) beanWithList.getBeans().get(0)).getDoubleValue().doubleValue() * 10.2) / 10 + 1.567 + " yeah",
+                        (((SimpleBean) beanWithList.getBeans().get(1)).getDoubleValue().doubleValue() * 10.2) / 10 + 1.567 + " yeah",
+                        (((SimpleBean) beanWithList.getBeans().get(2)).getDoubleValue().doubleValue() * 10.2) / 10 + 1.567 + " yeah"});
 
         checker.checkListCells(sourceSheet, 6, resultSheet, 6, (short) 2,
-                new String[]{((SimpleBean)beanWithList.getBeans().get(0)).getDoubleValue().doubleValue()  + ((SimpleBean)beanWithList.getBeans().get(0)).getIntValue().intValue()*2.1
-                        + " - " + (((SimpleBean)beanWithList.getBeans().get(0)).getIntValue().intValue()*(10 + 1.1)),
-                        ((SimpleBean)beanWithList.getBeans().get(1)).getDoubleValue().doubleValue()  + ((SimpleBean)beanWithList.getBeans().get(1)).getIntValue().intValue()*2.1
-                        + " - " + (((SimpleBean)beanWithList.getBeans().get(1)).getIntValue().intValue()*(10 + 1.1)),
-                        ((SimpleBean)beanWithList.getBeans().get(2)).getDoubleValue().doubleValue()  + ((SimpleBean)beanWithList.getBeans().get(2)).getIntValue().intValue()*2.1
-                        + " - " + (((SimpleBean)beanWithList.getBeans().get(2)).getIntValue().intValue()*(10 + 1.1))});
+                new String[]{((SimpleBean) beanWithList.getBeans().get(0)).getDoubleValue().doubleValue() + ((SimpleBean) beanWithList.getBeans().get(0)).getIntValue().intValue() * 2.1
+                        + " - " + (((SimpleBean) beanWithList.getBeans().get(0)).getIntValue().intValue() * (10 + 1.1)),
+                        ((SimpleBean) beanWithList.getBeans().get(1)).getDoubleValue().doubleValue() + ((SimpleBean) beanWithList.getBeans().get(1)).getIntValue().intValue() * 2.1
+                                + " - " + (((SimpleBean) beanWithList.getBeans().get(1)).getIntValue().intValue() * (10 + 1.1)),
+                        ((SimpleBean) beanWithList.getBeans().get(2)).getDoubleValue().doubleValue() + ((SimpleBean) beanWithList.getBeans().get(2)).getIntValue().intValue() * 2.1
+                                + " - " + (((SimpleBean) beanWithList.getBeans().get(2)).getIntValue().intValue() * (10 + 1.1))});
 
 
         is.close();
-        saveWorkbook( resultWorkbook, expressions1DestXLS);
+        saveWorkbook(resultWorkbook, expressions1DestXLS);
     }
 
     public void testIfTag() throws IOException, ParsePropertyException {
@@ -1111,30 +1124,27 @@ public class XLSTransformerTest extends TestCase {
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
 //        assertEquals("Last Row Number is incorrect", 11, resultSheet.getLastRowNum());
         Map props = new HashMap();
-        props.put( "${listBean.name}", listBean.getName());
-        props.put( "${listBean.doubleValue}", listBean.getDoubleValue());
+        props.put("${listBean.name}", listBean.getName());
+        props.put("${listBean.doubleValue}", listBean.getDoubleValue());
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows( sourceSheet, resultSheet, 4, 3, 1);
-        checker.checkRows( sourceSheet, resultSheet, 4, 6, 1);
-        checker.checkRows( sourceSheet, resultSheet, 4, 8, 1);
-        checker.checkRows( sourceSheet, resultSheet, 8, 5, 1);
-        checker.checkRows( sourceSheet, resultSheet, 8, 7, 1);
-        checker.checkRows( sourceSheet, resultSheet, 8, 10, 1);
+        checker.checkRows(sourceSheet, resultSheet, 4, 3, 1);
+        checker.checkRows(sourceSheet, resultSheet, 4, 6, 1);
+        checker.checkRows(sourceSheet, resultSheet, 4, 8, 1);
+        checker.checkRows(sourceSheet, resultSheet, 8, 5, 1);
+        checker.checkRows(sourceSheet, resultSheet, 8, 7, 1);
+        checker.checkRows(sourceSheet, resultSheet, 8, 10, 1);
         props.clear();
-        props.put("${sb.name}",names[0]);
-        props.put("${sb.doubleValue}",doubleValues[0]);
-        checker.checkRows( sourceSheet, resultSheet, 6, 4, 1);
+        props.put("${sb.name}", names[0]);
+        props.put("${sb.doubleValue}", doubleValues[0]);
+        checker.checkRows(sourceSheet, resultSheet, 6, 4, 1);
         props.clear();
-        props.put("${sb.name}",names[2]);
-        props.put("${sb.doubleValue}",doubleValues[2]);
-        checker.checkRows( sourceSheet, resultSheet, 6, 9, 1);
+        props.put("${sb.name}", names[2]);
+        props.put("${sb.doubleValue}", doubleValues[2]);
+        checker.checkRows(sourceSheet, resultSheet, 6, 9, 1);
 
         is.close();
-        saveWorkbook( resultWorkbook, iftagDestXLS);
+        saveWorkbook(resultWorkbook, iftagDestXLS);
     }
-
-
-
 
 
     public void testEmptyBeansExport() throws IOException, ParsePropertyException {
@@ -1163,7 +1173,7 @@ public class XLSTransformerTest extends TestCase {
         checker.checkRows(sourceSheet, resultSheet, 0, 0, 3);
 
         is.close();
-        saveWorkbook( resultWorkbook, emptyBeansDestXLS );
+        saveWorkbook(resultWorkbook, emptyBeansDestXLS);
     }
 
 
@@ -1183,7 +1193,7 @@ public class XLSTransformerTest extends TestCase {
         HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
         Map props = new HashMap();
         CellsChecker checker = new CellsChecker(props);
-        checker.checkListCells( sourceSheet, 2, resultSheet, 2, (short)1, ((Employee)itEmployees.get(0)).getNotes().toArray() );
+        checker.checkListCells(sourceSheet, 2, resultSheet, 2, (short) 1, ((Employee) itEmployees.get(0)).getNotes().toArray());
 
         is.close();
         saveWorkbook(resultWorkbook, employeeNotesDestXLS);
@@ -1192,7 +1202,7 @@ public class XLSTransformerTest extends TestCase {
     public void testVarStatusAttrInForEach() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
         beans.put("employees", itEmployees);
-        InputStream is = new BufferedInputStream(getClass().getResourceAsStream( varStatusXLS ));
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(varStatusXLS));
         XLSTransformer transformer = new XLSTransformer();
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
@@ -1204,7 +1214,7 @@ public class XLSTransformerTest extends TestCase {
         HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
         Map props = new HashMap();
         CellsChecker checker = new CellsChecker(props);
-        checker.checkListCells( sourceSheet, 3, resultSheet, 2, (short)0, new Object[]{ new Integer(0), new Integer(1), new Integer(2), new Integer(3), new Integer(4)} );
+        checker.checkListCells(sourceSheet, 3, resultSheet, 2, (short) 0, new Object[]{new Integer(0), new Integer(1), new Integer(2), new Integer(3), new Integer(4)});
         is.close();
         saveWorkbook(resultWorkbook, varStatusDestXLS);
     }
@@ -1221,7 +1231,7 @@ public class XLSTransformerTest extends TestCase {
     public void atestOutlineInForEach() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
         beans.put("employees", itEmployees);
-        InputStream is = new BufferedInputStream(getClass().getResourceAsStream( outlineXLS ));
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(outlineXLS));
         XLSTransformer transformer = new XLSTransformer();
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
@@ -1247,7 +1257,7 @@ public class XLSTransformerTest extends TestCase {
         notes.add("Запи�?ь 1");
         notes.add("Заметка 2");
         notes.add("Строка 3");
-        emp.setNotes( notes );
+        emp.setNotes(notes);
         beans.put("employee", emp);
         beans.put("employees", itEmployees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(employeeNotesXLS));
@@ -1262,10 +1272,10 @@ public class XLSTransformerTest extends TestCase {
         HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
         Map props = new HashMap();
         CellsChecker checker = new CellsChecker(props);
-        checker.checkListCells( sourceSheet, 2, resultSheet, 2, (short)1, emp.getNotes().toArray() );
+        checker.checkListCells(sourceSheet, 2, resultSheet, 2, (short) 1, emp.getNotes().toArray());
 
         is.close();
-        saveWorkbook( resultWorkbook, employeeNotesRusDestXLS);
+        saveWorkbook(resultWorkbook, employeeNotesRusDestXLS);
 
     }
 
@@ -1275,15 +1285,15 @@ public class XLSTransformerTest extends TestCase {
         String[] colNames = new String[]{"Column 1", "Column 2", "Column 3"};
         for (int i = 0; i < colNames.length; i++) {
             String colName = colNames[i];
-            cols.add( new Column(colName) );
+            cols.add(new Column(colName));
         }
-        beans.put( "cols", cols );
+        beans.put("cols", cols);
         List list = new ArrayList();
-        list.add(new Item("A", new int[] { 1, 2, 3 }));
-        list.add(new Item("B", new int[] { }));
-        list.add(new Item("C", new int[] { 4, 5, 6 }));
-        list.add(new Item("D", new int[] { }));
-        beans.put("list", list);        
+        list.add(new Item("A", new int[]{1, 2, 3}));
+        list.add(new Item("B", new int[]{}));
+        list.add(new Item("C", new int[]{4, 5, 6}));
+        list.add(new Item("D", new int[]{}));
+        beans.put("list", list);
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(dynamicColumnsXLS));
         XLSTransformer transformer = new XLSTransformer();
@@ -1296,15 +1306,15 @@ public class XLSTransformerTest extends TestCase {
         HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
 
         Map props = new HashMap();
-        props.put( "${col.text}", colNames[0]);
+        props.put("${col.text}", colNames[0]);
         CellsChecker checker = new CellsChecker(props);
-        checker.checkCells( sourceSheet, resultSheet, 0, (short)1, 0, (short)0, true);
-        props.put( "${col.text}", colNames[1]);
-        checker.checkCells( sourceSheet, resultSheet, 0, (short)1, 0, (short)1, true);
-        props.put( "${col.text}", colNames[2]);
-        checker.checkCells( sourceSheet, resultSheet, 0, (short)1, 0, (short)2, true);
+        checker.checkCells(sourceSheet, resultSheet, 0, (short) 1, 0, (short) 0, true);
+        props.put("${col.text}", colNames[1]);
+        checker.checkCells(sourceSheet, resultSheet, 0, (short) 1, 0, (short) 1, true);
+        props.put("${col.text}", colNames[2]);
+        checker.checkCells(sourceSheet, resultSheet, 0, (short) 1, 0, (short) 2, true);
         is.close();
-        saveWorkbook( resultWorkbook, dynamicColumnsDestXLS);
+        saveWorkbook(resultWorkbook, dynamicColumnsDestXLS);
     }
 
     public void testForIfTagOneRowExport2() throws IOException, ParsePropertyException {
@@ -1326,7 +1336,7 @@ public class XLSTransformerTest extends TestCase {
 //        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
 
 //        is.close();
-        saveWorkbook( resultWorkbook, forifTagOneRowDest2XLS);
+        saveWorkbook(resultWorkbook, forifTagOneRowDest2XLS);
     }
 
     public void testHiddenSheetsExport() throws IOException, ParsePropertyException {
@@ -1336,12 +1346,12 @@ public class XLSTransformerTest extends TestCase {
         XLSTransformer transformer = new XLSTransformer();
         transformer.setSpreadsheetsToRemove(new String[]{"Sheet 2", "Sheet 3"});
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
-        assertEquals("Number of sheets in result workbook is incorrect", 1, resultWorkbook.getNumberOfSheets() );
+        assertEquals("Number of sheets in result workbook is incorrect", 1, resultWorkbook.getNumberOfSheets());
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(hideSheetsXLS));
         transformer.setSpreadsheetsToRemove(new String[]{"Sheet 2"});
         resultWorkbook = transformer.transformXLS(is, beans);
-        assertEquals("Number of sheets in result workbook is incorrect", 2, resultWorkbook.getNumberOfSheets() );
+        assertEquals("Number of sheets in result workbook is incorrect", 2, resultWorkbook.getNumberOfSheets());
         is.close();
 
         saveWorkbook(resultWorkbook, hideSheetsDestXLS);
@@ -1352,9 +1362,9 @@ public class XLSTransformerTest extends TestCase {
         XLSTransformer transformer = new XLSTransformer();
         List sheetNames = new ArrayList();
 //        sheetNames.add("New Sheet");
-        for(int i = 0; i < departments.size(); i++){
-            Department department = (Department) departments.get( i );
-            sheetNames.add( department.getName() );
+        for (int i = 0; i < departments.size(); i++) {
+            Department department = (Department) departments.get(i);
+            sheetNames.add(department.getName());
         }
 
         HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, departments, sheetNames, "department", new HashMap(), 0);
@@ -1363,7 +1373,7 @@ public class XLSTransformerTest extends TestCase {
         POIFSFileSystem fs = new POIFSFileSystem(is);
         HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
 
-        assertEquals( "Number of result worksheets is incorrect ", sourceWorkbook.getNumberOfSheets() + departments.size() - 1, resultWorkbook.getNumberOfSheets());
+        assertEquals("Number of result worksheets is incorrect ", sourceWorkbook.getNumberOfSheets() + departments.size() - 1, resultWorkbook.getNumberOfSheets());
 //        for (int sheetNo = 0; sheetNo < resultWorkbook.getNumberOfSheets() && sheetNo < sheetNames.size(); sheetNo++) {
 //             assertEquals( "Result worksheet name is incorrect", sheetNames.get(sheetNo), resultWorkbook.getSheetName(sheetNo));
 //        }
@@ -1392,13 +1402,13 @@ public class XLSTransformerTest extends TestCase {
         List sheetNames = new ArrayList();
 //        sheetNames.add("New Sheet");
         List maps = new ArrayList();
-        for(int i = 0; i < departments.size(); i++){
+        for (int i = 0; i < departments.size(); i++) {
             Map map = new HashMap();
-            Department department = (Department) departments.get( i );
-            map.put("department", department );
-            sheetNames.add( department.getName() );
+            Department department = (Department) departments.get(i);
+            map.put("department", department);
+            sheetNames.add(department.getName());
             map.put("name", "Number " + i);
-            maps.add( map );
+            maps.add(map);
         }
 
 
@@ -1413,9 +1423,9 @@ public class XLSTransformerTest extends TestCase {
         XLSTransformer transformer = new XLSTransformer();
         List sheetNames = new ArrayList();
         sheetNames.add("Sheet 1");
-        for(int i = 0; i < departments.size(); i++){
-            Department department = (Department) departments.get( i );
-            sheetNames.add( department.getName() );
+        for (int i = 0; i < departments.size(); i++) {
+            Department department = (Department) departments.get(i);
+            sheetNames.add(department.getName());
         }
         List templateSheetList = new ArrayList();
         templateSheetList.add("Template Sheet 1");
@@ -1424,13 +1434,13 @@ public class XLSTransformerTest extends TestCase {
         List beanParamList = new ArrayList();
 
         HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, departments, sheetNames, "department", new HashMap(), 0);
-        transformer.transformXLS(is, templateSheetList, sheetNameList, beanParamList );
+        transformer.transformXLS(is, templateSheetList, sheetNameList, beanParamList);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetList2XLS));
         POIFSFileSystem fs = new POIFSFileSystem(is);
         HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
 
-        assertEquals( "Number of result worksheets is incorrect ", sourceWorkbook.getNumberOfSheets() + departments.size() - 1, resultWorkbook.getNumberOfSheets());
+        assertEquals("Number of result worksheets is incorrect ", sourceWorkbook.getNumberOfSheets() + departments.size() - 1, resultWorkbook.getNumberOfSheets());
         for (int sheetNo = 0; sheetNo < resultWorkbook.getNumberOfSheets() && sheetNo < sheetNames.size(); sheetNo++) {
         }
         is.close();
@@ -1439,7 +1449,7 @@ public class XLSTransformerTest extends TestCase {
 
     public void testGroupTag() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
-        beans.put( "departments", departments );
+        beans.put("departments", departments);
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(groupTagXLS));
         XLSTransformer transformer = new XLSTransformer();
@@ -1453,7 +1463,7 @@ public class XLSTransformerTest extends TestCase {
 //        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
 //        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
 
-        saveWorkbook( resultWorkbook, groupTagDestXLS );
+        saveWorkbook(resultWorkbook, groupTagDestXLS);
     }
 
     public void testJEXLExpressions() throws IOException {
@@ -1472,21 +1482,21 @@ public class XLSTransformerTest extends TestCase {
 
         Bean bean = new Bean();
 
-        beans.put( "bean", bean );
+        beans.put("bean", bean);
 
         beans.put("emptyVar", "");
         beans.put("nullVar", null);
 
         beans.put("obj", obj);
-        beans.put("employees1", ((Department)departments.get(0)).getStaff());
+        beans.put("employees1", ((Department) departments.get(0)).getStaff());
         beans.put("employees2", new ArrayList());
-        beans.put("employees3", ((Department)departments.get(1)).getStaff());
+        beans.put("employees3", ((Department) departments.get(1)).getStaff());
         beans.put("employees4", new ArrayList());
-        beans.put("employees5", ((Department)departments.get(2)).getStaff());
+        beans.put("employees5", ((Department) departments.get(2)).getStaff());
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(jexlXLS));
         XLSTransformer transformer = new XLSTransformer();
-        transformer.setJexlInnerCollectionsAccess( true );
+        transformer.setJexlInnerCollectionsAccess(true);
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(jexlXLS));
@@ -1496,13 +1506,13 @@ public class XLSTransformerTest extends TestCase {
         HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
         HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
         Map props = new HashMap();
-        props.put("${obj.name}", obj.getName() );
-        props.put("${\"Hello, World\"}","Hello, World");
+        props.put("${obj.name}", obj.getName());
+        props.put("${\"Hello, World\"}", "Hello, World");
         props.put("${obj.flag == true}", Boolean.valueOf(obj.getFlag()));
         props.put("${obj.name == null}", Boolean.valueOf(obj.getName() == null));
 //        props.put("${empty(obj.collection)}", Boolean.valueOf(obj.getCollection().isEmpty()));
 //        props.put("${obj.collection.size()}", new Integer(((String)obj.getCollection().get(0)).length()));
-        props.put("${obj.name.size()}", new Integer( obj.getName().length() ) );
+        props.put("${obj.name.size()}", new Integer(obj.getName().length()));
         props.put("${!empty(obj.collection) && obj.id > 0}", Boolean.valueOf(!obj.getCollection().isEmpty() && obj.getId() > 0));
         props.put("${empty(obj.collection) || obj.id == 1}", Boolean.valueOf(obj.getCollection().isEmpty() && obj.getId() == 1));
         props.put("${not empty(obj.collection)}", Boolean.valueOf(!obj.getCollection().isEmpty()));
@@ -1512,38 +1522,38 @@ public class XLSTransformerTest extends TestCase {
         props.put("${obj.id eq 1}", Boolean.valueOf(obj.getId() == 1));
         props.put("${obj.id % 2}", new Integer(obj.getId() % 2));
         props.put("${obj.myArray[0]} and ${obj.myArray[1]}", obj.getMyArray()[0] + " and " + obj.getMyArray()[1]);
-        props.put("${dateFormat.format(obj.date)}", dateFormat.format( obj.getDate() ));
-        props.put("${obj.printIt()}", obj.printIt() );
+        props.put("${dateFormat.format(obj.date)}", dateFormat.format(obj.getDate()));
+        props.put("${obj.printIt()}", obj.printIt());
         props.put("${obj.getName()}", obj.getName());
         props.put("${obj.echo(\"Hello\")}", obj.echo("Hello"));
 
         CellsChecker checker = new CellsChecker(props);
-        checker.checkSection( sourceSheet, resultSheet, 0, 0, (short)0, (short)1, 25, false, false);
+        checker.checkSection(sourceSheet, resultSheet, 0, 0, (short) 0, (short) 1, 25, false, false);
         props.clear();
         props.put("${bean.collection.innerCollection.get(0)}", "1");
-        checker.checkListCells( sourceSheet, 25, resultSheet, 25, (short)1,
-                new String[]{((Bean.InnerBean)bean.getCollection().get(0)).getInnerCollection().get(0).toString(),
-                              ((Bean.InnerBean)bean.getCollection().get(1)).getInnerCollection().get(0).toString(),
-                                ((Bean.InnerBean)bean.getCollection().get(2)).getInnerCollection().get(0).toString()});
+        checker.checkListCells(sourceSheet, 25, resultSheet, 25, (short) 1,
+                new String[]{((Bean.InnerBean) bean.getCollection().get(0)).getInnerCollection().get(0).toString(),
+                        ((Bean.InnerBean) bean.getCollection().get(1)).getInnerCollection().get(0).toString(),
+                        ((Bean.InnerBean) bean.getCollection().get(2)).getInnerCollection().get(0).toString()});
 
-        saveWorkbook( resultWorkbook, jexlDestXLS);
+        saveWorkbook(resultWorkbook, jexlDestXLS);
 
     }
 
     public void testPoiObjectsExpose() throws IOException, ParsePropertyException {
         Map beans = new HashMap();
-        beans.put( "departments", departments );
+        beans.put("departments", departments);
         beans.put("itDepartment", itDepartment);
 
         List employees = itDepartment.getStaff();
-        ((Employee)employees.get(0)).setComment("");
+        ((Employee) employees.get(0)).setComment("");
         for (int i = 1; i < employees.size(); i++) {
             Employee employee = (Employee) employees.get(i);
             String comment = "";
-            for( int j =0; j <= i; j++ ){
+            for (int j = 0; j <= i; j++) {
                 comment += "Employee Comment Line " + j + " ..\r\n";
             }
-            employee.setComment( comment );
+            employee.setComment(comment);
         }
         beans.put("employees", employees);
         beans.put("lineSize", new Integer(0));
@@ -1565,7 +1575,7 @@ public class XLSTransformerTest extends TestCase {
         assertEquals(resultSheet.getHeader().getRight(), "Test Right Header");
         assertEquals(resultSheet.getFooter().getRight(), "Test Right Footer");
         assertEquals(resultSheet.getFooter().getCenter(), "Test Center Footer");
-        assertEquals( resultWorkbook.getSheetName(2), itDepartment.getName());
+        assertEquals(resultWorkbook.getSheetName(2), itDepartment.getName());
         Map props = new HashMap();
         props.put("${department.name}", "IT");
         CellsChecker checker = new CellsChecker(props);
@@ -1590,7 +1600,7 @@ public class XLSTransformerTest extends TestCase {
         checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 1, baPayments);
         checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 2, baBonuses);
         is.close();
-        saveWorkbook( resultWorkbook, poiobjectsDestXLS);
+        saveWorkbook(resultWorkbook, poiobjectsDestXLS);
     }
 
 
@@ -1603,10 +1613,10 @@ public class XLSTransformerTest extends TestCase {
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
         HSSFSheet sheet = resultWorkbook.getSheetAt(0);
         HSSFRow row = sheet.getRow(0);
-        HSSFCell cell = row.getCell((short)0);
+        HSSFCell cell = row.getCell((short) 0);
         assertEquals("Incorrect cell value", "${value", cell.getRichStringCellValue().getString());
         row = sheet.getRow(1);
-        cell = row.getCell((short)0);
+        cell = row.getCell((short) 0);
         assertEquals("Incorrect cell value", "Second value", cell.getRichStringCellValue().getString());
         is.close();
     }
@@ -1620,16 +1630,16 @@ public class XLSTransformerTest extends TestCase {
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
         HSSFSheet sheet = resultWorkbook.getSheetAt(0);
         HSSFRow row = sheet.getRow(0);
-        HSSFCell cell = row.getCell((short)0);
-        assertEquals("Incorrect cell value", testNumber.getTestNumber(), (int)cell.getNumericCellValue());
+        HSSFCell cell = row.getCell((short) 0);
+        assertEquals("Incorrect cell value", testNumber.getTestNumber(), (int) cell.getNumericCellValue());
         is.close();
     }
 
 
     private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
         String saveResultsProp = System.getProperty("saveResults");
-        if( "true".equalsIgnoreCase(saveResultsProp) ){
-            if( log.isInfoEnabled() ){
+        if ("true".equalsIgnoreCase(saveResultsProp)) {
+            if (log.isInfoEnabled()) {
                 log.info("Saving " + fileName);
             }
             OutputStream os = new BufferedOutputStream(new FileOutputStream(fileName));

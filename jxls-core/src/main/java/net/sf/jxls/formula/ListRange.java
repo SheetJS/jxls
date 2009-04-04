@@ -5,6 +5,7 @@ import org.apache.poi.hssf.util.CellReference;
 
 /**
  * Represents named list range (usually used in formulas resolving)
+ *
  * @author Leonid Vysochyn
  */
 public class ListRange {
@@ -25,9 +26,9 @@ public class ListRange {
     }
 
     public String toExcelCellRange() {
-        CellReference firstCellRef = new CellReference(firstRowNum, cellNum);
-        CellReference lastCellRef = new CellReference(lastRowNum, cellNum);
-        return firstCellRef.toString() + ":" + lastCellRef.toString();
+        CellReference firstCellRef = new CellReference(firstRowNum, cellNum, false, false);
+        CellReference lastCellRef = new CellReference(lastRowNum, cellNum, false, false);
+        return firstCellRef.formatAsString() + ":" + lastCellRef.formatAsString();
     }
 
     public int getFirstRowNum() {

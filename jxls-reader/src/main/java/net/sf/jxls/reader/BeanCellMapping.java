@@ -185,8 +185,8 @@ public class BeanCellMapping {
     }
 
     public String getCellName() {
-        CellReference cellRef = new CellReference(row, col);
-        return cellRef.toString();
+        CellReference cellRef = new CellReference(row, col, false, false);
+        return cellRef.formatAsString();
     }
 
     public String toString() {

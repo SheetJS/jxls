@@ -18,17 +18,16 @@ public class MockWorkbookCellFinder extends WorkbookCellFinderImpl {
     }
 
 
-
     public List findCell(String sheetName, String cellName) {
-        if( !sheetCellsMapping.containsKey( sheetName ) ){
+        if (!sheetCellsMapping.containsKey(sheetName)) {
             throw new IllegalArgumentException("Can't find sheet with name " + sheetName);
         }
-        Map cellsMapping = (Map) sheetCellsMapping.get( sheetName );
-        return (List) cellsMapping.get( cellName );
+        Map cellsMapping = (Map) sheetCellsMapping.get(sheetName);
+        return (List) cellsMapping.get(cellName);
     }
 
     public List findCell(String sheetName, int rowNum, int colNum) {
-        CellReference cellReference = new CellReference( rowNum, colNum );
-        return findCell( sheetName, cellReference.toString() );
+        CellReference cellReference = new CellReference(rowNum, colNum, false, false);
+        return findCell(sheetName, cellReference.formatAsString());
     }
 }

@@ -4,6 +4,7 @@ import org.apache.poi.hssf.util.CellReference;
 
 /**
  * Represents a single cell
+ *
  * @author Leonid Vysochyn
  */
 public class Point {
@@ -21,8 +22,8 @@ public class Point {
         col = cellReference.getCol();
     }
 
-    public Point shift( int rowOffset, int colOffset){
-        return new Point( row + rowOffset, (short) (col + colOffset) );
+    public Point shift(int rowOffset, int colOffset) {
+        return new Point(row + rowOffset, (short) (col + colOffset));
     }
 
     public int getRow() {
@@ -41,22 +42,22 @@ public class Point {
         this.col = col;
     }
 
-    public String getCellRef(){
-        CellReference cellRef = new CellReference( row, col );
-        return cellRef.toString();
+    public String getCellRef() {
+        CellReference cellRef = new CellReference(row, col, false, false);
+        return cellRef.formatAsString();
     }
 
     public String toString() {
         return "(" + row + "," + col + ")";
     }
 
-    public String toString(String sheetName){
+    public String toString(String sheetName) {
         String cellname;
-        CellReference cellRef = new CellReference( row, col );
-        if( sheetName != null ){
-            cellname = sheetName + "!" + cellRef.toString();
-        }else{
-            cellname = cellRef.toString();
+        CellReference cellRef = new CellReference(row, col, false, false);
+        if (sheetName != null) {
+            cellname = sheetName + "!" + cellRef.formatAsString();
+        } else {
+            cellname = cellRef.formatAsString();
         }
         return cellname;
     }

@@ -14,6 +14,7 @@ import org.apache.poi.hssf.util.Region;
 
 /**
  * Represents excel cell
+ *
  * @author Leonid Vysochyn
  */
 public class Cell {
@@ -117,8 +118,8 @@ public class Cell {
     }
 
     public String toCellName() {
-        CellReference cellRef = new CellReference(getRow().getHssfRow().getRowNum(), getHssfCell().getCellNum());
-        return cellRef.toString();
+        CellReference cellRef = new CellReference(getRow().getHssfRow().getRowNum(), getHssfCell().getCellNum(), false, false);
+        return cellRef.formatAsString();
     }
 
     public Row getRow() {
@@ -129,8 +130,8 @@ public class Cell {
         this.row = row;
     }
 
-    public boolean isFormula(){
-        return getFormula() !=null;
+    public boolean isFormula() {
+        return getFormula() != null;
     }
 
 
@@ -146,11 +147,11 @@ public class Cell {
         return metaInfo;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return getHssfCellValue() == null || getHssfCellValue().length() == 0 || getHssfCell().getCellType() == HSSFCell.CELL_TYPE_BLANK;
     }
 
-    public boolean isNull(){
+    public boolean isNull() {
         return getHssfCell() == null;
     }
 

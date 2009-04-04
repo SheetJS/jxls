@@ -19,20 +19,20 @@ public class MockSheetCellFinder implements SheetCellFinder {
     }
 
     public List findCell(String cellName) {
-        return (List) cellsMapping.get( cellName );
+        return (List) cellsMapping.get(cellName);
     }
 
     public List findCell(int rowNum, int colNum) {
-        CellReference cellReference = new CellReference( rowNum, colNum );
-        return (List) cellsMapping.get( cellReference.toString() );
+        CellReference cellReference = new CellReference(rowNum, colNum, false, false);
+        return (List) cellsMapping.get(cellReference.formatAsString());
     }
 
     public List findCell(String sheetName, String cellName) {
-        return (List) cellsMapping.get( cellName );
+        return (List) cellsMapping.get(cellName);
     }
 
     public List findCell(String sheetName, int rowNum, int colNum) {
-        CellReference cellReference = new CellReference( rowNum, colNum );
-        return (List) cellsMapping.get( cellReference.toString() );
+        CellReference cellReference = new CellReference(rowNum, colNum, false, false);
+        return (List) cellsMapping.get(cellReference.formatAsString());
     }
 }

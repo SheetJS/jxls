@@ -44,29 +44,29 @@ public class CellsChecker extends Assert {
         this.ignoreFirstLastCellNums = ignoreFirstLastCellNums;
     }
 
-    void checkSection(HSSFSheet srcSheet, HSSFSheet destSheet, int srcRowNum, int destRowNum, short fromCellNum, short toCellNum, int numberOfRows, boolean ignoreHeight, boolean ignoreNullRows){
+    void checkSection(HSSFSheet srcSheet, HSSFSheet destSheet, int srcRowNum, int destRowNum, short fromCellNum, short toCellNum, int numberOfRows, boolean ignoreHeight, boolean ignoreNullRows) {
         for (int i = 0; i < numberOfRows; i++) {
             HSSFRow sourceRow = srcSheet.getRow(srcRowNum + i);
             HSSFRow destRow = destSheet.getRow(destRowNum + i);
-            if( !ignoreNullRows ){
+            if (!ignoreNullRows) {
                 assertTrue("Null Row problem found", (sourceRow != null && destRow != null) || (sourceRow == null && destRow == null));
                 if (sourceRow != null) {
-                    if( !ignoreHeight ){
+                    if (!ignoreHeight) {
                         assertEquals("Row height is not the same", sourceRow.getHeight(), destRow.getHeight());
                     }
                     checkCells(sourceRow, destRow, fromCellNum, toCellNum);
                 }
-            }else{
-                if( !ignoreHeight ){
+            } else {
+                if (!ignoreHeight) {
                     assertEquals("Row height is not the same", sourceRow.getHeight(), destRow.getHeight());
                 }
-                if( sourceRow==null && destRow!=null){
-                    checkEmptyCells( destRow, fromCellNum, toCellNum );
+                if (sourceRow == null && destRow != null) {
+                    checkEmptyCells(destRow, fromCellNum, toCellNum);
                 }
-                if( destRow == null && sourceRow!=null ){
-                    checkEmptyCells( sourceRow, fromCellNum, toCellNum );
+                if (destRow == null && sourceRow != null) {
+                    checkEmptyCells(sourceRow, fromCellNum, toCellNum);
                 }
-                if( sourceRow!=null && destRow!=null ){
+                if (sourceRow != null && destRow != null) {
                     checkCells(sourceRow, destRow, fromCellNum, toCellNum);
                 }
             }
@@ -75,9 +75,9 @@ public class CellsChecker extends Assert {
     }
 
     private void checkEmptyCells(HSSFRow destRow, short fromCellNum, short toCellNum) {
-        if( destRow!=null ){
-            for( short i = fromCellNum; i <= toCellNum; i++){
-                assertNull("Cell " + i + " in " + destRow.getRowNum() + " row is not null", destRow.getCell(i) );
+        if (destRow != null) {
+            for (short i = fromCellNum; i <= toCellNum; i++) {
+                assertNull("Cell " + i + " in " + destRow.getRowNum() + " row is not null", destRow.getCell(i));
             }
         }
     }
@@ -121,7 +121,7 @@ public class CellsChecker extends Assert {
         HSSFCell srcCell = srcRow.getCell(cellNum);
         HSSFRow destRow = destSheet.getRow(destRowNum);
         HSSFCell destCell = destRow.getCell(cellNum);
-        if( !ignoreCellStyle ){
+        if (!ignoreCellStyle) {
             checkCellStyle(srcCell.getCellStyle(), destCell.getCellStyle());
         }
         assertEquals("Result Cell is not a formula", destCell.getCellType(), HSSFCell.CELL_TYPE_FORMULA);
@@ -134,12 +134,12 @@ public class CellsChecker extends Assert {
             HSSFRow destRow = destSheet.getRow(destRowNum + i);
             assertTrue("Null Row problem found", (sourceRow != null && destRow != null) || (sourceRow == null && destRow == null));
             if (sourceRow != null && destRow != null) {
-                if( !ignoreFirstLastCellNums ){
+                if (!ignoreFirstLastCellNums) {
                     assertEquals("First Cell Numbers differ in source and result row", sourceRow.getFirstCellNum(), destRow.getFirstCellNum());
                 }
-//                assertEquals("Last Cell Numbers differ in source and result row", sourceRow.getLastCellNum(), destRow.getLastCellNum());
                 assertEquals("Physical Number Of Cells differ in source and result row", sourceRow.getPhysicalNumberOfCells(), destRow.getPhysicalNumberOfCells());
-                assertEquals("Row height is not the same", sourceRow.getHeight(), destRow.getHeight());
+                assertEquals("Row height is not the same for srcRow = " + sourceRow.getRowNum() + ", destRow = " + destRow.getRowNum(),
+                        sourceRow.getHeight(), destRow.getHeight());
                 checkCells(sourceRow, destRow, sourceRow.getFirstCellNum(), sourceRow.getLastCellNum());
             }
         }
@@ -166,14 +166,14 @@ public class CellsChecker extends Assert {
         if (srcCell != null && destCell != null) {
             checkCells(srcCell, destCell);
         }
-        if( checkCellWidth ){
-            assertEquals("Cell Widths are different", getWidth(srcSheet, srcCellNum ), getWidth(destSheet, destCellNum ) );
+        if (checkCellWidth) {
+            assertEquals("Cell Widths are different", getWidth(srcSheet, srcCellNum), getWidth(destSheet, destCellNum));
         }
     }
 
-    static short getWidth(HSSFSheet sheet, short col){
-        short width = sheet.getColumnWidth( col );
-        if( width == sheet.getDefaultColumnWidth() ){
+    static short getWidth(HSSFSheet sheet, short col) {
+        short width = sheet.getColumnWidth(col);
+        if (width == sheet.getDefaultColumnWidth()) {
             width = (short) (width * 256);
         }
         return width;
@@ -186,7 +186,7 @@ public class CellsChecker extends Assert {
     }
 
     private void checkCellStyle(HSSFCellStyle sourceStyle, HSSFCellStyle destStyle) {
-        if( !ignoreStyle ){
+        if (!ignoreStyle) {
             assertEquals(sourceStyle.getAlignment(), destStyle.getAlignment());
             assertEquals(sourceStyle.getBorderBottom(), destStyle.getBorderBottom());
             assertEquals(sourceStyle.getBorderLeft(), destStyle.getBorderLeft());
@@ -212,7 +212,7 @@ public class CellsChecker extends Assert {
         switch (sourceCell.getCellType()) {
             case HSSFCell.CELL_TYPE_STRING:
                 if (propertyMap.containsKey(sourceCell.getRichStringCellValue().getString())) {
-                    assertEquals("Property value was set incorrectly", propertyMap.get(sourceCell.getRichStringCellValue().getString()), getCellValue(destCell, propertyMap.get(sourceCell.getRichStringCellValue().getString())) );
+                    assertEquals("Property value was set incorrectly", propertyMap.get(sourceCell.getRichStringCellValue().getString()), getCellValue(destCell, propertyMap.get(sourceCell.getRichStringCellValue().getString())));
                 } else {
                     assertEquals("Cell type is not the same", sourceCell.getCellType(), destCell.getCellType());
                     assertEquals("Cell values are not the same", sourceCell.getRichStringCellValue().getString(), destCell.getRichStringCellValue().getString());
@@ -259,14 +259,14 @@ public class CellsChecker extends Assert {
             value = cell.getDateCellValue();
         } else if (obj instanceof Calendar) {
             Calendar c = Calendar.getInstance();
-            c.setTime( cell.getDateCellValue() );
+            c.setTime(cell.getDateCellValue());
             value = c;
-        } else if (obj instanceof Boolean){
-            if( cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN ){
+        } else if (obj instanceof Boolean) {
+            if (cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN) {
                 value = (cell.getBooleanCellValue()) ? Boolean.TRUE : Boolean.FALSE;
-            }else if( cell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
-                value = Boolean.valueOf( cell.getRichStringCellValue().getString() );
-            }else{
+            } else if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+                value = Boolean.valueOf(cell.getRichStringCellValue().getString());
+            } else {
                 value = Boolean.FALSE;
             }
         }
