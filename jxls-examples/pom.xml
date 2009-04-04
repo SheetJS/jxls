@@ -2,7 +2,7 @@
   <parent>
     <groupId>net.sf.jxls</groupId>
     <artifactId>jxls</artifactId>
-    <version>0.9.7-SNAPSHOT</version>
+    <version>0.9.7</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sf.jxls</groupId>
