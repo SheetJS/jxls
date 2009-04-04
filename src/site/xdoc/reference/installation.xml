@@ -27,7 +27,7 @@
             </p>
 			<ul>
 				<li>
-					<a href="http://jakarta.apache.org/poi/">POI 2.5.x or 3.0.x</a> 
+					<a href="http://jakarta.apache.org/poi/">POI 3.1</a>
 				</li>
 				<li>
 					<a href="http://jakarta.apache.org/commons/beanutils/">Commons BeanUtils</a>
@@ -45,7 +45,7 @@
 					<a href="http://jakarta.apache.org/commons/digester/">Commons Digester</a>
 				</li>
 			</ul>
-            <p><strong>Note:</strong>Current version of jXLS is incompatible with POI of version higher than 3.0.2</p>
+            <p><strong>Note:</strong>If you want to use jXLS with previous versions of POI library you should check older jXLS releases</p>
 		</section>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

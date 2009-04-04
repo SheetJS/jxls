@@ -6,33 +6,31 @@
     <body>
         <section name="News">
             <p>
-                <strong>jXLS v.0.9.6.1 released</strong>
+                <strong>jXLS v.0.9.7 released</strong>
             </p>
-            <p>The following bugs were fixed</p>
+            <p>The changes in this version are</p>
             <ul>
-                <li>Remove log4j.xml from jxls-reader.jar - ID: 2012767 </li>
-                <li>select attribute on ForEach ignored on single row for each - ID: 2018513</li>
-                <li>Parsing expressions that contain colons - ID: 1960357</li>
-                <li>Syntax errors cause OutOfMemoryError - ID: 1850657 </li>
-                <li>cannot use more than one &lt;jx:out expr=".."/&gt; in one row  - ID: 1924313 </li>
-                <li>deprecated POI methods replaced</li>
-                <li>code refactoring</li>
+                <li>Compatibility with POI 3.1 - ID: 2012767 </li>
+                <li>Fixed issue with incorrect forEach processing when 'select' attribute condition is not met</li>
             </ul>
-            <p><strong>A work on enterprise version of jXLS started</strong></p>
+            <p><strong>A work on enterprise version of jXLS is in progress</strong></p>
             <p>The following features are planned:</p>
             <ul>
                 <li>compatibility with the latest POI versions (which means also Office 2007
                     support)
                 </li>
                 <li>richer jx tag library easily extensible with custom tags</li>
-                <li>better Excel formulas support</li>
+                <li>greatly improved Excel formulas support</li>
                 <li>support for adjacent tables using tags</li>
                 <li>better support for expanding collections by columns</li>
-                <li>more flexible Excel reader module</li>
+                <li>flexible Excel reader module</li>
                 <li>better support for generating charts</li>
                 <li>complete architecture rework</li>
             </ul>
-            <p>Standard jXLS version will continue to be supported and developed as usual</p>
+            <p>If you want any specific feature to be included into enterprise or standard jXLS edition please send your request to jxls-user or jxls-dev mailing list
+                or post your message to jXLS forum on Sourceforge
+            </p>
+            <p>NOTE: Standard jXLS version will continue to be supported and developed as usual</p>
         </section>
         <section name="Overview">
             <p>jXLS is small and easy-to-use Java library for generating Excel files using XLS templates. Also jXLS can
