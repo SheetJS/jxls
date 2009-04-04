@@ -46,14 +46,5 @@
 			<p>The second constructor argument indicates that property names should not be lowercased before processing. </p>
 			<p>See <a href="../samples/resultsetsample.html">ResultSet sample</a> for more details</p>
 		</section>
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-7339856-1");
-pageTracker._trackPageview();
-} catch(err) {}</script>
 	</body>
 </document>
