@@ -1,20 +1,15 @@
 package net.sf.jxls.formula;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import net.sf.jxls.tag.Point;
 import net.sf.jxls.transformation.BlockTransformation;
 import net.sf.jxls.transformation.DuplicateTransformation;
 import net.sf.jxls.transformer.Workbook;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
+
+import java.util.*;
 
 /**
  * @author Leonid Vysochyn
@@ -114,10 +109,6 @@ public class FormulaControllerImpl implements FormulaController {
             }
             formulas.removeAll( formulasToRemove );
         }
-//        if( log.isDebugEnabled() ){
-//            writeFormulas( new CommonFormulaResolver() );
-//            net.sf.jxls.util.Util.writeToFile("test.xls", transformation.getBlock().getSheet().getHssfWorkbook());
-//        }
     }
 
     public Map getSheetFormulasMap() {
@@ -133,10 +124,10 @@ public class FormulaControllerImpl implements FormulaController {
                 Formula formula = (Formula) formulas.get(i);
                 String formulaString = formulaResolver.resolve( formula, null);
                 HSSFRow hssfRow = formula.getSheet().getHssfSheet().getRow(formula.getRowNum().intValue());
-                HSSFCell hssfCell = hssfRow.getCell(formula.getCellNum().shortValue());
+                HSSFCell hssfCell = hssfRow.getCell(formula.getCellNum().intValue());
                 if (formulaString != null) {
                     if( hssfCell == null ){
-                        hssfCell = hssfRow.createCell( formula.getCellNum().shortValue() );
+                        hssfCell = hssfRow.createCell( formula.getCellNum().intValue() );
                     }
                     try {
                         hssfCell.setCellFormula(formulaString);

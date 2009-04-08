@@ -1,22 +1,23 @@
 package net.sf.jxls.transformer;
 
-import org.apache.poi.hssf.util.Region;
+import org.apache.poi.hssf.util.CellRangeAddress;
+
 
 /**
  * Represents merged region
  * @author Leonid Vysochyn
  */
 public class MergedRegion {
-    private Region region;
+    private CellRangeAddress region;
     private RowCollection rowCollection;
     private int index;
 
-    public MergedRegion(Region region, RowCollection rowCollection) {
+    public MergedRegion(CellRangeAddress region, RowCollection rowCollection) {
         this.region = region;
         this.rowCollection = rowCollection;
     }
 
-    public MergedRegion(Region region, int index) {
+    public MergedRegion(CellRangeAddress region, int index) {
         this.region = region;
         this.index = index;
     }
@@ -25,11 +26,11 @@ public class MergedRegion {
         return index;
     }
 
-    public Region getRegion() {
+    public CellRangeAddress getRegion() {
         return region;
     }
 
-    public void setRegion(Region region) {
+    public void setRegion(CellRangeAddress region) {
         this.region = region;
     }
 

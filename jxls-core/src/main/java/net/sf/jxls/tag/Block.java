@@ -1,11 +1,11 @@
 package net.sf.jxls.tag;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import net.sf.jxls.formula.CellRef;
 import net.sf.jxls.formula.Formula;
 import net.sf.jxls.transformer.Sheet;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents rectangular range of excel cells
@@ -14,8 +14,8 @@ import net.sf.jxls.transformer.Sheet;
 public class Block {
     int startRowNum;
     int endRowNum;
-    short startCellNum;
-    short endCellNum;
+    int startCellNum;
+    int endCellNum;
 
     Sheet sheet;
 
@@ -29,14 +29,14 @@ public class Block {
         this.sheet = sheet;
     }
 
-    public Block(int startRowNum, short startCellNum, int endRowNum, short endCellNum) {
+    public Block(int startRowNum, int startCellNum, int endRowNum, int endCellNum) {
         this.startRowNum = startRowNum;
         this.startCellNum = startCellNum;
         this.endRowNum = endRowNum;
         this.endCellNum = endCellNum;
     }
 
-    public Block(Sheet sheet, int startRowNum, short startCellNum, int endRowNum, short endCellNum) {
+    public Block(Sheet sheet, int startRowNum, int startCellNum, int endRowNum, int endCellNum) {
         this.sheet = sheet;
         this.startRowNum = startRowNum;
         this.startCellNum = startCellNum;
@@ -44,11 +44,11 @@ public class Block {
         this.endCellNum = endCellNum;
     }
 
-    public void addAffectedColumn(short col){
-        affectedColumns.add( new Short(col) );
+    public void addAffectedColumn(int col){
+        affectedColumns.add( new Integer(col) );
     }
 
-    public Block horizontalShift(short cellShift){
+    public Block horizontalShift(int cellShift){
         startCellNum += cellShift;
         endCellNum += cellShift;
         return this;
@@ -60,19 +60,19 @@ public class Block {
         return this;
     }
 
-    public short getStartCellNum() {
+    public int getStartCellNum() {
         return startCellNum;
     }
 
-    public void setStartCellNum(short startCellNum) {
+    public void setStartCellNum(int startCellNum) {
         this.startCellNum = startCellNum;
     }
 
-    public short getEndCellNum() {
+    public int getEndCellNum() {
         return endCellNum;
     }
 
-    public void setEndCellNum(short endCellNum) {
+    public void setEndCellNum(int endCellNum) {
         this.endCellNum = endCellNum;
     }
 
@@ -103,7 +103,7 @@ public class Block {
     public boolean contains(int rowNum, int cellNum){
         boolean flag = (startRowNum <= rowNum && rowNum <= endRowNum && ((startCellNum < 0 || endCellNum < 0) || (startCellNum <= cellNum && cellNum <= endCellNum)));
         if(flag && !affectedColumns.isEmpty()){
-            return affectedColumns.contains( new Short( (short) cellNum) );
+            return affectedColumns.contains( new Integer( cellNum) );
         }
         return flag;
     }
@@ -119,7 +119,7 @@ public class Block {
         boolean flag =  (startRowNum <= p.getRow() && p.getRow() <= endRowNum &&
                 ((startCellNum<0 || endCellNum<0) || (startCellNum <= p.getCol() && p.getCol() <= endCellNum)));
         if(flag && !affectedColumns.isEmpty()){
-            return affectedColumns.contains( new Short( p.getCol() ) );
+            return affectedColumns.contains( new Integer( p.getCol() ) );
         }
         return flag;
     }
@@ -129,7 +129,7 @@ public class Block {
         boolean flag =  ((refSheetName == null || sheet.getSheetName().equals(refSheetName)) && startRowNum <= cellRef.getRowNum() && cellRef.getRowNum() <= endRowNum &&
                 ((startCellNum<0 || endCellNum<0) || (startCellNum <= cellRef.getColNum() && cellRef.getColNum() <= endCellNum)));
         if(flag && !affectedColumns.isEmpty()){
-            return affectedColumns.contains( new Short( cellRef.getColNum() ) );
+            return affectedColumns.contains( new Integer( cellRef.getColNum() ) );
         }
         return flag;
     }

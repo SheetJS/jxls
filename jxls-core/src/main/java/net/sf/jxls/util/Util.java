@@ -1,38 +1,22 @@
 package net.sf.jxls.util;
 
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.transformer.Row;
+import net.sf.jxls.transformer.RowCollection;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.hssf.util.CellReference;
+
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Pattern;
-
-import net.sf.jxls.parser.Cell;
-import net.sf.jxls.transformer.Row;
-import net.sf.jxls.transformer.RowCollection;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFooter;
-import org.apache.poi.hssf.usermodel.HSSFHeader;
-import org.apache.poi.hssf.usermodel.HSSFPrintSetup;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellReference;
-import org.apache.poi.hssf.util.Region;
 
 /**
  * This class contains many utility methods used by jXLS framework
@@ -65,7 +49,7 @@ public final class Util {
         HSSFSheet sheet = rowCollection.getParentRow().getSheet().getHssfSheet();
         for (int i = 0; i <= rowCollection.getDependentRowNumber(); i++) {
             HSSFRow hssfRow = sheet.getRow(startRow + i);
-            for (short j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
+            for (int j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
                 HSSFCell cell = hssfRow.getCell(j);
                 removeRowCollectionPropertyFromCell(cell, rowCollection.getCollectionProperty().getFullCollectionName());
             }
@@ -87,9 +71,11 @@ public final class Util {
      * @param sheet
      * @param region
      */
-    private static void removeMergedRegion(HSSFSheet sheet, Region region) {
+    private static void removeMergedRegion(HSSFSheet sheet, CellRangeAddress region) {
         int index = getMergedRegionIndex(sheet, region);
-        sheet.removeMergedRegion(index);
+        if( index >= 0 ){
+            sheet.removeMergedRegion(index);
+        }
     }
 
     /**
@@ -99,35 +85,68 @@ public final class Util {
      * @param mergedRegion
      * @return index of mergedRegion or -1 if the region not found
      */
-    private static int getMergedRegionIndex(HSSFSheet sheet, Region mergedRegion) {
+    private static int getMergedRegionIndex(HSSFSheet sheet, CellRangeAddress mergedRegion) {
         for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
-            Region region = sheet.getMergedRegionAt(i);
-            if (region.equals(mergedRegion)) {
+            CellRangeAddress region = getMergedRegion(sheet, i);
+            if ( areRegionsEqual(region, mergedRegion)) {
                 return i;
             }
         }
         return -1;
     }
 
-    private static boolean isNewMergedRegion(Region region, Collection mergedRegions) {
-        return !mergedRegions.contains(region);
+    public static boolean areRegionsEqual(CellRangeAddress region1, CellRangeAddress region2) {
+        if( (region1 == null && region2 != null) || (region1 != null && region2 == null )){
+            return false;
+        }
+        if( region1 == null && region2 == null ){
+            return true;
+        }
+        return (region1.getFirstColumn() == region2.getFirstColumn() && region1.getLastColumn() == region2.getLastColumn()
+                && region1.getFirstRow() == region2.getFirstRow() && region2.getLastRow() == region2.getLastRow());
     }
 
-    public static Region getMergedRegion(HSSFSheet sheet, int rowNum, short cellNum) {
+    private static CellRangeAddress getMergedRegion(HSSFSheet sheet, int i) {
+        CellRangeAddress region = sheet.getMergedRegion(i);
+        return region;
+    }
+
+    private static boolean isNewMergedRegion(CellRangeAddress region, Collection mergedRegions) {
+        for (Iterator iterator = mergedRegions.iterator(); iterator.hasNext();) {
+            CellRangeAddress cellRangeAddress = (CellRangeAddress) iterator.next();
+            if( areRegionsEqual(cellRangeAddress,region)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static CellRangeAddress getMergedRegion(HSSFSheet sheet, int rowNum, int cellNum) {
         for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
-            Region merged = sheet.getMergedRegionAt(i);
-            if (merged.contains(rowNum, cellNum)) {
+            CellRangeAddress merged = getMergedRegion(sheet, i);
+            if (isRangeContainsCell(merged, rowNum, cellNum)) {
                 return merged;
             }
         }
         return null;
     }
 
-    public static boolean removeMergedRegion(HSSFSheet sheet, int rowNum, short cellNum) {
+    public static boolean isRangeContainsCell(CellRangeAddress range, int row, int col)
+    {
+        if ((range.getFirstRow() <= row) && (range.getLastRow() >= row)
+                && (range.getFirstColumn() <= col) && (range.getLastColumn() >= col))
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+    public static boolean removeMergedRegion(HSSFSheet sheet, int rowNum, int cellNum) {
         Set mergedRegionNumbersToRemove = new TreeSet();
         for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
-            Region merged = sheet.getMergedRegionAt(i);
-            if (merged.contains(rowNum, cellNum)) {
+            CellRangeAddress merged = getMergedRegion(sheet, i);
+            if (isRangeContainsCell(merged, rowNum, cellNum)) {
                 mergedRegionNumbersToRemove.add(new Integer(i));
             }
         }
@@ -143,7 +162,7 @@ public final class Util {
         HSSFSheet sheet = rowCollection.getParentRow().getSheet().getHssfSheet();
         for (int i = 0; i <= rowCollection.getDependentRowNumber(); i++) {
             HSSFRow hssfRow = sheet.getRow(startRow + i);
-            for (short j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
+            for (int j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
                 HSSFCell cell = hssfRow.getCell(j);
                 prepareCollectionPropertyInCellForDuplication(cell, rowCollection.getCollectionProperty().getFullCollectionName(), collectionItemName);
             }
@@ -182,11 +201,11 @@ public final class Util {
                 for (int j = 0; j < rowCollection.getCells().size(); j++) {
                     Cell cell = (Cell) rowCollection.getCells().get(j);
                     if (!cell.isEmpty()) {
-                        HSSFCell destCell = destRow.getCell(cell.getHssfCell().getCellNum());
+                        HSSFCell destCell = destRow.getCell(cell.getHssfCell().getColumnIndex());
                         if (destCell == null) {
-                            destCell = destRow.createCell(cell.getHssfCell().getCellNum());
+                            destCell = destRow.createCell(cell.getHssfCell().getColumnIndex());
                         }
-                        copyCell(srcRow.getCell(cell.getHssfCell().getCellNum()), destCell, false);
+                        copyCell(srcRow.getCell(cell.getHssfCell().getColumnIndex()), destCell, false);
                     }
                 }
             }
@@ -226,7 +245,7 @@ public final class Util {
         int from = rowCollection.getParentRow().getHssfRow().getRowNum();
         int num = rowCollection.getDependentRowNumber() + 1;
         int to = from + num;
-        Set mergedRegions = new TreeSet();
+        Set mergedRegions = new HashSet();
         for (int i = from; i < from + num; i++) {
             HSSFRow srcRow = sheet.getRow(i);
             HSSFRow destRow = sheet.getRow(to + i - from);
@@ -236,15 +255,15 @@ public final class Util {
             if (srcRow.getHeight() >= 0) {
                 destRow.setHeight(srcRow.getHeight());
             }
-            for (short j = srcRow.getFirstCellNum(); j <= srcRow.getLastCellNum(); j++) {
+            for (int j = srcRow.getFirstCellNum(); j <= srcRow.getLastCellNum(); j++) {
                 HSSFCell srcCell = srcRow.getCell(j);
                 if (srcCell != null) {
                     HSSFCell destCell = destRow.createCell(j);
                     copyCell(srcCell, destCell, true);
-                    Region mergedRegion = getMergedRegion(sheet, i, j);
+                    CellRangeAddress mergedRegion = getMergedRegion(sheet, i, j);
                     if (mergedRegion != null) {
-                        Region newMergedRegion = new Region(to - from + mergedRegion.getRowFrom(), mergedRegion.getColumnFrom(),
-                                to - from + mergedRegion.getRowTo(), mergedRegion.getColumnTo());
+                        CellRangeAddress newMergedRegion = new CellRangeAddress(to - from + mergedRegion.getFirstRow(),
+                                to - from + mergedRegion.getLastRow(), mergedRegion.getFirstColumn(), mergedRegion.getLastColumn());
                         if (isNewMergedRegion(newMergedRegion, mergedRegions)) {
                             mergedRegions.add(newMergedRegion);
                         }
@@ -254,7 +273,7 @@ public final class Util {
         }
         // set merged regions
         for (Iterator iterator = mergedRegions.iterator(); iterator.hasNext();) {
-            Region region = (Region) iterator.next();
+            CellRangeAddress region = (CellRangeAddress) iterator.next();
             sheet.addMergedRegion(region);
         }
     }
@@ -274,11 +293,11 @@ public final class Util {
 
     private static void shiftColumnUp(Cell cell, int startRow, int shiftNumber) {
         HSSFSheet sheet = cell.getRow().getSheet().getHssfSheet();
-        short cellNum = cell.getHssfCell().getCellNum();
+        int cellNum = cell.getHssfCell().getColumnIndex();
         List hssfMergedRegions = new ArrayList();
         // find all merged regions in this area
         for (int i = startRow; i <= sheet.getLastRowNum(); i++) {
-            Region region = getMergedRegion(sheet, i, cellNum);
+            CellRangeAddress region = getMergedRegion(sheet, i, cellNum);
             if (region != null && isNewMergedRegion(region, hssfMergedRegions)) {
                 hssfMergedRegions.add(region);
             }
@@ -295,12 +314,13 @@ public final class Util {
         }
         // remove previously shifted merged regions in this area
         for (Iterator iterator = hssfMergedRegions.iterator(); iterator.hasNext();) {
-            removeMergedRegion(sheet, (Region) iterator.next());
+            removeMergedRegion(sheet, (CellRangeAddress) iterator.next());
         }
         // set merged regions for shifted cells
         for (Iterator iterator = hssfMergedRegions.iterator(); iterator.hasNext();) {
-            Region region = (Region) iterator.next();
-            Region newRegion = new Region(region.getRowFrom() - shiftNumber, region.getColumnFrom(), region.getRowTo() - shiftNumber, region.getColumnTo());
+            CellRangeAddress region = (CellRangeAddress) iterator.next();
+            CellRangeAddress newRegion = new CellRangeAddress(region.getFirstRow() - shiftNumber,  region.getLastRow() - shiftNumber,
+                    region.getFirstColumn(), region.getLastColumn());
             sheet.addMergedRegion(newRegion);
         }
         // remove moved cells
@@ -343,7 +363,7 @@ public final class Util {
 
     private static void duplicateStyle(RowCollection rowCollection, int rowToCopy, int startRow, int num) {
         HSSFSheet sheet = rowCollection.getParentRow().getSheet().getHssfSheet();
-        Set mergedRegions = new TreeSet();
+        Set mergedRegions = new HashSet();
         HSSFRow srcRow = sheet.getRow(rowToCopy);
         for (int i = startRow; i < startRow + num; i++) {
             HSSFRow destRow = sheet.getRow(i);
@@ -357,12 +377,12 @@ public final class Util {
                 Cell cell = (Cell) rowCollection.getCells().get(j);
                 HSSFCell hssfCell = cell.getHssfCell();
                 if (hssfCell != null) {
-                    HSSFCell newCell = destRow.createCell(hssfCell.getCellNum());
+                    HSSFCell newCell = destRow.createCell(hssfCell.getColumnIndex());
                     copyCell(hssfCell, newCell, true);
-                    Region mergedRegion = getMergedRegion(sheet, rowToCopy, hssfCell.getCellNum());
+                    CellRangeAddress mergedRegion = getMergedRegion(sheet, rowToCopy, hssfCell.getColumnIndex());
                     if (mergedRegion != null) {
-                        Region newMergedRegion = new Region(i, mergedRegion.getColumnFrom(),
-                                i + mergedRegion.getRowTo() - mergedRegion.getRowFrom(), mergedRegion.getColumnTo());
+                        CellRangeAddress newMergedRegion = new CellRangeAddress(i, i + mergedRegion.getLastRow() - mergedRegion.getFirstRow(),
+                                mergedRegion.getFirstColumn(), mergedRegion.getLastColumn());
                         if (isNewMergedRegion(newMergedRegion, mergedRegions)) {
                             mergedRegions.add(newMergedRegion);
                             sheet.addMergedRegion(newMergedRegion);
@@ -378,7 +398,7 @@ public final class Util {
         if (oldRow.getHeight() >= 0) {
             newRow.setHeight(oldRow.getHeight());
         }
-        for (short j = oldRow.getFirstCellNum(); j <= oldRow.getLastCellNum(); j++) {
+        for (int j = oldRow.getFirstCellNum(); j <= oldRow.getLastCellNum(); j++) {
             HSSFCell oldCell = oldRow.getCell(j);
             HSSFCell newCell = newRow.getCell(j);
             if (oldCell != null) {
@@ -386,10 +406,10 @@ public final class Util {
                     newCell = newRow.createCell(j);
                 }
                 copyCell(oldCell, newCell, true);
-                Region mergedRegion = getMergedRegion(sheet, oldRow.getRowNum(), oldCell.getCellNum());
+                CellRangeAddress mergedRegion = getMergedRegion(sheet, oldRow.getRowNum(), oldCell.getColumnIndex());
                 if (mergedRegion != null) {
-                    Region newMergedRegion = new Region(newRow.getRowNum(), mergedRegion.getColumnFrom(),
-                            newRow.getRowNum() + mergedRegion.getRowTo() - mergedRegion.getRowFrom(), mergedRegion.getColumnTo());
+                    CellRangeAddress newMergedRegion = new CellRangeAddress(newRow.getRowNum(), newRow.getRowNum() + mergedRegion.getLastRow() - mergedRegion.getFirstRow(),
+                            mergedRegion.getFirstColumn(), mergedRegion.getLastColumn());
                     if (isNewMergedRegion(newMergedRegion, mergedRegions)) {
                         mergedRegions.add(newMergedRegion);
                         sheet.addMergedRegion(newMergedRegion);
@@ -404,7 +424,7 @@ public final class Util {
         if (srcRow.getHeight() >= 0) {
             destRow.setHeight(srcRow.getHeight());
         }
-        for (short j = srcRow.getFirstCellNum(); j <= srcRow.getLastCellNum(); j++) {
+        for (int j = srcRow.getFirstCellNum(); j <= srcRow.getLastCellNum(); j++) {
             HSSFCell oldCell = srcRow.getCell(j);
             HSSFCell newCell = destRow.getCell(j);
             if (oldCell != null) {
@@ -412,12 +432,12 @@ public final class Util {
                     newCell = destRow.createCell(j);
                 }
                 copyCell(oldCell, newCell, true);
-                Region mergedRegion = getMergedRegion(srcSheet, srcRow.getRowNum(), oldCell.getCellNum());
+                CellRangeAddress mergedRegion = getMergedRegion(srcSheet, srcRow.getRowNum(), oldCell.getColumnIndex());
                 if (mergedRegion != null) {
 //                    Region newMergedRegion = new Region( destRow.getRowNum(), mergedRegion.getColumnFrom(),
 //                            destRow.getRowNum() + mergedRegion.getRowTo() - mergedRegion.getRowFrom(), mergedRegion.getColumnTo() );
-                    Region newMergedRegion = new Region(mergedRegion.getRowFrom(), mergedRegion.getColumnFrom(),
-                            mergedRegion.getRowTo(), mergedRegion.getColumnTo());
+                    CellRangeAddress newMergedRegion = new CellRangeAddress(mergedRegion.getFirstRow(), mergedRegion.getLastRow(), mergedRegion.getFirstColumn(),
+                             mergedRegion.getLastColumn());
                     if (isNewMergedRegion(newMergedRegion, mergedRegions)) {
                         mergedRegions.add(newMergedRegion);
                         destSheet.addMergedRegion(newMergedRegion);
@@ -432,7 +452,7 @@ public final class Util {
         if (srcRow.getHeight() >= 0) {
             destRow.setHeight(srcRow.getHeight());
         }
-        for (short j = srcRow.getFirstCellNum(); j <= srcRow.getLastCellNum(); j++) {
+        for (int j = srcRow.getFirstCellNum(); j <= srcRow.getLastCellNum(); j++) {
             HSSFCell oldCell = srcRow.getCell(j);
             HSSFCell newCell = destRow.getCell(j);
             if (oldCell != null) {
@@ -440,12 +460,12 @@ public final class Util {
                     newCell = destRow.createCell(j);
                 }
                 copyCell(oldCell, newCell, true, expressionToReplace, expressionReplacement);
-                Region mergedRegion = getMergedRegion(srcSheet, srcRow.getRowNum(), oldCell.getCellNum());
+                CellRangeAddress mergedRegion = getMergedRegion(srcSheet, srcRow.getRowNum(), oldCell.getColumnIndex());
                 if (mergedRegion != null) {
 //                    Region newMergedRegion = new Region( destRow.getRowNum(), mergedRegion.getColumnFrom(),
 //                            destRow.getRowNum() + mergedRegion.getRowTo() - mergedRegion.getRowFrom(), mergedRegion.getColumnTo() );
-                    Region newMergedRegion = new Region(mergedRegion.getRowFrom(), mergedRegion.getColumnFrom(),
-                            mergedRegion.getRowTo(), mergedRegion.getColumnTo());
+                    CellRangeAddress newMergedRegion = new CellRangeAddress(mergedRegion.getFirstRow(), mergedRegion.getLastRow(),
+                            mergedRegion.getFirstColumn(), mergedRegion.getLastColumn());
                     if (isNewMergedRegion(newMergedRegion, mergedRegions)) {
                         mergedRegions.add(newMergedRegion);
                         destSheet.addMergedRegion(newMergedRegion);
@@ -467,7 +487,7 @@ public final class Util {
                 }
             }
         }
-        for (short i = 0; i <= maxColumnNum; i++) {
+        for (int i = 0; i <= maxColumnNum; i++) {
             newSheet.setColumnWidth(i, sheet.getColumnWidth(i));
         }
     }
@@ -484,7 +504,7 @@ public final class Util {
                 }
             }
         }
-        for (short i = 0; i <= maxColumnNum; i++) {
+        for (int i = 0; i <= maxColumnNum; i++) {
             newSheet.setColumnWidth(i, sheet.getColumnWidth(i));
         }
     }
@@ -696,48 +716,48 @@ public final class Util {
         return (String) xmlEntities.get(Integer.toString(ch));
     }
 
-    public static void shiftCellsLeft(HSSFSheet sheet, int startRow, short startCol, int endRow, short endCol, short shiftNumber) {
+    public static void shiftCellsLeft(HSSFSheet sheet, int startRow, int startCol, int endRow, int endCol, int shiftNumber) {
         for (int i = startRow; i <= endRow; i++) {
             boolean doSetWidth = true;
             HSSFRow row = sheet.getRow(i);
             if (row != null) {
-                for (short j = startCol; j <= endCol; j++) {
+                for (int j = startCol; j <= endCol; j++) {
                     HSSFCell cell = row.getCell(j);
                     if (cell == null) {
                         cell = row.createCell(j);
                         doSetWidth = false;
                     }
-                    HSSFCell destCell = row.getCell((short) (j - shiftNumber));
+                    HSSFCell destCell = row.getCell((int) (j - shiftNumber));
                     if (destCell == null) {
-                        destCell = row.createCell((short) (j - shiftNumber));
+                        destCell = row.createCell((int) (j - shiftNumber));
                     }
                     copyCell(cell, destCell, true);
                     if (doSetWidth) {
-                        sheet.setColumnWidth(destCell.getCellNum(), getWidth(sheet, cell.getCellNum()));
+                        sheet.setColumnWidth(destCell.getColumnIndex(), getWidth(sheet, cell.getColumnIndex()));
                     }
                 }
             }
         }
     }
 
-    static short getWidth(HSSFSheet sheet, short col) {
-        short width = sheet.getColumnWidth(col);
+    static int getWidth(HSSFSheet sheet, int col) {
+        int width = sheet.getColumnWidth(col);
         if (width == sheet.getDefaultColumnWidth()) {
-            width = (short) (width * 256);
+            width = (int) (width * 256);
         }
         return width;
     }
 
 
-    public static void shiftCellsRight(HSSFSheet sheet, int startRow, int endRow, short startCol, short shiftNumber) {
+    public static void shiftCellsRight(HSSFSheet sheet, int startRow, int endRow, int startCol, int shiftNumber) {
         for (int i = startRow; i <= endRow; i++) {
             HSSFRow row = sheet.getRow(i);
             if (row != null) {
-                short lastCellNum = row.getLastCellNum();
-                for (short j = lastCellNum; j >= startCol; j--) {
-                    HSSFCell destCell = row.getCell((short) (j + shiftNumber));
+                int lastCellNum = row.getLastCellNum();
+                for (int j = lastCellNum; j >= startCol; j--) {
+                    HSSFCell destCell = row.getCell((int) (j + shiftNumber));
                     if (destCell == null) {
-                        destCell = row.createCell((short) (j + shiftNumber));
+                        destCell = row.createCell((int) (j + shiftNumber));
                     }
                     HSSFCell cell = row.getCell(j);
                     if (cell == null) {
@@ -749,7 +769,7 @@ public final class Util {
         }
     }
 
-    public static void updateCellValue(HSSFSheet sheet, int rowNum, short colNum, String cellValue) {
+    public static void updateCellValue(HSSFSheet sheet, int rowNum, int colNum, String cellValue) {
         HSSFRow hssfRow = sheet.getRow(rowNum);
         HSSFCell hssfCell = hssfRow.getCell(colNum);
         hssfCell.setCellValue(new HSSFRichTextString(cellValue));
@@ -883,9 +903,11 @@ public final class Util {
 
 
     public static void shiftRows(HSSFSheet sheet, int startRow, int endRow, int shiftNum) {
-        short[] rowHeights = getRowHeights(sheet, startRow, endRow);
-        sheet.shiftRows(startRow, endRow, shiftNum, false, false);
-        copyPositiveRowHeight(sheet, startRow, endRow, shiftNum, rowHeights);
+        if( startRow <= endRow ){
+            short[] rowHeights = getRowHeights(sheet, startRow, endRow);
+            sheet.shiftRows(startRow, endRow, shiftNum, false, false);
+            copyPositiveRowHeight(sheet, startRow, endRow, shiftNum, rowHeights);
+        }
     }
 
     private static short[] getRowHeights(HSSFSheet sheet, int startRow, int endRow) {

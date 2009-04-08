@@ -1,16 +1,15 @@
 package net.sf.jxls.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.sf.jxls.formula.Formula;
 import net.sf.jxls.tag.Tag;
 import net.sf.jxls.transformer.Row;
 import net.sf.jxls.transformer.RowCollection;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.hssf.util.CellReference;
-import org.apache.poi.hssf.util.Region;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents excel cell
@@ -33,7 +32,7 @@ public class Cell {
     private String stringCellValue;
     private String metaInfo;
 
-    private Region mergedRegion;
+    private CellRangeAddress mergedRegion;
 
     private List expressions = new ArrayList();
 
@@ -64,7 +63,7 @@ public class Cell {
         this.expressions = expressions;
     }
 
-    public Region getMergedRegion() {
+    public CellRangeAddress getMergedRegion() {
         return mergedRegion;
     }
 
@@ -118,7 +117,7 @@ public class Cell {
     }
 
     public String toCellName() {
-        CellReference cellRef = new CellReference(getRow().getHssfRow().getRowNum(), getHssfCell().getCellNum(), false, false);
+        CellReference cellRef = new CellReference(getRow().getHssfRow().getRowNum(), getHssfCell().getColumnIndex(), false, false);
         return cellRef.formatAsString();
     }
 
@@ -179,7 +178,7 @@ public class Cell {
         this.metaInfo = metaInfo;
     }
 
-    public void setMergedRegion(Region mergedRegion) {
+    public void setMergedRegion(CellRangeAddress mergedRegion) {
         this.mergedRegion = mergedRegion;
     }
 }

@@ -1,12 +1,5 @@
 package net.sf.jxls.transformer;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.controller.SheetTransformationControllerImpl;
 import net.sf.jxls.controller.WorkbookTransformationController;
@@ -17,11 +10,12 @@ import net.sf.jxls.parser.CellParser;
 import net.sf.jxls.processor.RowProcessor;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformation.ResultTransformation;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
+
+import java.util.*;
 
 /**
  * @author Leonid Vysochyn
@@ -173,7 +167,7 @@ public class SheetTransformer {
         return processRow(stc, sheet, hssfRow, hssfRow.getFirstCellNum(), hssfRow.getLastCellNum(), beans, parentRow);
     }
 
-    public ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, HSSFRow hssfRow, short startCell, short endCell, Map beans, Row parentRow) {
+    public ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, HSSFRow hssfRow, int startCell, int endCell, Map beans, Row parentRow) {
         List transformers = parseCells(sheet, hssfRow, startCell, endCell, beans);
 
 
@@ -182,7 +176,7 @@ public class SheetTransformer {
 
     }
 
-    private List parseCells(Sheet sheet, HSSFRow hssfRow, short startCell, short endCell, Map beans) {
+    private List parseCells(Sheet sheet, HSSFRow hssfRow, int startCell, int endCell, Map beans) {
         if (configuration.getRowKeyName() != null) {
             beans.put(configuration.getRowKeyName(), hssfRow);
         }
@@ -193,7 +187,7 @@ public class SheetTransformer {
         SimpleRowTransformer simpleRowTransformer = new SimpleRowTransformer(row, cellProcessors, configuration);
 //        transformations.add( simpleRowTransformer );
         boolean hasCollections = false;
-        for (short j = startCell; j <= endCell; j++) {
+        for (int j = startCell; j <= endCell; j++) {
             HSSFCell hssfCell = hssfRow.getCell(j);
             CellParser cellParser = new CellParser(hssfCell, row, configuration);
             Cell cell = cellParser.parseCell(beans);
@@ -255,7 +249,7 @@ public class SheetTransformer {
                     if (cell.getFormula().isInline() && cell.getLabel() != null && cell.getLabel().length() > 0) {
                         ListRange listRange = new ListRange(row.getHssfRow().getRowNum(),
                                 row.getHssfRow().getRowNum() + cell.getRowCollection().getCollectionProperty().getCollection().size() - 1,
-                                cell.getHssfCell().getCellNum());
+                                cell.getHssfCell().getColumnIndex());
                         addListRange(sheet, cell.getLabel(), listRange);
                     }
                 }

@@ -1,9 +1,5 @@
 package net.sf.jxls.parser;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Map;
-
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.formula.Formula;
 import net.sf.jxls.tag.Block;
@@ -12,13 +8,16 @@ import net.sf.jxls.tag.TagContext;
 import net.sf.jxls.transformer.Configuration;
 import net.sf.jxls.transformer.Row;
 import net.sf.jxls.util.Util;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Map;
 
 /**
  * Class for parsing excel cell
@@ -82,7 +81,7 @@ public class CellParser {
         String expr = cell.getHssfCellValue().substring(2, i);
         cell.setFormula(new Formula(expr));
         cell.getFormula().setRowNum(new Integer(cell.getRow().getHssfRow().getRowNum()));
-        cell.getFormula().setCellNum(new Integer(cell.getHssfCell().getCellNum()));
+        cell.getFormula().setCellNum(new Integer(cell.getHssfCell().getColumnIndex()));
         if (i + 1 < cell.getHssfCellValue().length()) {
             String tail = cell.getHssfCellValue().substring(i+1);
             int j = tail.indexOf(configuration.getMetaInfoToken());
@@ -178,15 +177,15 @@ public class CellParser {
                 String tagName = getTagName( cell.getHssfCellValue() );
                 if( tagName!=null ){
                     if (cell.getHssfCellValue().endsWith("/>")) {
-                        Block tagBody = new Block(cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getCellNum(),
-                                cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getCellNum());
+                        Block tagBody = new Block(cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getColumnIndex(),
+                                cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getColumnIndex());
                         parseTag( tagName, tagBody, beans, false);
                     } else {
                         HSSFCell hssfCell = findMatchingPairInRow( cell.getRow().getHssfRow(), tagName );
                         if( hssfCell!=null ){
                             // closing tag is in the same row
-                            Block tagBody = new Block(cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getCellNum(),
-                                    cell.getRow().getHssfRow().getRowNum(), hssfCell.getCellNum());
+                            Block tagBody = new Block(cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getColumnIndex(),
+                                    cell.getRow().getHssfRow().getRowNum(), hssfCell.getColumnIndex());
                             parseTag( tagName, tagBody, beans, true);
                         }else{
                             HSSFRow hssfRow = findMatchingPair( tagName );
@@ -196,7 +195,7 @@ public class CellParser {
                                 Block tagBody = new Block(null, cell.getRow().getHssfRow().getRowNum(), lastTagBodyRowNum);
                                 parseTag( tagName, tagBody, beans , true);
                             }else{
-                                log.warn("Can't find matching tag pair for " + cell.getHssfCellValue());
+                                log.error("Can't find matching tag pair for " + cell.getHssfCellValue());
                             }
                         }
                     }
@@ -210,7 +209,7 @@ public class CellParser {
     private HSSFCell findMatchingPairInRow(HSSFRow hssfRow, String tagName) {
         int count = 0;
         if( hssfRow!=null ){
-            for(short j = (short) (cell.getHssfCell().getCellNum() + 1); j <= hssfRow.getLastCellNum(); j++){
+            for(int j = (cell.getHssfCell().getColumnIndex() + 1); j <= hssfRow.getLastCellNum(); j++){
                 HSSFCell hssfCell = hssfRow.getCell( j );
                 if( hssfCell != null && hssfCell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
                     String cellValue = hssfCell.getRichStringCellValue().getString();
@@ -251,7 +250,7 @@ public class CellParser {
             HSSFRow hssfRow = hssfSheet.getRow( i );
             if( hssfRow!=null ){
                 for(short j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++){
-                    HSSFCell hssfCell = hssfRow.getCell( j );
+                    HSSFCell hssfCell = hssfRow.getCell( (int)j );
                     if( hssfCell != null && hssfCell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
                         String cellValue = hssfCell.getRichStringCellValue().getString();
                         if( cellValue.matches("<" + configuration.getTagPrefix() + tagName + "\\b.*")){
@@ -303,6 +302,6 @@ public class CellParser {
     }
 
     private void updateMergedRegions() {
-        cell.setMergedRegion(Util.getMergedRegion( cell.getRow().getSheet().getHssfSheet(), cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getCellNum() ));
+        cell.setMergedRegion(Util.getMergedRegion( cell.getRow().getSheet().getHssfSheet(), cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getColumnIndex() ));
     }
 }

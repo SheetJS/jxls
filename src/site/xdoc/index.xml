@@ -6,12 +6,11 @@
     <body>
         <section name="News">
             <p>
-                <strong>jXLS 0.9.7 released</strong>
+                <strong>jXLS 0.9.8 released</strong>
             </p>
             <p>The changes in this version are</p>
             <ul>
-                <li>Compatibility with POI 3.1 - ID: 2012767 </li>
-                <li>Fixed issue with incorrect forEach processing when 'select' attribute condition is not met</li>
+                <li>Compatibility with POI 3.2</li>
             </ul>
             <p><strong>A work on enterprise version of jXLS is in progress</strong></p>
             <p>The following features are planned:</p>

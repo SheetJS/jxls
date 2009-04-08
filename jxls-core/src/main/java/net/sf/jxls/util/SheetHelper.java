@@ -1,16 +1,15 @@
 package net.sf.jxls.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.sf.jxls.formula.Formula;
 import net.sf.jxls.parser.CellParser;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformer.Row;
 import net.sf.jxls.transformer.Sheet;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Leonid Vysochyn
@@ -37,12 +36,12 @@ public class SheetHelper {
     }
 
 
-    private static List findFormulasInRow(Sheet sheet, HSSFRow hssfRow, short startCellNum, short endCellNum) {
+    private static List findFormulasInRow(Sheet sheet, HSSFRow hssfRow, int startCellNum, int endCellNum) {
         List formulas = new ArrayList();
         if( hssfRow!=null ){
             Row row = new Row(sheet, hssfRow);
-            short endNum = (short)Math.min( hssfRow.getLastCellNum(), endCellNum);
-            for(short i = (short)Math.max(hssfRow.getFirstCellNum(), startCellNum); i <= endNum; i++){
+            int endNum = (int)Math.min( hssfRow.getLastCellNum(), endCellNum);
+            for(int i = (int)Math.max(hssfRow.getFirstCellNum(), startCellNum); i <= endNum; i++){
                 HSSFCell hssfCell = hssfRow.getCell( i );
                 if( hssfCell!=null ){
                     CellParser cellParser = new CellParser(hssfCell, row, sheet.getConfiguration());
@@ -64,7 +63,7 @@ public class SheetHelper {
             CellParser cellParser;
             Formula formula;
             HSSFCell hssfCell;
-            for(short i = hssfRow.getFirstCellNum(); i <= hssfRow.getLastCellNum(); i++){
+            for(int i = hssfRow.getFirstCellNum(); i <= hssfRow.getLastCellNum(); i++){
                 hssfCell = hssfRow.getCell( i );
                 if( hssfCell!=null ){
                     cellParser = new CellParser(hssfCell, row, sheet.getConfiguration());

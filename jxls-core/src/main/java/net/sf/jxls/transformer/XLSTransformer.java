@@ -1,19 +1,5 @@
 package net.sf.jxls.transformer;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import net.sf.jxls.controller.WorkbookTransformationController;
 import net.sf.jxls.controller.WorkbookTransformationControllerImpl;
 import net.sf.jxls.exception.ParsePropertyException;
@@ -24,15 +10,13 @@ import net.sf.jxls.processor.CellProcessor;
 import net.sf.jxls.processor.PropertyPreprocessor;
 import net.sf.jxls.processor.RowProcessor;
 import net.sf.jxls.util.Util;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * <p> This class uses excel template to generate excel file filled with required objects and collections.
@@ -468,7 +452,7 @@ public class XLSTransformer {
             for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
                 HSSFRow hssfRow = sheet.getRow(i);
                 if (hssfRow != null) {
-                    for (short j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
+                    for (int j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
                         HSSFCell cell = hssfRow.getCell(j);
                         if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
                             String value = cell.getRichStringCellValue().getString();
@@ -492,7 +476,7 @@ public class XLSTransformer {
                 short column = columnsToHide[i];
                 for (int sheet_no = 0; sheet_no < workbook.getNumberOfSheets(); sheet_no++) {
                     HSSFSheet sheet = workbook.getSheetAt(sheet_no);
-                    sheet.setColumnWidth(column, (short) 0);
+                    sheet.setColumnWidth(column, (int) 0);
                 }
             }
         }
@@ -513,14 +497,14 @@ public class XLSTransformer {
                 HSSFRow hssfRow = sheet.getRow(i);
                 if (hssfRow != null) {
                     //for all cells
-                    for (short j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
+                    for (int j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
                         HSSFCell cell = hssfRow.getCell(j);
                         if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
                             String value = cell.getRichStringCellValue().getString();
                             //if any from columnPropertyNamesToHide is substring of cell value, than hide column
                             for (int prptIndx = 0; prptIndx < columnPropertyNamesToHide.length; prptIndx++) {
                                 if (value != null && value.indexOf(columnPropertyNamesToHide[prptIndx]) != -1) {
-                                    sheet.setColumnWidth(j, (short) 0);
+                                    sheet.setColumnWidth(j, (int) 0);
                                     break;
                                 }
                             }

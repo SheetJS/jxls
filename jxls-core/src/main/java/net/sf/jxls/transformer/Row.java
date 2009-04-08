@@ -1,13 +1,12 @@
 package net.sf.jxls.transformer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.sf.jxls.parser.Cell;
 import net.sf.jxls.parser.Property;
-
 import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.util.Region;
+import org.apache.poi.hssf.util.CellRangeAddress;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents single row in excel transformation
@@ -181,7 +180,7 @@ public class Row {
         return rowCollection;
     }
 
-    private RowCollection getRowCollection(Region mergedRegion) {
+    private RowCollection getRowCollection(CellRangeAddress mergedRegion) {
         for (int i = 0; i < mergedRegions.size(); i++) {
             MergedRegion region = (MergedRegion) mergedRegions.get(i);
             if( region.getRegion().equals( mergedRegion ) ){

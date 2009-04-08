@@ -1,12 +1,11 @@
 package net.sf.jxls.controller;
 
-import java.util.List;
-
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformer.RowCollection;
 import net.sf.jxls.transformer.Sheet;
-
 import org.apache.poi.hssf.usermodel.HSSFRow;
+
+import java.util.List;
 
 /**
  * Interface for controlling all excel sheet transformations
@@ -52,7 +51,7 @@ public interface SheetTransformationController {
      * @param startCellNum - start cell number to clear
      * @param endCellNum   - end cell number to clear
      */
-    void removeRowCells(HSSFRow row, short startCellNum, short endCellNum);
+    void removeRowCells(HSSFRow row, int startCellNum, int endCellNum);
 
     /**
      * Deletes the body of the block
