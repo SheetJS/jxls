@@ -8,10 +8,8 @@
             <p>
                 <strong>jXLS 0.9.8 released</strong>
             </p>
-            <p>The changes in this version are</p>
-            <ul>
-                <li>Compatibility with POI 3.2</li>
-            </ul>
+            <p>jXLS is now compatible with POI 3.2 !</p>
+            <hr/>
             <p><strong>A work on enterprise version of jXLS is in progress</strong></p>
             <p>The following features are planned:</p>
             <ul>
