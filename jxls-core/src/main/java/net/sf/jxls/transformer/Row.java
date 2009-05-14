@@ -3,7 +3,7 @@ package net.sf.jxls.transformer;
 import net.sf.jxls.parser.Cell;
 import net.sf.jxls.parser.Property;
 import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.util.ArrayList;
 import java.util.List;

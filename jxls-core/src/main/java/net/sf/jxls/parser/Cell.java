@@ -5,7 +5,7 @@ import net.sf.jxls.tag.Tag;
 import net.sf.jxls.transformer.Row;
 import net.sf.jxls.transformer.RowCollection;
 import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.hssf.util.CellReference;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package net.sf.jxls.transformer;
 
-import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 
 /**
