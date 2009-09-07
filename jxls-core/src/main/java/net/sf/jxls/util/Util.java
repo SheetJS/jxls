@@ -456,7 +456,7 @@ public final class Util {
 	}
 
 	public static void copyRow(HSSFSheet sheet, HSSFRow oldRow, HSSFRow newRow) {
-		Set mergedRegions = new TreeSet();
+		Set mergedRegions = new HashSet();
 		if (oldRow.getHeight() >= 0) {
 			newRow.setHeight(oldRow.getHeight());
 		}
@@ -524,7 +524,7 @@ public final class Util {
 	public static void copyRow(HSSFSheet srcSheet, HSSFSheet destSheet,
 			HSSFRow srcRow, HSSFRow destRow, String expressionToReplace,
 			String expressionReplacement) {
-		Set mergedRegions = new TreeSet();
+		Set mergedRegions = new HashSet();
 		if (srcRow.getHeight() >= 0) {
 			destRow.setHeight(srcRow.getHeight());
 		}
