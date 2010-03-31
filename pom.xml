@@ -26,12 +26,11 @@
       <name>leonate</name>
       <id>leonate</id>
     </developer>
-    <developer>
-      <name>Michael Zarillo</name>
-      <id>mzarillo</id>
-    </developer>
   </developers>
     <contributors>
+        <contributor>
+            <name>Michael Zarillo</name>
+        </contributor>
         <contributor>
             <name>Curtis Stanford</name>
         </contributor>
@@ -103,11 +102,6 @@
       <!--<name>jXLS Snapshots Repository at Sourceforge</name>-->
       <!--<url>scp://shell.sourceforge.net/home/groups/j/jx/jxls/htdocs/repository/snapshots</url>-->
     <!--</snapshotRepository>-->
-    <site>
-      <id>sourceforge.net</id>
-      <name>jXLS Website at Sourceforge</name>
-      <url>scp://shell.sourceforge.net/home/groups/j/jx/jxls/htdocs</url>
-    </site>
   </distributionManagement>
 
     <repositories>
@@ -135,10 +129,10 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>2.0</version>
-          <configuration>
-            <templateFile>src/site/site.vm</templateFile>
-          </configuration>
+          <!--<version>2.1</version>-->
+          <!--<configuration>-->
+            <!--<templateFile>src/site/site.vm</templateFile>-->
+          <!--</configuration>-->
         </plugin>
     </plugins>
   </build>

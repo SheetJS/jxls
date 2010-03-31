@@ -27,7 +27,7 @@
             </p>
 			<ul>
 				<li>
-					<a href="http://jakarta.apache.org/poi/">POI 3.2</a>
+					<a href="http://jakarta.apache.org/poi/">POI 3.5 or later</a>
 				</li>
 				<li>
 					<a href="http://jakarta.apache.org/commons/beanutils/">Commons BeanUtils</a>
