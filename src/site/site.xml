@@ -42,6 +42,7 @@
       <item name="Adjacent Lists" href="samples/adjacentlists.html"/>
       <item name="Dynamic Style" href="samples/dynamicstylesample.html"/>
       <item name="JDBC ResultSet" href="samples/resultsetsample.html"/>
+      <item name="Dynamic Columns" href="samples/dynamiccolumnssample.html"/>
     </menu>
     ${reports}
   </body>

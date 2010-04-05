@@ -1,0 +1,35 @@
+<document>
+    <properties>
+      <author email="leonid.vysochyn@gmail.com">Leonid Vysochyn</author>
+      <title>Dynamic Columns Sample</title>
+    </properties>
+    <body>
+        <section id="introduction" name="Introduction">
+            <p>This sample was contributed by Senthur Selvi Karunakaran and shows how to generate dynamic columns in Excel report.
+            </p>
+            <section id="dynamiccolumnsSample" name="Dynamic Columns Sample">
+                <p>Below is an Excel template for this sample
+                </p>
+                <img src="../images/dynamiccolumnsTemplateXLS.png" alt="Screenshot of Dynamic Columns Sample XLS Template"/>
+                <p>
+                    <a href="../xls/dynamiccolumns_template.xls">Template XLS file</a>
+                </p>
+                <p>Check the following files to see the source code
+                    <br/>
+                    <a href="../source/dynamiccolumns/Columns.java">Columns.java</a>
+                    <br/>
+                    <a href="../source/dynamiccolumns/FundsVO.java">FundsVO.java</a>
+                    <br/>
+                    <a href="../source/dynamiccolumns/ValueBean.java">ValueBean.java</a>
+                    <br/>
+                    <a href="../source/dynamiccolumns/DynamicXLSGeneration.java">DynamicXLSGeneration.java</a>
+                </p>
+                <p>Here is the output</p>
+                <img src="../images/dynamiccolumnsOutputXLS.png" alt="Screenshot of Dynamic Columns Sample XLS Output"/>
+                <p>
+                    <a href="../xls/dynamiccolumns_output.xls">Result XLS file</a>
+                </p>
+            </section>
+        </section>
+    </body>
+</document>
