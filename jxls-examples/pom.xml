@@ -93,6 +93,11 @@
                           <arg value="${project.build.directory}/classes/templates/report.xls" />
                           <arg value="${project.build.directory}/report_output.xls" />
                       </java>
+                      <java classname="net.sf.jxls.sample.dynamicColumns.DynamicXLSGeneration">
+                          <classpath refid="maven.runtime.classpath" />
+                          <arg value="${project.build.directory}/classes/templates/ex_temp.xls" />
+                          <arg value="${project.build.directory}/ex_output.xls" />
+                      </java>
                   </tasks>
                 </configuration>
                 <goals>
@@ -108,6 +113,14 @@
                 <!--<configuration>-->
                   <!--<templateFile>../src/site/site.vm</templateFile>-->
                 <!--</configuration>-->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
             </plugin>
         </plugins>
       </build>
