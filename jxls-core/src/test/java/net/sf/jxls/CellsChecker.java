@@ -70,6 +70,23 @@ public class CellsChecker extends Assert {
                 }
             }
         }
+    }
+
+    void checkRow(HSSFSheet sheet, int rowNum, int startCellNum, int endCellNum, Object[] values){
+        HSSFRow row  = sheet.getRow(rowNum);
+        if( row != null){
+            for(int i = startCellNum; i<=endCellNum; i++){
+                HSSFCell cell = row.getCell(i);
+                if( cell != null ){
+                    Object cellValue = getCellValue(cell, values[i]);
+                    assertEquals("Result cell values incorrect in row=" + row + ", cell=" + i, values[i], cellValue);
+                }else{
+                    fail("Cell is null");
+                }
+            }
+        }else{
+            fail("Row is null");
+        }
 
     }
 

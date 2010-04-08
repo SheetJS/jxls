@@ -5,6 +5,7 @@ import net.sf.jxls.tag.Tag;
 import net.sf.jxls.transformer.Row;
 import net.sf.jxls.transformer.RowCollection;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.hssf.util.CellReference;
 
@@ -114,6 +115,11 @@ public class Cell {
 
     public void setHssfCell(HSSFCell hssfCell) {
         this.hssfCell = hssfCell;
+    }
+
+    public void replaceCellWithNewShiftedBy(int shift){
+        HSSFCell newHSSFCell = row.getHssfRow().getCell(hssfCell.getColumnIndex() + shift);
+        this.hssfCell = newHSSFCell;
     }
 
     public String toCellName() {

@@ -12,6 +12,7 @@ public class ResultTransformation extends BaseTransformation {
     short nextCellShift;
     short lastCellShift;
     int lastProcessedRow = -1;
+    int startCellShift;
 
     boolean isTagProcessResult;
 
@@ -52,6 +53,7 @@ public class ResultTransformation extends BaseTransformation {
     public ResultTransformation add(ResultTransformation transformation){
         lastRowShift += transformation.getLastRowShift();
         nextRowShift += transformation.getNextRowShift();
+        startCellShift += transformation.getStartCellShift();
 //        if( nextRowShift < - 1){
 //            // next row shift can't be less than 1 because we must not process already processed rows
 //            nextRowShift = -1;
@@ -110,4 +112,11 @@ public class ResultTransformation extends BaseTransformation {
         return nextCellShift;
     }
 
+    public int getStartCellShift() {
+        return startCellShift;
+    }
+
+    public void setStartCellShift(int startCellShift) {
+        this.startCellShift = startCellShift;
+    }
 }

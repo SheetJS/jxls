@@ -29,7 +29,7 @@ public class TagRowTransformer extends BaseRowTransformer {
         return resultTransformation;
     }
 
-    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans) {
+    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans, ResultTransformation previousTransformation) {
         tag.getTagContext().setSheetTransformationController( stc );
         resultTransformation = tag.process( sheetTransformer );
         return resultTransformation;

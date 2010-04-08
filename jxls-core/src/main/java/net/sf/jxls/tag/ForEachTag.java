@@ -222,6 +222,7 @@ public class ForEachTag extends BaseTag {
             shiftNumber += -2;
             ResultTransformation shift = new ResultTransformation();
             shift.setLastProcessedRow(-1);
+            shift.setStartCellShift(body.getEndCellNum()+1);
             if (groupBy == null || groupBy.length() == 0) {
                 shiftNumber += tagContext.getSheetTransformationController().duplicateRight(body, collectionToProcess.size() - 1);
                 processCollectionItemsOneRow(collectionToProcess, beans, body, shift, sheetTransformer);

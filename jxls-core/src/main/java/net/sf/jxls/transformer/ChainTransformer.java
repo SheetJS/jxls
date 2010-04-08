@@ -60,7 +60,7 @@ public class ChainTransformer{
             row.setParentRow( parentRow );
             applyRowProcessors(row );
 //            Util.writeToFile("beforeTransformBlock.xls", sheet.getHssfWorkbook());
-            resultTransformation.add( rowTransformer.transform(stc, sheetTransformer, beans ) );
+            resultTransformation.add( rowTransformer.transform(stc, sheetTransformer, beans, resultTransformation) );
 //            Util.writeToFile("afterTransformBlock.xls", sheet.getHssfWorkbook());
 
         }

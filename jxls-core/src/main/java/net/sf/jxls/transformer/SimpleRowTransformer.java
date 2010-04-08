@@ -41,7 +41,7 @@ public class SimpleRowTransformer extends BaseRowTransformer {
     }
 
 
-    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans){
+    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans, ResultTransformation previousTransformation){
         CellTransformer cellTransformer = new CellTransformer( configuration );
         if( cells.isEmpty() ){
 //            throw new RuntimeException("Don't expect to execute this code");
@@ -53,6 +53,10 @@ public class SimpleRowTransformer extends BaseRowTransformer {
         }else{
             for (int i = 0; i < cells.size(); i++) {
                 Cell cell = (Cell) cells.get(i);
+                if( previousTransformation != null && cell.getHssfCell().getColumnIndex()>= previousTransformation.getStartCellShift()
+                        && previousTransformation.getStartCellShift() != 0){
+                    cell.replaceCellWithNewShiftedBy(previousTransformation.getLastCellShift());
+                }
                 applyCellProcessors( row.getSheet(), cell );
                 cellTransformer.transform( cell );
             }

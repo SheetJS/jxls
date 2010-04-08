@@ -3,18 +3,19 @@ package net.sf.jxls;
 import junit.framework.TestCase;
 import net.sf.jxls.bean.Department;
 import net.sf.jxls.bean.Employee;
+import net.sf.jxls.bean.Item;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.Configuration;
 import net.sf.jxls.transformer.XLSTransformer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -22,6 +23,8 @@ import java.util.*;
  *         Date: 12.03.2009
  */
 public class ForEachTest extends TestCase {
+    protected final Log log = LogFactory.getLog(getClass());
+
     public static final String forifTag2XLS = "/templates/foriftag2.xls";
     public static final String forifTag2DestXLS = "target/foriftag2_output.xls";
 
@@ -36,6 +39,9 @@ public class ForEachTest extends TestCase {
 
     public static final String forifTagOneRowXLS = "/templates/foriftagOneRow.xls";
     public static final String forifTagOneRowDestXLS = "target/foriftagOneRow_output.xls";
+
+    public static final String forOneRowXLS = "/templates/forOneRow.xls";
+    public static final String forOneRowDestXLS = "target/forOneRow_output.xls";
 
     public static final String forGroupByXLS = "/templates/forgroup.xls";
     public static final String forGroupByDestXLS = "target/forgroup_output.xls";
@@ -401,7 +407,9 @@ public class ForEachTest extends TestCase {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTagOneRowXLS));
         XLSTransformer transformer = new XLSTransformer();
         HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        saveWorkbook(resultWorkbook, forifTagOneRowDestXLS);
         is.close();
+
         is = new BufferedInputStream(getClass().getResourceAsStream(forifTagOneRowXLS));
         POIFSFileSystem fs = new POIFSFileSystem(is);
         HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
@@ -543,7 +551,37 @@ public class ForEachTest extends TestCase {
         is.close();
     }
 
+    private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
+        String saveResultsProp = System.getProperty("saveResults");
+        if ("true".equalsIgnoreCase(saveResultsProp)) {
+            if (log.isInfoEnabled()) {
+                log.info("Saving " + fileName);
+            }
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(fileName));
+            resultWorkbook.write(os);
+            os.flush();
+            os.close();
+            log.info("Output Excel saved to " + fileName);
+        }
+    }
 
+
+    public void testForOneRow() throws IOException, ParsePropertyException {
+        Map beans = new HashMap();
+//        beans.put( "departments", departments );
+        beans.put( "itDep", itDepartment );
+
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forOneRowXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        CellsChecker checker = new CellsChecker();
+        Object[] values = new Object[]{"IT", "IT", null, "Elsa", new Double(1500), "Oleg", new Double(2300),
+                "Neil", new Double(2500), "Maria", new Double(1700), "John", new Double(2800), "IT", "IT", "IT"};
+//        checker.checkRow(resultSheet, 0, 0, 13, values);
+        saveWorkbook(resultWorkbook, forOneRowDestXLS);
+    }
 
 
 }

@@ -71,7 +71,7 @@ public class SheetTransformer {
     }
 
     void transformSheet(WorkbookTransformationController workbookTransformationController, Sheet sheet, Map beans) throws ParsePropertyException {
-        log.info("Processing sheet: " + sheet.getSheetName());
+        log.debug("Processing sheet: " + sheet.getSheetName());
         exposePOIBeans(sheet, beans);
         if (!beans.isEmpty()) {
             SheetTransformationController stc = new SheetTransformationControllerImpl(sheet);
@@ -82,11 +82,12 @@ public class SheetTransformer {
                     List rowTransformers = parseRow(sheet, hssfRow, beans);
                     if (!rowTransformers.isEmpty()) {
                         // process first Transformer
+                        ResultTransformation processResult = new ResultTransformation();
                         RowTransformer rowTransformer = (RowTransformer) rowTransformers.get(0);
                         if (rowTransformer != null) {
                             Row row = rowTransformer.getRow();
                             applyRowProcessors(sheet, row);
-                            ResultTransformation processResult = rowTransformer.transform(stc, this, beans);
+                            processResult = rowTransformer.transform(stc, this, beans, null);
                             ownTransformers.add(rowTransformer);
                             if (!processResult.isTagProcessResult()) {
                                 i += processResult.getNextRowShift();
@@ -102,7 +103,8 @@ public class SheetTransformer {
                         for (int j = 1; j < rowTransformers.size(); j++) {
                             rowTransformer = (RowTransformer) rowTransformers.get(j);
                             if (rowTransformer != null) {
-                                rowTransformer.transform(stc, this, beans);
+                                ResultTransformation newTransformation = rowTransformer.transform(stc, this, beans, processResult);
+                                processResult.add(newTransformation);
                                 ownTransformers.add(rowTransformer);
                             }
                         }

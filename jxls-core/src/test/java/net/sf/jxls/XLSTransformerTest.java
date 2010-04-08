@@ -90,7 +90,7 @@ public class XLSTransformerTest extends TestCase {
     public static final String employeeNotesRusDestXLS = "target/employeeNotesRus_output.xls";
 
     public static final String varStatusXLS = "/templates/varstatus.xls";
-    public static final String varStatusDestXLS = "/target/varstatus_output.xls";
+    public static final String varStatusDestXLS = "target/varstatus_output.xls";
 
     public static final String dynamicColumnsXLS = "/templates/dynamicColumns.xls";
     public static final String dynamicColumnsDestXLS = "target/dynamicColumns_output.xls";

@@ -48,6 +48,14 @@
                     <a href="../xls/chart_output.xls">chart_output.xls</a>
                 </p>
             </section>
+            <section id="dynamicRowsChartSample" name="Dynamic Rows Chart Sample">
+                <p>It is possible to create a chart even if the number of source data rows is dynamic.
+                    Check the following articles to understand the approach to this
+                    http://pubs.logicalexpressions.com/pub0009/LPMArticle.asp?ID=518.
+                    http://amateuratbest.blogspot.com/2007/08/excel-charting-in-java.html
+                    http://www.tushar-mehta.com/excel/newsgroups/dynamic_charts/index.html
+                </p>
+            </section>
         </section>
     </body>
 </document>

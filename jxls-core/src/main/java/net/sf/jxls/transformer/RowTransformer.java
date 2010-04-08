@@ -11,7 +11,7 @@ import net.sf.jxls.transformation.ResultTransformation;
  */
 public interface RowTransformer {
     Row getRow();
-    ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans);
+    ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans, ResultTransformation previousTransformation);
     Block getTransformationBlock();
     void setTransformationBlock(Block block);
     ResultTransformation getTransformationResult();

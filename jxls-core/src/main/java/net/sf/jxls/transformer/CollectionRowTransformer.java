@@ -59,10 +59,10 @@ public class CollectionRowTransformer extends BaseRowTransformer {
         rowCollections.add( rowCollection );
     }
 
-    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans) {
+    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans, ResultTransformation previousTransformation) {
         try {
             SimpleRowTransformer simpleRowTransformer = new SimpleRowTransformer(row, cellProcessors, configuration);
-            simpleRowTransformer.transform(stc, sheetTransformer, beans );
+            simpleRowTransformer.transform(stc, sheetTransformer, beans, null);
             resultTransformation = processRowCollections(stc, sheetTransformer, beans );
             sheetTransformer.groupRows( row.getSheet() );
         } catch (ParsePropertyException e) {
