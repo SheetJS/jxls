@@ -13,6 +13,9 @@ public class SimpleBean {
     private SimpleBean other;
     int amount;
 
+    public SimpleBean(String name) {
+        this.name = name;
+    }
 
     public SimpleBean(String name, Double doubleValue, Integer intValue, Date dateValue) {
         this.name = name;
