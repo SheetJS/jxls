@@ -40,10 +40,10 @@
         </section>
         <section id="fullJEXLSupport" name="JEXL Expressions Support">
             <p>
-                jXLS uses <a href="http://jakarta.apache.org/commons/jexl">Jakarta Commons JEXL</a> library to evaluate expressions.
+                jXLS uses <a href="http://commons.apache.org/jexl/">Jakarta Commons JEXL</a> library to evaluate expressions.
                 It means that besides standard arithmetic and boolean expressions you may also use arrays, collection references,
                 perform object method calls and do many other things supported by JEXL.
-                See reference on <a href="http://jakarta.apache.org/commons/jexl/reference/syntax.html">JEXL Syntax</a> for more details.
+                See reference on <a href="http://commons.apache.org/jexl/reference/syntax.html">JEXL Syntax</a> for more details.
                 Still there are a couple of limitations imposed by jXLS on JEXL that needs to be mentioned.</p>
                 <ul>
                     <li>Use of the JEXL built-in "size" function does not produce the expected result because JXLS handles collections in a special way</li>

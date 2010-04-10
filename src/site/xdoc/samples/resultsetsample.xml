@@ -19,7 +19,7 @@
 			</p>
 			<subsection id="resultset" name="ResultSet">
 				<p>This is a source code snippet to query data using
-                    <code>org.apache.commons.beanutils.ResultSetDynaClass</code> from <a href="http://jakarta.apache.org/commons/beanutils/">Commons BeanUtils</a> library.
+                    <code>org.apache.commons.beanutils.ResultSetDynaClass</code> from <a href="http://commons.apache.org/beanutils/">Commons BeanUtils</a> library.
 				</p>
 				<source>
 		                Connection con = ...// get connection
@@ -35,7 +35,7 @@
 				<p>An important problem with this approach is that the underlying ResultSet must remain open throughout the period of time that the rows are being processed by jXLS engine. Next approach does not have such restriction. </p>
 			</subsection>
 			<subsection id="rowSet" name="RowSet">
-				<p> When you construct an instance of <code>org.apache.commons.beanutils.RowSetDynaClass</code> from <a href="http://jakarta.apache.org/commons/beanutils/">Commons BeanUtils</a>,
+				<p> When you construct an instance of <code>org.apache.commons.beanutils.RowSetDynaClass</code> from <a href="http://commons.apache.org/beanutils/">Commons BeanUtils</a>,
                     the underlying data are copied into a set of in-memory DynaBeans that represent the result.
                     So you can immediately close the <code>ResultSet</code>, normally before you even process the actual data that was returned.
                     But the disadvantage is that you must pay the performance and memory costs of copying the result data.

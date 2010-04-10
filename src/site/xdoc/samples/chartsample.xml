@@ -8,7 +8,7 @@
             <p>Creating Excel reports containing charts is not difficult with
                 <a href="http://jxls.sourceforge.net">jXLS</a>.
              Mainly it is possible because
-                <a href="http://jakarta.apache.org/poi/"> Jakarta POI </a> attempts to keep existing records intact as far as possible.
+                <a href="http://poi.apache.org/"> Jakarta POI </a> attempts to keep existing records intact as far as possible.
             </p>
             <section id="chartSample" name="Basic Chart Sample">
                 <p>To create a chart in Excel we have to set source data range. Here we assume that these source data takes up a fixed number of rows and all data for the rows are contained in some collection.

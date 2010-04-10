@@ -6,7 +6,7 @@
 	<body>
 		<section id="overview" name="Overview">
 			<p>Though <a href="http://jxls.sourceforge.net">jXLS</a> was not designed to export JDBC query results it can be easily done
-                using dynabean classes from Jakarta <a href="http://jakarta.apache.org/commons/beanutils/">Commons BeanUtils</a>. There are two ways to export
+                using dynabean classes from Jakarta <a href="http://commons.apache.org/beanutils/">Commons BeanUtils</a>. There are two ways to export
             <code>ResultSet</code> object with <code>XLSTransformer</code>. First one uses <code>org.apache.commons.beanutils.RowSetDynaClass</code>.
             Second one is based on <code>net.sf.jxls.report.ResultSetCollection</code> class.
             </p>

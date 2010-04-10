@@ -6,7 +6,7 @@
     <body>
         <section name="Overview" id="overview">
             <p>This section demonstrates how to apply different formulas to your exported data. First any static Excel formulas (which are supported by
-                <a href="http://jakarta.apache.org/poi/">POI</a>) will be copied  to result Excel file untouched.
+                <a href="http://poi.apache.org/">POI</a>) will be copied  to result Excel file untouched.
 			 But if you want to apply formula to dynamic data like exported collections you have to use predefined notation.
 			Any cell with value starting with
                 <strong>

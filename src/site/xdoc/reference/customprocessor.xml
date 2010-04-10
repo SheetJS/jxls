@@ -30,7 +30,7 @@
 					<code>Map namedCells</code> - contains all named cells that were found during processing of previous cells
                 </li>
 			</ul>
-			<p>With <code>Row</code> object you have access to related <a href="http://jakarta.apache.org/poi/">POI</a>
+			<p>With <code>Row</code> object you have access to related <a href="http://poi.apache.org/">POI</a>
                 objects to modify cell style if required. </p>
 			<p> Let's take a look at <code>StyleRowProcessor</code> class from <a href="../samples/dynamicstylesample.html">Row Style sample</a>.
                 This class allows to highlight some rows containing employee information for all employees with payment greater than 2000.
