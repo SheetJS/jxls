@@ -218,15 +218,15 @@ public class ForEachTag extends BaseTag {
             collectionToProcess = selectCollectionDataToProcess(beans);
         }
         if (itemsCollection != null && !itemsCollection.isEmpty() && (collectionToProcess == null || !collectionToProcess.isEmpty())) {
+            body.setSheet(tagContext.getSheet());
             tagContext.getSheetTransformationController().removeLeftRightBorders(body);
             shiftNumber += -2;
             ResultTransformation shift = new ResultTransformation();
-            shift.setLastProcessedRow(-1);
+            shift.setLastProcessedRow(0);
             shift.setStartCellShift(body.getEndCellNum()+1);
             if (groupBy == null || groupBy.length() == 0) {
                 shiftNumber += tagContext.getSheetTransformationController().duplicateRight(body, collectionToProcess.size() - 1);
                 processCollectionItemsOneRow(collectionToProcess, beans, body, shift, sheetTransformer);
-
             } else {
                 try {
                     Collection groupedData = ReportUtil.groupCollectionData(itemsCollection, groupBy, groupOrder, select, configuration);
@@ -257,7 +257,6 @@ public class ForEachTag extends BaseTag {
         tagContext.getSheetTransformationController().removeRowCells(currentRow, body.getStartCellNum(), body.getEndCellNum());
         ResultTransformation shift = new ResultTransformation(0);
         shift.add( new ResultTransformation((short)-body.getNumberOfColumns(), (short)(-body.getNumberOfColumns() )));
-        shift.setLastProcessedRow(-1);
         shift.setTagProcessResult(true);
         return shift;
     }

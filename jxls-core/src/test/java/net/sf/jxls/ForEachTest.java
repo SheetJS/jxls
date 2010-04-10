@@ -43,6 +43,12 @@ public class ForEachTest extends TestCase {
     public static final String forOneRowXLS = "/templates/forOneRow.xls";
     public static final String forOneRowDestXLS = "target/forOneRow_output.xls";
 
+    public static final String forOneRowMergeXLS = "/templates/forOneRowMerge.xls";
+    public static final String forOneRowMergeDestXLS = "target/forOneRowMerge_output.xls";
+
+    public static final String forOneRowMerge2XLS = "/templates/forOneRowMerge2.xls";
+    public static final String forOneRowMerge2DestXLS = "target/forOneRowMerge2_output.xls";
+
     public static final String doubleForEachOneRowXLS = "/templates/doubleForEachOneRow.xls";
     public static final String doubleForEachOneRowDestXLS = "target/doubleForEachOneRow_output.xls";
 
@@ -604,6 +610,35 @@ public class ForEachTest extends TestCase {
         saveWorkbook(resultWorkbook, doubleForEachOneRowDestXLS);
     }
 
+    public void testForOneRowMerge() throws IOException, ParsePropertyException {
+        Map beans = new HashMap();
+        beans.put( "mgrDep", mgrDepartment );
+
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forOneRowMergeXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        CellsChecker checker = new CellsChecker();
+        Object[] values = new Object[]{"Sean", null, null, "John", null, new Double(6000), "Joerg", null, null, "MGR", null, null};
+        checker.checkRow(resultSheet, 0, 0, 11, values);
+        saveWorkbook(resultWorkbook, forOneRowMergeDestXLS);
+    }
+
+    public void testForOneRowMerge2() throws IOException, ParsePropertyException {
+        Map beans = new HashMap();
+        beans.put( "itDep", itDepartment );
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forOneRowMerge2XLS));
+        XLSTransformer transformer = new XLSTransformer();
+        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        CellsChecker checker = new CellsChecker();
+        Object[] values = new Object[]{"Elsa", null, new Double(1500), "Oleg", null, new Double(2300), "Neil", null, new Double(2500),
+                "Maria", null, new Double(1700), "John", null, new Double(2800), "IT", null, null};
+        checker.checkRow(resultSheet, 0, 0, values.length - 1, values);
+        saveWorkbook(resultWorkbook, forOneRowMerge2DestXLS);
+    }
 
 }
 

@@ -80,7 +80,7 @@ public final class Util {
 	 * @param sheet
 	 * @param region
 	 */
-	private static void removeMergedRegion(HSSFSheet sheet,
+	public static void removeMergedRegion(HSSFSheet sheet,
 			CellRangeAddress region) {
 		int index = getMergedRegionIndex(sheet, region);
 		if (index >= 0) {
@@ -126,7 +126,7 @@ public final class Util {
 		return region;
 	}
 
-	private static boolean isNewMergedRegion(CellRangeAddress region,
+	protected static boolean isNewMergedRegion(CellRangeAddress region,
 			Collection mergedRegions) {
 		for (Iterator iterator = mergedRegions.iterator(); iterator.hasNext();) {
 			CellRangeAddress cellRangeAddress = (CellRangeAddress) iterator
@@ -814,23 +814,43 @@ public final class Util {
 		return (String) xmlEntities.get(Integer.toString(ch));
 	}
 
+    protected static void updateMergedRegionInRow(HSSFSheet sheet, Set mergedRegions, int rowNum, int cellNum, int destCellNum, boolean removeSourceMergedRegion) {
+        CellRangeAddress mergedRegion = Util.getMergedRegion(sheet, rowNum, cellNum);
+        if (mergedRegion != null && Util.isNewMergedRegion(mergedRegion, mergedRegions)) {
+            CellRangeAddress newMergedRegion = new CellRangeAddress(
+                    mergedRegion.getFirstRow(), mergedRegion.getLastRow(),
+                    mergedRegion.getFirstColumn() + destCellNum - cellNum, mergedRegion.getLastColumn() + destCellNum - cellNum);
+            if (Util.isNewMergedRegion(newMergedRegion, mergedRegions)) {
+                mergedRegions.add(newMergedRegion);
+                sheet.addMergedRegion(newMergedRegion);
+                if( removeSourceMergedRegion ){
+                    removeMergedRegion(sheet, mergedRegion);
+                }
+            }
+        }
+    }
+
+
 	public static void shiftCellsLeft(HSSFSheet sheet, int startRow,
-			int startCol, int endRow, int endCol, int shiftNumber) {
-		for (int i = startRow; i <= endRow; i++) {
+                                      int startCol, int endRow, int endCol, int shiftNumber, boolean removeSourceMergedRegion) {
+        Set mergedRegions = new HashSet();
+		for (int rowNum = startRow; rowNum <= endRow; rowNum++) {
 			boolean doSetWidth = true;
-			HSSFRow row = sheet.getRow(i);
+			HSSFRow row = sheet.getRow(rowNum);
 			if (row != null) {
-				for (int j = startCol; j <= endCol; j++) {
-					HSSFCell cell = row.getCell(j);
+				for (int colNum = startCol; colNum <= endCol; colNum++) {
+					HSSFCell cell = row.getCell(colNum);
 					if (cell == null) {
-						cell = row.createCell(j);
+						cell = row.createCell(colNum);
 						doSetWidth = false;
 					}
-					HSSFCell destCell = row.getCell((int) (j - shiftNumber));
+                    int destColNum = colNum - shiftNumber;
+                    HSSFCell destCell = row.getCell(destColNum);
 					if (destCell == null) {
-						destCell = row.createCell((int) (j - shiftNumber));
+						destCell = row.createCell( destColNum);
 					}
 					copyCell(cell, destCell, true);
+                    Util.updateMergedRegionInRow(sheet, mergedRegions, rowNum, colNum, destColNum, removeSourceMergedRegion);
 					if (doSetWidth) {
 						sheet.setColumnWidth(destCell.getColumnIndex(),
 								getWidth(sheet, cell.getColumnIndex()));
@@ -849,21 +869,24 @@ public final class Util {
 	}
 
 	public static void shiftCellsRight(HSSFSheet sheet, int startRow,
-			int endRow, int startCol, int shiftNumber) {
-		for (int i = startRow; i <= endRow; i++) {
-			HSSFRow row = sheet.getRow(i);
+                                       int endRow, int startCol, int shiftNumber, boolean removeSourceMergedRegion) {
+        Set mergedRegions = new HashSet();
+		for (int rowNum = startRow; rowNum <= endRow; rowNum++) {
+			HSSFRow row = sheet.getRow(rowNum);
 			if (row != null) {
 				int lastCellNum = row.getLastCellNum();
-				for (int j = lastCellNum; j >= startCol; j--) {
-					HSSFCell destCell = row.getCell((int) (j + shiftNumber));
+				for (int colNum = lastCellNum; colNum >= startCol; colNum--) {
+                    int destColNum = colNum + shiftNumber;
+                    HSSFCell destCell = row.getCell( destColNum);
 					if (destCell == null) {
-						destCell = row.createCell((int) (j + shiftNumber));
+						destCell = row.createCell(destColNum);
 					}
-					HSSFCell cell = row.getCell(j);
+					HSSFCell cell = row.getCell(colNum);
 					if (cell == null) {
-						cell = row.createCell(j);
+						cell = row.createCell(colNum);
 					}
 					copyCell(cell, destCell, true);
+                    Util.updateMergedRegionInRow(sheet, mergedRegions, rowNum, colNum, destColNum, removeSourceMergedRegion);
 				}
 			}
 		}
