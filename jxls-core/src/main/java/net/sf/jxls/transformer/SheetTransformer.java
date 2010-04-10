@@ -237,7 +237,7 @@ public class SheetTransformer {
                     if (rowCollection != null) {
                         rowCollection.addCell(cell);
                     } else {
-                        log.warn("RowCollection with name " + cell.getCollectionName() + " not found");
+                        log.debug("RowCollection with name " + cell.getCollectionName() + " not found");
                     }
                 } else {
                     // add null cells to all hssfRow collections

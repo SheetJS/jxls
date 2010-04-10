@@ -78,7 +78,6 @@
             <p>jx:if tag can be used to exclude some columns from export based on some condition. If you
             place opening and closing <code>jx:if</code> tag into the same row jXLS will process or remove columns contained in
             tag body depending on test condition.</p>
-            <p>See also <a href="../samples/tagsample.html">Basic Tags sample</a></p>
         </section>
         <section id="outlineTag" name="jx:outline Tag">
             <p><code>&lt;jx:outline></code> tag allows you to group particular set of rows. For example having</p>
@@ -101,6 +100,10 @@
             <p>
                 This tag can be used anywhere that an expression would be used normally and simply takes a JEXL expression as an attribute value.
             </p>
+        </section>
+        <section id="getMoreInformation" name="Getting more information">
+            <p>A big source of samples of jx tags usage can be found in jxls-core module unit tests. Take a look at various templates to see how they are built.
+            If you are stuck do not hesitate to write on jXLS forum or send a message to jXLS mailing list.</p>
         </section>
     </body>
 </document>
