@@ -93,10 +93,11 @@
   </dependencyManagement>
   <distributionManagement>
     <repository>
-      <id>sourceforge.net</id>
+      <id>sourceforge</id>
       <name>jXLS Releases Repository at Sourceforge</name>
-      <url>scp://frs.sourceforge.net/home/groups/j/jx/jxls/htdocs/repository/releases</url>
+      <url>scp://shell.sourceforge.net/home/groups/j/jx/jxls/htdocs/repository/releases</url>
     </repository>
+      
     <!--<snapshotRepository>-->
       <!--<id>sourceforge.net</id>-->
       <!--<name>jXLS Snapshots Repository at Sourceforge</name>-->
@@ -106,7 +107,7 @@
 
     <repositories>
         <repository>
-            <id>sourceforge.net</id>
+            <id>sourceforge</id>
             <name>jXLS snapshot repository</name>
             <url>http://jxls.sourceforge.net/repository/snapshots</url>
             <releases>
