@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.jexl.JexlContext;
-import org.apache.commons.jexl.JexlHelper;
+import org.apache.commons.jexl2.JexlContext;
+import org.apache.commons.jexl2.MapContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -23,8 +23,6 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
 
     SectionCheck loopBreakCheck;
 
-
-
     public XLSForEachBlockReaderImpl() {
     }
 
@@ -38,55 +36,52 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
 
     public XLSReadStatus read(XLSRowCursor cursor, Map beans) {
         readStatus.clear();
-            JexlContext context = JexlHelper.createContext();
-            context.setVars(beans);
-            ExpressionCollectionParser parser = new ExpressionCollectionParser( context, items + ";", true );
-            Collection itemsCollection = parser.getCollection();
-            while( !loopBreakCheck.isCheckSuccessful(cursor) ){
-                createNewCollectionItem(itemsCollection, beans);
-                readInnerBlocks(cursor, beans);
-            }
-            cursor.moveBackward();
+        JexlContext context = new MapContext(beans);
+        ExpressionCollectionParser parser = new ExpressionCollectionParser(context, items + ";", true);
+        Collection itemsCollection = parser.getCollection();
+        while (!loopBreakCheck.isCheckSuccessful(cursor)) {
+            createNewCollectionItem(itemsCollection, beans);
+            readInnerBlocks(cursor, beans);
+        }
+        cursor.moveBackward();
         return readStatus;
 
     }
-
 
     private void createNewCollectionItem(Collection itemsCollection, Map beans) {
         Object obj = null;
         try {
             obj = varType.newInstance();
-        }catch (Exception e) {
+        } catch (Exception e) {
             String message = "Can't create a new collection item for " + items + ". varType = " + varType.getName();
-            readStatus.addMessage( new XLSReadMessage(message) );
-            if( !ReaderConfig.getInstance().isSkipErrors() ){
-                readStatus.setStatusOK( false );
+            readStatus.addMessage(new XLSReadMessage(message));
+            if (!ReaderConfig.getInstance().isSkipErrors()) {
+                readStatus.setStatusOK(false);
                 throw new XLSDataReadException(message, readStatus);
             }
-            if( log.isWarnEnabled() ){
+            if (log.isWarnEnabled()) {
                 log.warn(message);
             }
         }
         itemsCollection.add(obj);
-        beans.put( var, obj );
+        beans.put(var, obj);
     }
 
     private void readInnerBlocks(XLSRowCursor cursor, Map beans) {
         for (int i = 0; i < innerBlockReaders.size(); i++) {
             XLSBlockReader xlsBlockReader = (XLSBlockReader) innerBlockReaders.get(i);
-            readStatus.mergeReadStatus( xlsBlockReader.read( cursor, beans ) );
+            readStatus.mergeReadStatus(xlsBlockReader.read(cursor, beans));
             cursor.moveForward();
         }
     }
 
     public void addBlockReader(XLSBlockReader reader) {
-        innerBlockReaders.add( reader );
+        innerBlockReaders.add(reader);
     }
 
     public List getBlockReaders() {
         return innerBlockReaders;
     }
-
 
     public SectionCheck getLoopBreakCondition() {
         return loopBreakCheck;
@@ -95,7 +90,6 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
     public void setLoopBreakCondition(SectionCheck sectionCheck) {
         this.loopBreakCheck = sectionCheck;
     }
-
 
     public void setItems(String items) {
         this.items = items;
@@ -108,7 +102,6 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
     public void setVarType(Class varType) {
         this.varType = varType;
     }
-
 
     public String getItems() {
         return items;

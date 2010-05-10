@@ -7,8 +7,8 @@ import java.util.Map;
 
 import net.sf.jxls.transformer.Configuration;
 
-import org.apache.commons.jexl.JexlContext;
-import org.apache.commons.jexl.JexlHelper;
+import org.apache.commons.jexl2.JexlContext;
+import org.apache.commons.jexl2.MapContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -40,24 +40,22 @@ public class Property {
         propertyValue = getPropertyValue(beans);
     }
 
-    public boolean isConstant(){
-        return property==null;
+    public boolean isConstant() {
+        return property == null;
     }
 
     public Object getPropertyValue(Map beans) {
-        
-        JexlContext context = JexlHelper.createContext();
-        context.setVars(beans);
+        JexlContext context = new MapContext(beans);
         ExpressionCollectionParser parser = new ExpressionCollectionParser(context, this.property + ";", config.isJexlInnerCollectionsAccess());
         if (parser.getCollection() == null) {
-            propertyValue = null; 
+            propertyValue = null;
         } else {
             collectionName = parser.getCollectionExpression();
             collection = parser.getCollection();
             beanName = null;
             bean = null;
         }
-        
+
         return propertyValue;
     }
 
@@ -81,11 +79,9 @@ public class Property {
         this.collectionName = collectionName;
     }
 
-
     public String getProperty() {
         return property;
     }
-
 
     public Collection getCollection() {
         return collection;
@@ -129,12 +125,11 @@ public class Property {
     }
 
     public String toString() {
-        return "Property{" +
-                "property='" + property + "'}";
+        return "Property{" + "property='" + property + "'}";
     }
 
     public Object getPropertyValue() {
-        if( bean instanceof String){
+        if (bean instanceof String) {
             return bean;
         }
         return propertyValue;

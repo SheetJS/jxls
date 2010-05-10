@@ -6,14 +6,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.jexl.Expression;
-import org.apache.commons.jexl.ExpressionFactory;
-import org.apache.commons.jexl.JexlContext;
-import org.apache.commons.jexl.parser.ASTIdentifier;
-import org.apache.commons.jexl.parser.ASTReference;
-import org.apache.commons.jexl.parser.Node;
-import org.apache.commons.jexl.parser.Parser;
-import org.apache.commons.jexl.parser.SimpleNode;
+import org.apache.commons.jexl2.Expression;
+import org.apache.commons.jexl2.JexlContext;
+import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.parser.ASTIdentifier;
+import org.apache.commons.jexl2.parser.ASTReference;
+import org.apache.commons.jexl2.parser.Node;
+import org.apache.commons.jexl2.parser.Parser;
+import org.apache.commons.jexl2.parser.SimpleNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,14 +31,13 @@ public class ExpressionCollectionParser {
 
     private boolean jexlInnerCollectionsAccess;
 
-
     private String collectionExpression;
     private Collection collection;
 
     public ExpressionCollectionParser(JexlContext jexlContext, String expr, boolean jexlInnerCollectionsAccess) {
         try {
             this.jexlInnerCollectionsAccess = jexlInnerCollectionsAccess;
-            SimpleNode tree = ((Parser) ExpressionCollectionParser.parser.get()).parse(new StringReader(expr));
+            SimpleNode tree = ((Parser) parser.get()).parse(new StringReader(expr), null);
             ArrayList references = new ArrayList();
             findReferences(references, tree);
             findCollection(jexlContext, references);
@@ -74,10 +73,10 @@ public class ExpressionCollectionParser {
 
         for (Iterator itr = references.iterator(); itr.hasNext();) {
             node = (Node) itr.next();
-            String collectionExpression = findCollectionProperties(jexlContext, node);
-            if (collectionExpression != null) {
-                if (!collectionExpression.endsWith(ExpressionCollectionParser.COLLECTION_REFERENCE_SUFFIX)) {
-                    this.collectionExpression = collectionExpression;
+            String expression = findCollectionProperties(jexlContext, node);
+            if (expression != null) {
+                if (!expression.endsWith(ExpressionCollectionParser.COLLECTION_REFERENCE_SUFFIX)) {
+                    collectionExpression = expression;
                 }
                 break;
             }
@@ -87,25 +86,26 @@ public class ExpressionCollectionParser {
     private String findCollectionProperties(JexlContext jexlContext, Node node) {
 
         int childCount = node.jjtGetNumChildren();
-        Node child  ;
+        Node child;
         String subExpr = null;
 
+        JexlEngine jexlEngine = new JexlEngine();
         for (int i = 0; i < childCount; i++) {
             child = node.jjtGetChild(i);
             if (child instanceof ASTIdentifier) {
                 ASTIdentifier ident = (ASTIdentifier) child;
                 if (subExpr == null) {
-                    subExpr = ident.getIdentifierString();
+                    subExpr = ident.image;
                 } else {
-                    subExpr = subExpr + "." + ident.getIdentifierString();
+                    subExpr = subExpr + "." + ident.image;
                 }
-                if( jexlInnerCollectionsAccess ){
+                if (jexlInnerCollectionsAccess) {
                     if (subExpr.endsWith(ExpressionCollectionParser.COLLECTION_REFERENCE_SUFFIX)) {
                         return subExpr;
                     }
                 }
                 try {
-                    Expression e = ExpressionFactory.createExpression(subExpr);
+                    Expression e = jexlEngine.createExpression(subExpr);
                     Object obj = e.evaluate(jexlContext);
                     if (obj instanceof Collection) {
                         this.collection = (Collection) obj;
