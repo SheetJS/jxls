@@ -12,10 +12,8 @@ import net.sf.jxls.transformer.SheetTransformer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 public class OutTag extends BaseTag {
     
@@ -80,16 +78,16 @@ public class OutTag extends BaseTag {
                 
                 Sheet jxlsSheet = getTagContext().getSheet();
                 if (jxlsSheet != null) {
-                    HSSFSheet sheet = jxlsSheet.getHssfSheet();
+                    org.apache.poi.ss.usermodel.Sheet sheet = jxlsSheet.getPoiSheet();
                     if (sheet != null) {
-                        HSSFRow row = sheet.getRow(rowNum);
+                        Row row = sheet.getRow(rowNum);
                         if (row != null) {
-                            HSSFCell cell = row.getCell((short) cellNum);
+                            Cell cell = row.getCell((short) cellNum);
                             if (cell != null) {
                                 
                                 Object value = new Expression(expr, tagContext.getBeans(), configuration).evaluate();
                                 if (value == null) {
-                                    cell.setCellValue(new HSSFRichTextString(""));
+                                    cell.setCellValue(sheet.getWorkbook().getCreationHelper().createRichTextString(""));
                                 } else if (value instanceof Double) {
                                     cell.setCellValue(((Double) value).doubleValue());
                                 } else if (value instanceof BigDecimal) {
@@ -108,7 +106,7 @@ public class OutTag extends BaseTag {
                                     if (fixedValue != null) {
                                         fixedValue = fixedValue.replaceAll("\r\n", "\n");
                                     }
-                                    cell.setCellValue(new HSSFRichTextString(fixedValue));
+                                    cell.setCellValue(sheet.getWorkbook().getCreationHelper().createRichTextString(fixedValue));
                                 }
                             }
                         }

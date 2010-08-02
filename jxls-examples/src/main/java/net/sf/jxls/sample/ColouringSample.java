@@ -11,6 +11,7 @@ import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.sample.model.Department;
 import net.sf.jxls.sample.model.Employee;
 import net.sf.jxls.transformer.XLSTransformer;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
  * @author Leonid Vysochyn
@@ -19,7 +20,7 @@ public class ColouringSample {
     private static String templateFileName = "examples/templates/colouring.xls";
     private static String destFileName = "build/colouring_output.xls";
 
-    public static void main(String[] args) throws IOException, ParsePropertyException {
+    public static void main(String[] args) throws IOException, ParsePropertyException, InvalidFormatException {
         if (args.length >= 2) {
             templateFileName = args[0];
             destFileName = args[1];

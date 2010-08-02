@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * @author Leonid Vysochyn
@@ -17,7 +17,7 @@ public class XLSSheetReaderImpl implements XLSSheetReader {
     XLSReadStatus readStatus = new XLSReadStatus();
 
 
-    public XLSReadStatus read(HSSFSheet sheet, Map beans) {
+    public XLSReadStatus read(Sheet sheet, Map beans) {
         readStatus.clear();
         XLSRowCursor cursor = new XLSRowCursorImpl( sheetName, sheet );
         for (int i = 0; i < blockReaders.size(); i++) {

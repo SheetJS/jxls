@@ -11,6 +11,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 import net.sf.jxls.reader.sample.Department;
 import net.sf.jxls.reader.sample.Employee;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
  * @author Leonid Vysochyn
@@ -18,7 +19,7 @@ import net.sf.jxls.reader.sample.Employee;
 public class XLSReaderTest extends TestCase {
     public static final String dataXLS = "/templates/departmentdata.xls";
 
-    public void testRead() throws IOException {
+    public void testRead() throws IOException, InvalidFormatException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));
 
         Department itDepartment = new Department();

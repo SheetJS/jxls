@@ -18,9 +18,10 @@ import net.sf.jxls.reader.sample.Employee;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.LazyDynaBean;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  * @author Leonid Vysochyn
@@ -34,11 +35,10 @@ public class XLSBlockReaderTest extends TestCase {
 //        ConvertUtils.register( new SqlDateConverter(null), java.util.Date.class);
     }
 
-    public void testRead() throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException, ParseException {
+    public void testRead() throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException, ParseException, InvalidFormatException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));
-        POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
-        HSSFWorkbook hssfInputWorkbook = new HSSFWorkbook(fsInput);
-        HSSFSheet sheet = hssfInputWorkbook.getSheetAt( 0 );
+        Workbook hssfInputWorkbook = WorkbookFactory.create(inputXLS);
+        Sheet sheet = hssfInputWorkbook.getSheetAt( 0 );
         List mappings = new ArrayList();
         Department departmentBean = new Department();
         Employee chief = new Employee();

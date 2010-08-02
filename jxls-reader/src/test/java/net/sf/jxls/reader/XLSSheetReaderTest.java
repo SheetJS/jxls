@@ -12,9 +12,10 @@ import junit.framework.TestCase;
 import net.sf.jxls.reader.sample.Department;
 import net.sf.jxls.reader.sample.Employee;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  * @author Leonid Vysochyn
@@ -22,11 +23,10 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 public class XLSSheetReaderTest extends TestCase {
     public static final String dataXLS = "/templates/departmentData.xls";
 
-    public void testRead() throws IOException {
+    public void testRead() throws IOException, InvalidFormatException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));
-        POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
-        HSSFWorkbook hssfInputWorkbook = new HSSFWorkbook(fsInput);
-        HSSFSheet sheet = hssfInputWorkbook.getSheetAt( 0 );
+        Workbook hssfInputWorkbook = WorkbookFactory.create(inputXLS);
+        Sheet sheet = hssfInputWorkbook.getSheetAt( 0 );
 
         Department department = new Department();
         Employee chief = new Employee();

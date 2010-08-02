@@ -83,7 +83,7 @@ public class CollectionRowTransformer extends BaseRowTransformer {
     ResultTransformation processRowCollections(SheetTransformationController sheetTransformationController, SheetTransformer sheetTransformer, Map beans) throws ParsePropertyException {
         int maxShiftNumber = 0;
 
-        int rowNum = row.getHssfRow().getRowNum();
+        int rowNum = row.getPoiRow().getRowNum();
         Set keys = new HashSet( beans.keySet() );
         for (int i = 0; i < row.getRowCollections().size(); i++) {
             RowCollection rowCollection = (RowCollection) row.getRowCollections().get(i);
@@ -139,11 +139,11 @@ public class CollectionRowTransformer extends BaseRowTransformer {
                         beans.put( rowCollection.getCollectionItemName(), o);
                     }
                 }
-//                Util.writeToFile("beforeProcessRows.xls", row.getSheet().getHssfWorkbook());
+//                Util.writeToFile("beforeProcessRows.xls", row.getSheet().getPoiWorkbook());
 //                int shiftNumber = sheetTransformer.processRows( row.getSheet(), rowNum + (minDependentRowNumber+1)*k, rowNum + (minDependentRowNumber+1)*k + minDependentRowNumber, beans, row);
 
                 ResultTransformation processResult = sheetTransformer.processRows(sheetTransformationController, row.getSheet(), rowNum + (minDependentRowNumber+1)*k, rowNum + (minDependentRowNumber+1)*k + minDependentRowNumber, beans, row);
-//                Util.writeToFile("afterProcessRows.xls", row.getSheet().getHssfWorkbook());
+//                Util.writeToFile("afterProcessRows.xls", row.getSheet().getPoiWorkbook());
                 int shiftNumber = processResult.getNextRowShift();
                 mainShiftNumber += shiftNumber + 1;
                 rowNum += shiftNumber;

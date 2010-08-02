@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.xml.sax.SAXException;
 import net.sf.jxls.reader.sample.SimpleBean;
 
@@ -21,7 +22,7 @@ public class ReadFormulasTest extends TestCase {
     public static final String formulasXLS = "/templates/formulasData.xls";
     public static final String xmlConfig = "/xml/formulas.xml";
 
-    public void testReadFormulas() throws IOException, SAXException {
+    public void testReadFormulas() throws IOException, SAXException, InvalidFormatException {
         InputStream inputXML = new BufferedInputStream(getClass().getResourceAsStream( xmlConfig ));
         XLSReader reader = ReaderBuilder.buildFromXML( inputXML );
         assertNotNull( reader );

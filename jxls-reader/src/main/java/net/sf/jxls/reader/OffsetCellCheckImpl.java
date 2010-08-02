@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 /**
  * @author Leonid Vysochyn
@@ -43,7 +43,7 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
         this.offset = offset;
     }
 
-    public boolean isCheckSuccessful(HSSFCell cell) {
+    public boolean isCheckSuccessful(Cell cell) {
         Object obj = getCellValue(cell, value);
         if (value == null) {
             return obj == null;
@@ -52,16 +52,16 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
         }
     }
 
-    public boolean isCheckSuccessful(HSSFRow row) {
+    public boolean isCheckSuccessful(Row row) {
         if (row == null) {
             return value == null;
         } else {
-            HSSFCell cell = row.getCell(offset);
+            Cell cell = row.getCell(offset);
             return isCheckSuccessful(cell);
         }
     }
 
-    private Object getCellValue(HSSFCell cell, Object obj) {
+    private Object getCellValue(Cell cell, Object obj) {
         Object value = null;
         if (obj instanceof String) {
             value = readStringValue(cell);
@@ -80,9 +80,9 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
             c.setTime(cell.getDateCellValue());
             value = c;
         } else if (obj instanceof Boolean) {
-            if (cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN) {
+            if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
                 value = (cell.getBooleanCellValue()) ? Boolean.TRUE : Boolean.FALSE;
-            } else if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+            } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
                 value = Boolean.valueOf(cell.getRichStringCellValue().getString());
             } else {
                 value = Boolean.FALSE;
@@ -91,24 +91,24 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
         return value;
     }
 
-    private String readStringValue(HSSFCell cell) {
+    private String readStringValue(Cell cell) {
         String value = null;
         if (cell == null) return null; // ZJ
         switch (cell.getCellType()) {
-            case HSSFCell.CELL_TYPE_STRING:
+            case Cell.CELL_TYPE_STRING:
                 value = cell.getRichStringCellValue().getString().trim();
                 break;
-            case HSSFCell.CELL_TYPE_NUMERIC:
+            case Cell.CELL_TYPE_NUMERIC:
                 value = Double.toString(cell.getNumericCellValue()).trim();
                 break;
-            case HSSFCell.CELL_TYPE_BLANK:
+            case Cell.CELL_TYPE_BLANK:
                 value = "";
                 break;
-            case HSSFCell.CELL_TYPE_BOOLEAN:
+            case Cell.CELL_TYPE_BOOLEAN:
                 break;
-            case HSSFCell.CELL_TYPE_ERROR:
+            case Cell.CELL_TYPE_ERROR:
                 break;
-            case HSSFCell.CELL_TYPE_FORMULA:
+            case Cell.CELL_TYPE_FORMULA:
                 break;
             default:
                 break;

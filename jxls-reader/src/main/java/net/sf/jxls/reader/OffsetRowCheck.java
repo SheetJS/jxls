@@ -1,6 +1,6 @@
 package net.sf.jxls.reader;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.ss.usermodel.Row;
 
 /**
  * @author Leonid Vysochyn
@@ -8,7 +8,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 public interface OffsetRowCheck {
     int getOffset();
     void setOffset(int offset);
-    boolean isCheckSuccessful(HSSFRow row);
+    boolean isCheckSuccessful(Row row);
     boolean isCheckSuccessful(XLSRowCursor cursor);
     void addCellCheck(OffsetCellCheck cellCheck);
 }

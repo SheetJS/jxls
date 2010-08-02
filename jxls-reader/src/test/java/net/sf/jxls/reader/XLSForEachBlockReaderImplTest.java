@@ -12,9 +12,10 @@ import junit.framework.TestCase;
 import net.sf.jxls.reader.sample.Department;
 import net.sf.jxls.reader.sample.Employee;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.xml.sax.SAXException;
 
 /**
@@ -33,11 +34,10 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
 //        ReaderConfig.getInstance().setUseDefaultValuesForPrimitiveTypes( true );
     }
 
-    public void testRead() throws IOException {
+    public void testRead() throws IOException, InvalidFormatException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(departmentDataXLS));
-        POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
-        HSSFWorkbook hssfInputWorkbook = new HSSFWorkbook(fsInput);
-        HSSFSheet sheet = hssfInputWorkbook.getSheetAt( 0 );
+        Workbook hssfInputWorkbook = WorkbookFactory.create(inputXLS);
+        Sheet sheet = hssfInputWorkbook.getSheetAt( 0 );
         List mappings = new ArrayList();
         Department department = new Department();
         Map beans = new HashMap();
@@ -66,11 +66,10 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
         checkEmployee( employee, "Alex", new Integer(28), new Double(1600.0), new Double(0.20) );
     }
 
-    public void testRead2() throws IOException {
+    public void testRead2() throws IOException, InvalidFormatException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(departmentDataXLS));
-        POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
-        HSSFWorkbook hssfInputWorkbook = new HSSFWorkbook(fsInput);
-        HSSFSheet sheet = hssfInputWorkbook.getSheetAt( 2 );
+        Workbook hssfInputWorkbook = WorkbookFactory.create(inputXLS);
+        Sheet sheet = hssfInputWorkbook.getSheetAt( 2 );
         Department department;
         Map beans = new HashMap();
         List departments = new ArrayList();
@@ -148,7 +147,7 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
         checkEmployee( employee, "Martha", new Integer(33), new Double(2150.0), new Double(0.25) );
     }
 
-    public void testEmptyLoopBreakCondition() throws IOException, SAXException {
+    public void testEmptyLoopBreakCondition() throws IOException, SAXException, InvalidFormatException {
         InputStream inputXML = new BufferedInputStream(getClass().getResourceAsStream(xmlConfig));
         XLSReader reader = ReaderBuilder.buildFromXML( inputXML );
         assertNotNull( reader );
@@ -167,7 +166,7 @@ public class XLSForEachBlockReaderImplTest extends TestCase {
 
     }
 
-    public void testReadIdentifiers() throws IOException, SAXException {
+    public void testReadIdentifiers() throws IOException, SAXException, InvalidFormatException {
         InputStream inputXML = new BufferedInputStream(getClass().getResourceAsStream(idsXML));
         XLSReader reader = ReaderBuilder.buildFromXML( inputXML );
         assertNotNull( reader );

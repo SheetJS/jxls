@@ -21,7 +21,8 @@ import net.sf.jxls.transformer.XLSTransformer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * @author Leonid Vysochyn
@@ -127,7 +128,7 @@ public class XLSTransformerStressTest extends TestCase {
         return "Department " + r.nextInt(max);
     }
 
-    public void testTransformXLS() throws IOException {
+    public void testTransformXLS() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
         ReportManager rm = new ReportManagerImpl( conn, beans );
         beans.put("rm", rm);
@@ -136,14 +137,14 @@ public class XLSTransformerStressTest extends TestCase {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(stressXLS));
         XLSTransformer transformer = new XLSTransformer();
         long start = System.currentTimeMillis();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         long end = System.currentTimeMillis();
         System.out.println( "Transformation time was: " + (end - start) );
         is.close();
         saveWorkbook( resultWorkbook, stressDestXLS );
     }
 
-    private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
+    private void saveWorkbook(Workbook resultWorkbook, String fileName) throws IOException {
         String saveResultsProp = System.getProperty("saveResults");
         if( "true".equalsIgnoreCase(saveResultsProp) ){
             OutputStream os = new BufferedOutputStream(new FileOutputStream(fileName));

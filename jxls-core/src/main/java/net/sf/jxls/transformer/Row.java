@@ -2,7 +2,6 @@ package net.sf.jxls.transformer;
 
 import net.sf.jxls.parser.Cell;
 import net.sf.jxls.parser.Property;
-import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.util.ArrayList;
@@ -14,14 +13,14 @@ import java.util.List;
  */
 public class Row {
     /**
-     * POI {@link org.apache.poi.hssf.usermodel.HSSFRow} object for the row
+     * POI {@link org.apache.poi.ss.usermodel.Row} object for the row
      */
-    private HSSFRow hssfRow;
+    private org.apache.poi.ss.usermodel.Row hssfRow;
 
     private Sheet sheet;
 
     /**
-     * List of {@link Cell} objects for this Row
+     * List of {@link net.sf.jxls.parser.Cell} objects for this Row
      */
     private List cells = new ArrayList();
     /**
@@ -50,7 +49,7 @@ public class Row {
         this.parentRow = parentRow;
     }
 
-    public Row(Sheet sheet, HSSFRow hssfRow) {
+    public Row(Sheet sheet, org.apache.poi.ss.usermodel.Row hssfRow) {
         this.sheet = sheet;
         this.hssfRow = hssfRow;
     }
@@ -157,7 +156,7 @@ public class Row {
     }
 
     /**
-     * Adds {@link Cell} object to the list of cells for this row
+     * Adds {@link net.sf.jxls.parser.Cell} object to the list of cells for this row
      * @param cell Cell to add
      * @return {@link RowCollection} object if given cell has row collection or null if it has not
      */
@@ -191,7 +190,7 @@ public class Row {
     }
 
     /**
-     * @return List of all {@link Cell} objects for this row
+     * @return List of all {@link net.sf.jxls.parser.Cell} objects for this row
      */
     public List getCells() {
         return cells;
@@ -202,13 +201,13 @@ public class Row {
     }
 
     /**
-     * @return POI {@link org.apache.poi.hssf.usermodel.HSSFRow} object for the row
+     * @return POI {@link org.apache.poi.ss.usermodel.Row} object for the row
      */
-    public HSSFRow getHssfRow() {
+    public org.apache.poi.ss.usermodel.Row getPoiRow() {
         return hssfRow;
     }
 
-    public void setHssfRow(HSSFRow hssfRow) {
+    public void setPoiRow(org.apache.poi.ss.usermodel.Row hssfRow) {
         this.hssfRow = hssfRow;
     }
 

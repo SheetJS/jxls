@@ -3,7 +3,10 @@ package net.sf.jxls.util;
 import net.sf.jxls.tag.Block;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -15,7 +18,7 @@ import java.util.Set;
 public class TagBodyHelper {
     protected final Log log = LogFactory.getLog(getClass());
 
-    public static int duplicateDown(HSSFSheet sheet, Block block, int n) {
+    public static int duplicateDown(Sheet sheet, Block block, int n) {
         if (n > 0) {
             int startRow = block.getEndRowNum() + 1;
             int endRow = sheet.getPhysicalNumberOfRows();
@@ -23,8 +26,8 @@ public class TagBodyHelper {
             Util.shiftRows(sheet, startRow, endRow, numberOfRows);
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < block.getNumberOfRows(); j++) {
-                    HSSFRow row = sheet.getRow(block.getStartRowNum() + j);
-                    HSSFRow newRow = sheet.getRow(block.getEndRowNum() + block.getNumberOfRows() * i + 1 + j);
+                    Row row = sheet.getRow(block.getStartRowNum() + j);
+                    Row newRow = sheet.getRow(block.getEndRowNum() + block.getNumberOfRows() * i + 1 + j);
                     if (row != null) {
                         if (newRow == null) {
                             newRow = sheet.createRow(block.getEndRowNum() + block.getNumberOfRows() * i + 1 + j);
@@ -38,13 +41,13 @@ public class TagBodyHelper {
         return 0;
     }
 
-    public static int duplicateDown(HSSFSheet sheet, Block block, int n, Map formulaCellsToUpdate) {
+    public static int duplicateDown(Sheet sheet, Block block, int n, Map formulaCellsToUpdate) {
         if (n > 0) {
             Util.shiftRows(sheet, block.getEndRowNum() + 1, sheet.getLastRowNum(), block.getNumberOfRows() * n);
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < block.getNumberOfRows(); j++) {
-                    HSSFRow row = sheet.getRow(block.getStartRowNum() + j);
-                    HSSFRow newRow = sheet.getRow(block.getEndRowNum() + block.getNumberOfRows() * i + 1 + j);
+                    Row row = sheet.getRow(block.getStartRowNum() + j);
+                    Row newRow = sheet.getRow(block.getEndRowNum() + block.getNumberOfRows() * i + 1 + j);
                     if (row != null) {
                         if (newRow == null) {
                             newRow = sheet.createRow(block.getEndRowNum() + block.getNumberOfRows() * i + 1 + j);
@@ -58,18 +61,18 @@ public class TagBodyHelper {
         return 0;
     }
 
-    public static int duplicateRight(HSSFSheet sheet, Block block, int n) {
+    public static int duplicateRight(Sheet sheet, Block block, int n) {
         if (n > 0) {
             Set mergedRegions = new HashSet();
             Util.shiftCellsRight(sheet, block.getStartRowNum(), block.getEndRowNum(),  (block.getEndCellNum() + 1),  (block.getNumberOfColumns() * n), true);
             for (int rowNum = block.getStartRowNum(); rowNum <= block.getEndRowNum(); rowNum++) {
-                HSSFRow row = sheet.getRow(rowNum);
+                Row row = sheet.getRow(rowNum);
                 if (row != null) {
                     for (int k = 0; k < n; k++) {
                         for (int cellNum = block.getStartCellNum(); cellNum <= block.getEndCellNum(); cellNum++) {
                             int destCellNum =  (block.getEndCellNum() + k * block.getNumberOfColumns() + cellNum - block.getStartCellNum() + 1);
-                            HSSFCell destCell = row.getCell(destCellNum);
-                            HSSFCell cell = row.getCell(cellNum);
+                            Cell destCell = row.getCell(destCellNum);
+                            Cell cell = row.getCell(cellNum);
                             if (destCell == null) {
                                 destCell = row.createCell(destCellNum);
                             }
@@ -85,7 +88,7 @@ public class TagBodyHelper {
         return 0;
     }
 
-//    private static void updateMergedRegionInRow(HSSFSheet sheet, Set mergedRegions, int rowNum, int cellNum) {
+//    private static void updateMergedRegionInRow(Sheet sheet, Set mergedRegions, int rowNum, int cellNum) {
 //        CellRangeAddress mergedRegion = Util.getMergedRegion(sheet, rowNum, cellNum);
 //        if (mergedRegion != null) {
 //            CellRangeAddress newMergedRegion = new CellRangeAddress(
@@ -98,30 +101,30 @@ public class TagBodyHelper {
 //        }
 //    }
 
-    public static void replaceProperty(HSSFSheet sheet, Block block, String oldProperty, String newProperty) {
+    public static void replaceProperty(Sheet sheet, Block block, String oldProperty, String newProperty) {
         for (int i = block.getStartRowNum(); i <= block.getEndRowNum(); i++) {
-            HSSFRow row = sheet.getRow(i);
+            Row row = sheet.getRow(i);
             replacePropertyInRow(row, oldProperty, newProperty);
         }
     }
 
-    private static void replacePropertyInRow(HSSFRow row, String oldProperty, String newProperty) {
+    private static void replacePropertyInRow(Row row, String oldProperty, String newProperty) {
         for (int j = row.getFirstCellNum(); j <= row.getLastCellNum(); j++) {
-            HSSFCell cell = row.getCell(j);
+            Cell cell = row.getCell(j);
             replacePropertyInCell(cell, oldProperty, newProperty);
         }
     }
 
-    private static void replacePropertyInCell(HSSFCell cell, String oldProperty, String newProperty) {
-        if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+    private static void replacePropertyInCell(Cell cell, String oldProperty, String newProperty) {
+        if (cell != null && cell.getCellType() == Cell.CELL_TYPE_STRING) {
             String cellValue = cell.getRichStringCellValue().getString();
             String newValue = cellValue.replaceAll(oldProperty, newProperty);
-            cell.setCellValue(new HSSFRichTextString(newValue));
+            cell.setCellValue(cell.getSheet().getWorkbook().getCreationHelper().createRichTextString(newValue));
         }
     }
 
-    public static void removeBorders(HSSFSheet sheet, Block block) {
-        HSSFRow rowToDelete = sheet.getRow(block.getStartRowNum());
+    public static void removeBorders(Sheet sheet, Block block) {
+        Row rowToDelete = sheet.getRow(block.getStartRowNum());
         deleteRow(sheet, rowToDelete);
         block.setStartRowNum(block.getStartRowNum() + 1);
         deleteRow(sheet, sheet.getRow(block.getEndRowNum()));
@@ -132,34 +135,34 @@ public class TagBodyHelper {
         }
     }
 
-    private static void deleteRow(HSSFSheet sheet, HSSFRow rowToDelete) {
+    private static void deleteRow(Sheet sheet, Row rowToDelete) {
         if (rowToDelete != null) {
             sheet.removeRow(rowToDelete);
         }
     }
 
-    public static void removeLeftRightBorders(HSSFSheet sheet, Block block) {
-        HSSFRow row = sheet.getRow(block.getStartRowNum());
+    public static void removeLeftRightBorders(Sheet sheet, Block block) {
+        Row row = sheet.getRow(block.getStartRowNum());
         if (row != null) {
             Util.shiftCellsLeft(sheet, block.getStartRowNum(),  (block.getStartCellNum() + 1),
                     block.getEndRowNum(), row.getLastCellNum(), 1, true);
-            HSSFCell cellToRemove = row.getCell(row.getLastCellNum());
+            Cell cellToRemove = row.getCell(row.getLastCellNum());
             clearAndRemoveCell(row, cellToRemove);
             Util.shiftCellsLeft(sheet, block.getStartRowNum(), block.getEndCellNum(), block.getEndRowNum(), row.getLastCellNum(), 1, true);
-            HSSFCell cell = cellToRemove;
+            Cell cell = cellToRemove;
             clearAndRemoveCell(row, cell);
             block.setEndCellNum((int) (block.getEndCellNum() - 2));
         }
     }
 
-    private static void clearAndRemoveCell(HSSFRow row, HSSFCell cellToRemove) {
+    private static void clearAndRemoveCell(Row row, Cell cellToRemove) {
         clearCell(cellToRemove);
         if (cellToRemove != null) {
             row.removeCell(cellToRemove);
         }
     }
 
-    public static void shift(HSSFSheet sheet, Block block, int n) {
+    public static void shift(Sheet sheet, Block block, int n) {
         Util.shiftRows(sheet, block.getStartRowNum(), block.getEndRowNum(), n);
         block.setStartRowNum(block.getStartRowNum() + n);
         block.setEndRowNum(block.getEndRowNum() + n);
@@ -167,22 +170,22 @@ public class TagBodyHelper {
     }
 
 
-    public static void removeRowCells(HSSFSheet sheet, HSSFRow row, int startCellNum, int endCellNum) {
+    public static void removeRowCells(Sheet sheet, Row row, int startCellNum, int endCellNum) {
         clearRowCells(row, startCellNum, endCellNum);
         Util.shiftCellsLeft(sheet, row.getRowNum(), (int) (endCellNum + 1), row.getRowNum(), row.getLastCellNum(), (int) (endCellNum - startCellNum + 1), true);
         clearRowCells(row, (int) (row.getLastCellNum() - (endCellNum - startCellNum)), row.getLastCellNum());
     }
 
-    public static void removeBodyRows(HSSFSheet sheet, Block block) {
+    public static void removeBodyRows(Sheet sheet, Block block) {
         for (int i = 0; i < block.getNumberOfRows(); i++) {
-            HSSFRow row = sheet.getRow(block.getStartRowNum() + i);
+            Row row = sheet.getRow(block.getStartRowNum() + i);
             removeMergedRegions(sheet, row);
             deleteRow(sheet, row);
         }
         Util.shiftRows(sheet, block.getEndRowNum() + 1, sheet.getLastRowNum(), -block.getNumberOfRows());
     }
 
-    private static void removeMergedRegions(HSSFSheet sheet, HSSFRow row) {
+    private static void removeMergedRegions(Sheet sheet, Row row) {
         if (row != null) {
             int i = row.getRowNum();
             for (int j = row.getFirstCellNum(); j <= row.getLastCellNum(); j++) {
@@ -191,19 +194,19 @@ public class TagBodyHelper {
         }
     }
 
-    static void clearRow(HSSFRow row) {
+    static void clearRow(Row row) {
         if (row != null) {
             for (int i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++) {
-                HSSFCell cell = row.getCell(i);
+                Cell cell = row.getCell(i);
                 clearCell(cell);
             }
         }
     }
 
-    static void clearRowCells(HSSFRow row, int startCell, int endCell) {
+    static void clearRowCells(Row row, int startCell, int endCell) {
         if (row != null) {
             for (int i = startCell; i <= endCell; i++) {
-                HSSFCell cell = row.getCell(i);
+                Cell cell = row.getCell(i);
                 if (cell != null) {
                     row.removeCell(cell);
                 }
@@ -212,31 +215,31 @@ public class TagBodyHelper {
         }
     }
 
-    static void clearCell(HSSFCell cell) {
+    static void clearCell(Cell cell) {
         if (cell != null) {
-            cell.setCellValue(new HSSFRichTextString(""));
-            cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
+            cell.setCellValue(cell.getSheet().getWorkbook().getCreationHelper().createRichTextString(""));
+            cell.setCellType(Cell.CELL_TYPE_BLANK);
         }
     }
 
-    public static void adjustFormulas(HSSFWorkbook hssfWorkbook, HSSFSheet hssfSheet, Block body) {
+    public static void adjustFormulas(Workbook hssfWorkbook, Sheet hssfSheet, Block body) {
         for (int i = body.getStartRowNum(); i <= body.getEndRowNum(); i++) {
-            HSSFRow row = hssfSheet.getRow(i);
+            Row row = hssfSheet.getRow(i);
             adjustFormulas(row);
         }
     }
 
-    private static void adjustFormulas(HSSFRow row) {
+    private static void adjustFormulas(Row row) {
         if (row != null) {
             for (int i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++) {
-                HSSFCell cell = row.getCell(i);
-                if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING && cell.getRichStringCellValue().getString().matches("\\$\\[.*?\\]")) {
+                Cell cell = row.getCell(i);
+                if (cell != null && cell.getCellType() == Cell.CELL_TYPE_STRING && cell.getRichStringCellValue().getString().matches("\\$\\[.*?\\]")) {
                     String cellValue = cell.getRichStringCellValue().getString();
                     String[] parts = cellValue.split("\\$\\[.*?\\]");
                     String newCellValue = parts[0];
                     newCellValue = newCellValue.replaceAll("#", Integer.toString(row.getRowNum() + 1));
 
-                    cell.setCellValue(new HSSFRichTextString(newCellValue));
+                    cell.setCellValue(cell.getSheet().getWorkbook().getCreationHelper().createRichTextString(newCellValue));
                 }
             }
         }

@@ -3,17 +3,13 @@ package net.sf.jxls;
 import junit.framework.TestCase;
 import net.sf.jxls.bean.Department;
 import net.sf.jxls.bean.Employee;
-import net.sf.jxls.bean.Item;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.Configuration;
 import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.*;
 import java.util.*;
@@ -123,7 +119,7 @@ public class ForEachTest extends TestCase {
     }
 
 
-    public void testForIfTag2() throws IOException, ParsePropertyException {
+    public void testForIfTag2() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put( "departments", departments );
         beans.put("depUrl", "http://www.somesite.com");
@@ -133,14 +129,13 @@ public class ForEachTest extends TestCase {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTag2XLS));
         XLSTransformer transformer = new XLSTransformer( config );
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(forifTag2XLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
 //        assertEquals("Last Row Number is incorrect", 11, resultSheet.getLastRowNum());
 
@@ -190,7 +185,7 @@ public class ForEachTest extends TestCase {
         is.close();
     }
 
-    public void testForIfTag3() throws IOException, ParsePropertyException {
+    public void testForIfTag3() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put( "departments", departments );
         beans.put("depUrl", "http://www.somesite.com");
@@ -206,14 +201,13 @@ public class ForEachTest extends TestCase {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTag3XLS));
         XLSTransformer transformer = new XLSTransformer( config );
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(forifTag3XLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
 //        assertEquals("Last Row Number is incorrect", 54, resultSheet.getLastRowNum());
 
@@ -294,7 +288,7 @@ public class ForEachTest extends TestCase {
         is.close();
     }
 
-    public void testForIfTag3OutTag() throws IOException, ParsePropertyException {
+    public void testForIfTag3OutTag() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put( "departments", departments );
         beans.put("depUrl", "http://www.somesite.com");
@@ -310,14 +304,13 @@ public class ForEachTest extends TestCase {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTag3OutTagXLS));
         XLSTransformer transformer = new XLSTransformer( config );
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(forifTag3OutTagXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
 //        assertEquals("Last Row Number is incorrect", 54, resultSheet.getLastRowNum());
 
@@ -398,32 +391,31 @@ public class ForEachTest extends TestCase {
         is.close();
     }
 
-    public void testForIfTagMergeCellsExport() throws IOException, ParsePropertyException {
+    public void testForIfTagMergeCellsExport() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put( "departments", departments );
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTagMergeXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         // TODO: need to check the result workbook is correct
         is.close();
     }
 
-    public void testForIfTagOneRowExport() throws IOException, ParsePropertyException {
+    public void testForIfTagOneRowExport() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put( "departments", departments );
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTagOneRowXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         saveWorkbook(resultWorkbook, forifTagOneRowDestXLS);
         is.close();
 
         is = new BufferedInputStream(getClass().getResourceAsStream(forifTagOneRowXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
 
         Map props = new HashMap();
         props.put( "${department.name}", "IT");
@@ -475,7 +467,7 @@ public class ForEachTest extends TestCase {
         is.close();
     }
 
-    public void testForGroupBy() throws IOException, ParsePropertyException {
+    public void testForGroupBy() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         List deps = new ArrayList( departments );
         // adding department with null values to check grouping with null values
@@ -484,7 +476,7 @@ public class ForEachTest extends TestCase {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forGroupByXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(forGroupByXLS));
         is.close();
@@ -494,17 +486,17 @@ public class ForEachTest extends TestCase {
         is.close();
     }
 
-    public void testForEachSelectWhenConditionIsNotMet() throws IOException {
+    public void testForEachSelectWhenConditionIsNotMet() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
         List employees = itDepartment.getStaff();
         beans.put("employees", employees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream("/templates/select2.xls"));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
-        HSSFSheet sheet = resultWorkbook.getSheetAt(0);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
+        Sheet sheet = resultWorkbook.getSheetAt(0);
         assertEquals( "Number of rows is incorrect", 1, sheet.getLastRowNum());
-        HSSFRow row = sheet.getRow(1);
-        HSSFCell cell = row.getCell(0);
+        Row row = sheet.getRow(1);
+        Cell cell = row.getCell(0);
         String empName = cell.getRichStringCellValue().getString();
         assertEquals("Cell value is incorrect", "Last line", empName);
         is.close();
@@ -512,25 +504,25 @@ public class ForEachTest extends TestCase {
     }
 
 
-    public void testForEachSelect() throws IOException {
+    public void testForEachSelect() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
         String[] selectedEmployees = new String[]{"Oleg", "Neil", "John"};
         List employees = itDepartment.getStaff();
         beans.put("employees", employees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(selectXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
-        HSSFSheet sheet = resultWorkbook.getSheetAt(0);
-        HSSFRow row = sheet.getRow(0);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
+        Sheet sheet = resultWorkbook.getSheetAt(0);
+        Row row = sheet.getRow(0);
         for(int i = 0; i < selectedEmployees.length; i++){
-            HSSFCell cell = row.getCell(i);
+            Cell cell = row.getCell(i);
             String empName = cell.getRichStringCellValue().getString();
             assertEquals("Selected employees are incorrect", selectedEmployees[i], empName);
         }
         is.close();
     }
 
-    public void testOutTagInOneRow() throws IOException {
+    public void testOutTagInOneRow() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
         List employees = itDepartment.getStaff();
         beans.put("employees", employees);
@@ -538,13 +530,13 @@ public class ForEachTest extends TestCase {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(outTagOneRowXLS));
         XLSTransformer transformer = new XLSTransformer();
         transformer.setJexlInnerCollectionsAccess(true);
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
-        HSSFSheet sheet = resultWorkbook.getSheetAt(0);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
+        Sheet sheet = resultWorkbook.getSheetAt(0);
         int index = 0;
         for (int i = 0; i < employees.size(); i++) {
             Employee employee = (Employee) employees.get(i);
             if( employee.getPayment().doubleValue() > 2000 ){
-                HSSFRow row = sheet.getRow(index);
+                Row row = sheet.getRow(index);
                 index++;
                 assertNotNull("Row must not be null", row);
                 assertEquals("Employee names are not equal", employee.getName(), row.getCell(0).getRichStringCellValue().getString());
@@ -552,7 +544,7 @@ public class ForEachTest extends TestCase {
                 assertEquals("Employee bonuses are not equal", employee.getBonus().doubleValue(), row.getCell(2).getNumericCellValue(), 1e-6);
             }
         }
-        HSSFRow row = sheet.getRow( index );
+        Row row = sheet.getRow( index );
         Employee employee = (Employee) employees.get(0);
         assertEquals("Employee names are not equal", employee.getName(), row.getCell(0).getRichStringCellValue().getString());
         assertEquals("Employee payments are not equal", employee.getPayment().doubleValue(), row.getCell(1).getNumericCellValue(), 1e-6);
@@ -560,7 +552,7 @@ public class ForEachTest extends TestCase {
         is.close();
     }
 
-    private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
+    private void saveWorkbook(Workbook resultWorkbook, String fileName) throws IOException {
         String saveResultsProp = System.getProperty("saveResults");
         if ("true".equalsIgnoreCase(saveResultsProp)) {
             if (log.isInfoEnabled()) {
@@ -575,16 +567,16 @@ public class ForEachTest extends TestCase {
     }
 
 
-    public void testForOneRow() throws IOException, ParsePropertyException {
+    public void testForOneRow() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
 //        beans.put( "departments", departments );
         beans.put( "itDep", itDepartment );
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forOneRowXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         CellsChecker checker = new CellsChecker();
         Object[] values = new Object[]{"IT", "IT", null, "Elsa", new Double(1500), "Oleg", new Double(2300),
                 "Neil", new Double(2500), "Maria", new Double(1700), "John", new Double(2800), "IT", "IT", "IT"};
@@ -592,16 +584,16 @@ public class ForEachTest extends TestCase {
         saveWorkbook(resultWorkbook, forOneRowDestXLS);
     }
 
-    public void testDoubleForEachInOneRow() throws IOException, ParsePropertyException {
+    public void testDoubleForEachInOneRow() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put( "itDep", itDepartment );
         beans.put( "mgrDep", mgrDepartment );
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(doubleForEachOneRowXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         //TODO fix this (test fails)
 //        CellsChecker checker = new CellsChecker();
 //        Object[] values = new Object[]{"IT", "Elsa", new Double(1500), "Oleg", new Double(2300),
@@ -610,29 +602,29 @@ public class ForEachTest extends TestCase {
         saveWorkbook(resultWorkbook, doubleForEachOneRowDestXLS);
     }
 
-    public void testForOneRowMerge() throws IOException, ParsePropertyException {
+    public void testForOneRowMerge() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put( "mgrDep", mgrDepartment );
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forOneRowMergeXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         CellsChecker checker = new CellsChecker();
         Object[] values = new Object[]{"Sean", null, null, "John", null, new Double(6000), "Joerg", null, null, "MGR", null, null};
         checker.checkRow(resultSheet, 0, 0, 11, values);
         saveWorkbook(resultWorkbook, forOneRowMergeDestXLS);
     }
 
-    public void testForOneRowMerge2() throws IOException, ParsePropertyException {
+    public void testForOneRowMerge2() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put( "itDep", itDepartment );
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forOneRowMerge2XLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         CellsChecker checker = new CellsChecker();
         Object[] values = new Object[]{"Elsa", null, new Double(1500), "Oleg", null, new Double(2300), "Neil", null, new Double(2500),
                 "Maria", null, new Double(1700), "John", null, new Double(2800), "IT", null, null};

@@ -16,7 +16,8 @@ import net.sf.jxls.report.ReportManager;
 import net.sf.jxls.report.ReportManagerImpl;
 import net.sf.jxls.transformer.XLSTransformer;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * @author Leonid Vysochyn
@@ -116,7 +117,7 @@ public class SQLReportingTest extends TestCase {
         stmt.close();
     }
 
-    public void testSelect() throws IOException {
+    public void testSelect() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
         ReportManager rm = new ReportManagerImpl( conn, beans );
         beans.put("rm", rm);
@@ -125,13 +126,13 @@ public class SQLReportingTest extends TestCase {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(report));
         XLSTransformer transformer = new XLSTransformer();
 //        transformer.setJexlInnerCollectionsAccess( true );
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         // todo
         saveWorkbook( resultWorkbook, reportDest );
     }
     
-    public void testSelectTimestamp() throws IOException {
+    public void testSelectTimestamp() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
         ReportManager rm = new ReportManagerImpl( conn, beans );
         beans.put("rm", rm);
@@ -139,7 +140,7 @@ public class SQLReportingTest extends TestCase {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(reportTimestamp));
         XLSTransformer transformer = new XLSTransformer();
 //        transformer.setJexlInnerCollectionsAccess( true );
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         // todo
         saveWorkbook( resultWorkbook, reportTimestampDest );
@@ -167,7 +168,7 @@ public class SQLReportingTest extends TestCase {
         stmt.close();
     }
 
-    private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
+    private void saveWorkbook(Workbook resultWorkbook, String fileName) throws IOException {
         String saveResultsProp = System.getProperty("saveResults");
         if( "true".equalsIgnoreCase(saveResultsProp) ){
             OutputStream os = new BufferedOutputStream(new FileOutputStream(fileName));

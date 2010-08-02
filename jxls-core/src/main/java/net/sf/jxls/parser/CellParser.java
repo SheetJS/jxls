@@ -10,9 +10,7 @@ import net.sf.jxls.transformer.Row;
 import net.sf.jxls.util.Util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -30,7 +28,7 @@ public class CellParser {
 
     private Configuration configuration;
 
-    public CellParser(HSSFCell hssfCell, Row row, Configuration configuration) {
+    public CellParser(org.apache.poi.ss.usermodel.Cell hssfCell, Row row, Configuration configuration) {
         this.cell = new Cell( hssfCell, row );
         if( configuration!=null ){
             this.configuration = configuration;
@@ -50,10 +48,10 @@ public class CellParser {
     }
 
     public Cell parseCell(Map beans){
-        if (cell.getHssfCell() != null) {
+        if (cell.getPoiCell() != null) {
             try {
-                if( cell.getHssfCell().getCellType() == HSSFCell.CELL_TYPE_STRING ){
-                    cell.setHssfCellValue(cell.getHssfCell().getRichStringCellValue().getString());
+                if( cell.getPoiCell().getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING ){
+                    cell.setPoiCellValue(cell.getPoiCell().getRichStringCellValue().getString());
                     parseCellValue( beans);
                 }
             } catch (ParsePropertyException e) {
@@ -66,9 +64,9 @@ public class CellParser {
     }
 
     public Formula parseCellFormula(){
-        if( cell.getHssfCell() != null && (cell.getHssfCell().getCellType() == HSSFCell.CELL_TYPE_STRING)) {
-            cell.setHssfCellValue( cell.getHssfCell().getRichStringCellValue().getString() );
-            if( cell.getHssfCellValue().startsWith(configuration.getStartFormulaToken()) && cell.getHssfCellValue().lastIndexOf(configuration.getEndFormulaToken()) > 0 ){
+        if( cell.getPoiCell() != null && (cell.getPoiCell().getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING)) {
+            cell.setPoiCellValue( cell.getPoiCell().getRichStringCellValue().getString() );
+            if( cell.getPoiCellValue().startsWith(configuration.getStartFormulaToken()) && cell.getPoiCellValue().lastIndexOf(configuration.getEndFormulaToken()) > 0 ){
                 parseFormula();
             }
         }
@@ -77,13 +75,13 @@ public class CellParser {
 
     private void parseFormula() {
         // process formula cell
-        int i = cell.getHssfCellValue().lastIndexOf(configuration.getEndFormulaToken());
-        String expr = cell.getHssfCellValue().substring(2, i);
+        int i = cell.getPoiCellValue().lastIndexOf(configuration.getEndFormulaToken());
+        String expr = cell.getPoiCellValue().substring(2, i);
         cell.setFormula(new Formula(expr));
-        cell.getFormula().setRowNum(new Integer(cell.getRow().getHssfRow().getRowNum()));
-        cell.getFormula().setCellNum(new Integer(cell.getHssfCell().getColumnIndex()));
-        if (i + 1 < cell.getHssfCellValue().length()) {
-            String tail = cell.getHssfCellValue().substring(i+1);
+        cell.getFormula().setRowNum(new Integer(cell.getRow().getPoiRow().getRowNum()));
+        cell.getFormula().setCellNum(new Integer(cell.getPoiCell().getColumnIndex()));
+        if (i + 1 < cell.getPoiCellValue().length()) {
+            String tail = cell.getPoiCellValue().substring(i+1);
             int j = tail.indexOf(configuration.getMetaInfoToken());
             if( j >= 0 ){
                 cell.setMetaInfo(tail.substring(j));
@@ -95,17 +93,17 @@ public class CellParser {
                 cell.setLabel(tail);
             }
         }
-        cell.setStringCellValue(cell.getHssfCellValue().substring(0, i+1));
+        cell.setStringCellValue(cell.getPoiCellValue().substring(0, i+1));
     }
 
     private void parseCellExpression(Map beans) {
         cell.setCollectionProperty(null);
-        String curValue = cell.getHssfCellValue();
+        String curValue = cell.getPoiCellValue();
         int depRowNum = 0;
         int j = curValue.lastIndexOf(configuration.getMetaInfoToken());
         if( j>=0 ){
-            cell.setStringCellValue(cell.getHssfCellValue().substring(0, j));
-            cell.setMetaInfo(cell.getHssfCellValue().substring(j + 2));
+            cell.setStringCellValue(cell.getPoiCellValue().substring(0, j));
+            cell.setMetaInfo(cell.getPoiCellValue().substring(j + 2));
             String tail = curValue.substring(j + 2);
             // processing additional parameters
                 // check if there is collection property name specified
@@ -122,7 +120,7 @@ public class CellParser {
                 }
                 curValue = curValue.substring(0, j);
         }else{
-            cell.setStringCellValue(cell.getHssfCellValue());
+            cell.setStringCellValue(cell.getPoiCellValue());
         }
 
         try {
@@ -156,7 +154,7 @@ public class CellParser {
                         curValue = "";
                     }
                 }else{
-                    if( curValue.length()!=cell.getHssfCellValue().length() ){
+                    if( curValue.length()!=cell.getPoiCellValue().length() ){
                         cell.getExpressions().add( new Expression( curValue, configuration ));
                     }
                     curValue = "";
@@ -169,33 +167,33 @@ public class CellParser {
     }
 
     private void parseCellValue(Map beans) throws ParsePropertyException {
-        if( cell.getHssfCellValue() !=null ){
-            if( cell.getHssfCellValue().startsWith(configuration.getStartFormulaToken()) && cell.getHssfCellValue().lastIndexOf(configuration.getEndFormulaToken()) > 0 ){
+        if( cell.getPoiCellValue() !=null ){
+            if( cell.getPoiCellValue().startsWith(configuration.getStartFormulaToken()) && cell.getPoiCellValue().lastIndexOf(configuration.getEndFormulaToken()) > 0 ){
                 parseFormula();
-            }else if(cell.getHssfCellValue().startsWith( "<" + configuration.getTagPrefix() )){
-//                String tagName = cell.getHssfCellValue().split("(?<=<" + configuration.getTagPrefix() + ")\\w+", 2)[0];
-                String tagName = getTagName( cell.getHssfCellValue() );
+            }else if(cell.getPoiCellValue().startsWith( "<" + configuration.getTagPrefix() )){
+//                String tagName = cell.getPoiCellValue().split("(?<=<" + configuration.getTagPrefix() + ")\\w+", 2)[0];
+                String tagName = getTagName( cell.getPoiCellValue() );
                 if( tagName!=null ){
-                    if (cell.getHssfCellValue().endsWith("/>")) {
-                        Block tagBody = new Block(cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getColumnIndex(),
-                                cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getColumnIndex());
+                    if (cell.getPoiCellValue().endsWith("/>")) {
+                        Block tagBody = new Block(cell.getRow().getPoiRow().getRowNum(), cell.getPoiCell().getColumnIndex(),
+                                cell.getRow().getPoiRow().getRowNum(), cell.getPoiCell().getColumnIndex());
                         parseTag( tagName, tagBody, beans, false);
                     } else {
-                        HSSFCell hssfCell = findMatchingPairInRow( cell.getRow().getHssfRow(), tagName );
+                        org.apache.poi.ss.usermodel.Cell hssfCell = findMatchingPairInRow( cell.getRow().getPoiRow(), tagName );
                         if( hssfCell!=null ){
                             // closing tag is in the same row
-                            Block tagBody = new Block(cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getColumnIndex(),
-                                    cell.getRow().getHssfRow().getRowNum(), hssfCell.getColumnIndex());
+                            Block tagBody = new Block(cell.getRow().getPoiRow().getRowNum(), cell.getPoiCell().getColumnIndex(),
+                                    cell.getRow().getPoiRow().getRowNum(), hssfCell.getColumnIndex());
                             parseTag( tagName, tagBody, beans, true);
                         }else{
-                            HSSFRow hssfRow = findMatchingPair( tagName );
+                            org.apache.poi.ss.usermodel.Row hssfRow = findMatchingPair( tagName );
                             if( hssfRow!=null ){
                                 // closing tag is in hssfRow
                                 int lastTagBodyRowNum = hssfRow.getRowNum() ;
-                                Block tagBody = new Block(null, cell.getRow().getHssfRow().getRowNum(), lastTagBodyRowNum);
+                                Block tagBody = new Block(null, cell.getRow().getPoiRow().getRowNum(), lastTagBodyRowNum);
                                 parseTag( tagName, tagBody, beans , true);
                             }else{
-                                log.error("Can't find matching tag pair for " + cell.getHssfCellValue());
+                                log.error("Can't find matching tag pair for " + cell.getPoiCellValue());
                             }
                         }
                     }
@@ -206,12 +204,12 @@ public class CellParser {
         }
     }
 
-    private HSSFCell findMatchingPairInRow(HSSFRow hssfRow, String tagName) {
+    private org.apache.poi.ss.usermodel.Cell findMatchingPairInRow(org.apache.poi.ss.usermodel.Row hssfRow, String tagName) {
         int count = 0;
         if( hssfRow!=null ){
-            for(int j = (cell.getHssfCell().getColumnIndex() + 1); j <= hssfRow.getLastCellNum(); j++){
-                HSSFCell hssfCell = hssfRow.getCell( j );
-                if( hssfCell != null && hssfCell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
+            for(int j = (cell.getPoiCell().getColumnIndex() + 1); j <= hssfRow.getLastCellNum(); j++){
+                org.apache.poi.ss.usermodel.Cell hssfCell = hssfRow.getCell( j );
+                if( hssfCell != null && hssfCell.getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING ){
                     String cellValue = hssfCell.getRichStringCellValue().getString();
                     if( cellValue.matches("<" + configuration.getTagPrefix() + tagName + "\\b.*")){
                         count++;
@@ -242,16 +240,16 @@ public class CellParser {
         return xmlTag.substring(i, j);
     }
 
-    private HSSFRow findMatchingPair(String tagName) {
-        HSSFSheet hssfSheet = cell.getRow().getSheet().getHssfSheet();
+    private org.apache.poi.ss.usermodel.Row findMatchingPair(String tagName) {
+        Sheet hssfSheet = cell.getRow().getSheet().getPoiSheet();
         int count = 0;
 
-        for( int i = cell.getRow().getHssfRow().getRowNum() + 1; i <= hssfSheet.getLastRowNum(); i++ ){
-            HSSFRow hssfRow = hssfSheet.getRow( i );
+        for( int i = cell.getRow().getPoiRow().getRowNum() + 1; i <= hssfSheet.getLastRowNum(); i++ ){
+            org.apache.poi.ss.usermodel.Row hssfRow = hssfSheet.getRow( i );
             if( hssfRow!=null ){
                 for(short j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++){
-                    HSSFCell hssfCell = hssfRow.getCell( (int)j );
-                    if( hssfCell != null && hssfCell.getCellType() == HSSFCell.CELL_TYPE_STRING ){
+                    org.apache.poi.ss.usermodel.Cell hssfCell = hssfRow.getCell( (int)j );
+                    if( hssfCell != null && hssfCell.getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING ){
                         String cellValue = hssfCell.getRichStringCellValue().getString();
                         if( cellValue.matches("<" + configuration.getTagPrefix() + tagName + "\\b.*")){
                             count++;
@@ -278,9 +276,9 @@ public class CellParser {
         
         try {
             if (appendCloseTag) {
-                xml = configuration.getJXLSRoot() + cell.getHssfCellValue() + "</" + configuration.getTagPrefix() + tagName + ">" + configuration.getJXLSRootEnd();
+                xml = configuration.getJXLSRoot() + cell.getPoiCellValue() + "</" + configuration.getTagPrefix() + tagName + ">" + configuration.getJXLSRootEnd();
             } else {
-                xml = configuration.getJXLSRoot() + cell.getHssfCellValue() + configuration.getJXLSRootEnd();
+                xml = configuration.getJXLSRoot() + cell.getPoiCellValue() + configuration.getJXLSRootEnd();
             }
             if (configuration.getEncodeXMLAttributes()) {
                 xml = Util.escapeAttributes( xml );
@@ -293,15 +291,15 @@ public class CellParser {
             TagContext tagContext = new TagContext( cell.getRow().getSheet(), tagBody, beans );
             tag.init( tagContext );
         } catch (IOException e) {
-            log.warn( "Can't parse cell tag " + cell.getHssfCellValue() + ": fullXML: " + xml, e);
-            throw new RuntimeException("Can't parse cell tag " + cell.getHssfCellValue() + ": fullXML: " + xml, e);
+            log.warn( "Can't parse cell tag " + cell.getPoiCellValue() + ": fullXML: " + xml, e);
+            throw new RuntimeException("Can't parse cell tag " + cell.getPoiCellValue() + ": fullXML: " + xml, e);
         } catch (SAXException e) {
-            log.warn( "Can't parse cell tag " + cell.getHssfCellValue() + ": fullXML: " + xml, e);
-            throw new RuntimeException("Can't parse cell tag " + cell.getHssfCellValue() + ": fullXML: " + xml, e);
+            log.warn( "Can't parse cell tag " + cell.getPoiCellValue() + ": fullXML: " + xml, e);
+            throw new RuntimeException("Can't parse cell tag " + cell.getPoiCellValue() + ": fullXML: " + xml, e);
         }
     }
 
     private void updateMergedRegions() {
-        cell.setMergedRegion(Util.getMergedRegion( cell.getRow().getSheet().getHssfSheet(), cell.getRow().getHssfRow().getRowNum(), cell.getHssfCell().getColumnIndex() ));
+        cell.setMergedRegion(Util.getMergedRegion( cell.getRow().getSheet().getPoiSheet(), cell.getRow().getPoiRow().getRowNum(), cell.getPoiCell().getColumnIndex() ));
     }
 }

@@ -5,8 +5,9 @@ import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class IfTagTest {
     public static final String ifTagEmptyDestXLS = "target/iftagempty_output.xls";
 
 
-    public void testEmptyCollection() throws IOException, ParsePropertyException {
+    public void testEmptyCollection() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         List items = new ArrayList();
         items.add(new SimpleBean("Simple bean"));
@@ -36,9 +37,9 @@ public class IfTagTest {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(ifTagEmptyXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         CellsChecker checker = new CellsChecker();
         checker.checkRow(resultSheet, 0, 0, 1, new Object[]{"Name:", "Simple bean"});
         checker.checkRow(resultSheet, 2, 0, 0, new Object[]{"This collection is empty"});
@@ -49,7 +50,7 @@ public class IfTagTest {
         saveWorkbook(resultWorkbook, ifTagEmptyDestXLS);
     }
 
-    private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
+    private void saveWorkbook(Workbook resultWorkbook, String fileName) throws IOException {
         String saveResultsProp = System.getProperty("saveResults");
         if ("true".equalsIgnoreCase(saveResultsProp)) {
             if (log.isInfoEnabled()) {

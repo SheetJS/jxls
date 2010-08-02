@@ -31,7 +31,7 @@ public abstract class BaseRowTransformer implements RowTransformer{
      */
     private Map listRanges = new HashMap();
     /**
-     * Stores all named HSSFCell objects
+     * Stores all named Cell objects
      */
     private Map namedCells = new HashMap();
 
@@ -55,7 +55,7 @@ public abstract class BaseRowTransformer implements RowTransformer{
     protected boolean addListRange(Sheet sheet, String rangeName, ListRange range) {
         if (listRanges.containsKey(rangeName)) {
             // update all formulas that can be updated and remove them from formulas list ( ignore all others )
-            FormulaUtil.updateFormulas(sheet.getHssfSheet(), formulas, listRanges, namedCells, true);
+            FormulaUtil.updateFormulas(sheet.getPoiSheet(), formulas, listRanges, namedCells, true);
             listRanges.put(rangeName, range);
             return true;
         }

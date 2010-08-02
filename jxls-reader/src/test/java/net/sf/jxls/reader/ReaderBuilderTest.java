@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 import net.sf.jxls.reader.sample.Department;
 import net.sf.jxls.reader.sample.Employee;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.xml.sax.SAXException;
 
 /**
@@ -44,7 +45,7 @@ public class ReaderBuilderTest extends TestCase {
         assertEquals( 1, sheetReader3.getBlockReaders().size() );
     }
 
-    public void testBuildFromXML2() throws IOException, SAXException {
+    public void testBuildFromXML2() throws IOException, SAXException, InvalidFormatException {
         InputStream inputXML = new BufferedInputStream(getClass().getResourceAsStream(xmlConfig));
         XLSReader mainReader = ReaderBuilder.buildFromXML( inputXML );
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(dataXLS));

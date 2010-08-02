@@ -98,18 +98,18 @@ public class IfTag extends BaseTag {
         if( testResult!=null ){
             if( testResult.booleanValue() ){
                 ResultTransformation processResult = sheetTransformer.processRow(tagContext.getSheetTransformationController(), tagContext.getSheet(),
-                        tagContext.getSheet().getHssfSheet().getRow( body.getStartRowNum() ),
+                        tagContext.getSheet().getPoiSheet().getRow( body.getStartRowNum() ),
                         body.getStartCellNum(), body.getEndCellNum(), beans, null);
                 shift.add( processResult );
             }else{
                 stc.removeRowCells(
-                        tagContext.getSheet().getHssfSheet().getRow( body.getStartRowNum() ), body.getStartCellNum(), body.getEndCellNum() );
+                        tagContext.getSheet().getPoiSheet().getRow( body.getStartRowNum() ), body.getStartCellNum(), body.getEndCellNum() );
 
                 shift.add( new ResultTransformation((short)-body.getNumberOfColumns(), (short)(-body.getNumberOfColumns() )));
             }
         }
         shift.setTagProcessResult( true );
-//        Util.writeToFile("ifTagFinished.xls", tagContext.getSheet().getHssfWorkbook());
+//        Util.writeToFile("ifTagFinished.xls", tagContext.getSheet().getPoiWorkbook());
         return shift;
     }
 }

@@ -3,7 +3,7 @@ package net.sf.jxls.controller;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformer.RowCollection;
 import net.sf.jxls.transformer.Sheet;
-import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.ss.usermodel.Row;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface SheetTransformationController {
     /**
-     * @return {@link Sheet} corresponding worksheet object
+     * @return {@link net.sf.jxls.transformer.Sheet} corresponding worksheet object
      */
     Sheet getSheet();
 
@@ -47,11 +47,11 @@ public interface SheetTransformationController {
 
     /**
      * Clears row cells in a given range
-     * @param row {@link HSSFRow} to process
+     * @param row {@link Row} to process
      * @param startCellNum - start cell number to clear
      * @param endCellNum   - end cell number to clear
      */
-    void removeRowCells(HSSFRow row, int startCellNum, int endCellNum);
+    void removeRowCells(Row row, int startCellNum, int endCellNum);
 
     /**
      * Deletes the body of the block

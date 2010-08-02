@@ -4,10 +4,8 @@ import net.sf.jxls.formula.Formula;
 import net.sf.jxls.tag.Tag;
 import net.sf.jxls.transformer.Row;
 import net.sf.jxls.transformer.RowCollection;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,7 @@ public class Cell {
 
     private Row row;
     private Property collectionProperty;
-    private HSSFCell hssfCell;
+    private org.apache.poi.ss.usermodel.Cell hssfCell;
 
     private Formula formula;
     private String label;
@@ -42,8 +40,8 @@ public class Cell {
     private RowCollection rowCollection;
 
 
-    public Cell(HSSFCell hssfCell, Row row) {
-        this.setHssfCell(hssfCell);
+    public Cell(org.apache.poi.ss.usermodel.Cell hssfCell, Row row) {
+        this.setPoiCell(hssfCell);
         this.setRow(row);
     }
 
@@ -109,21 +107,21 @@ public class Cell {
         this.collectionProperty = collectionProperty;
     }
 
-    public HSSFCell getHssfCell() {
+    public org.apache.poi.ss.usermodel.Cell getPoiCell() {
         return hssfCell;
     }
 
-    public void setHssfCell(HSSFCell hssfCell) {
+    public void setPoiCell(org.apache.poi.ss.usermodel.Cell hssfCell) {
         this.hssfCell = hssfCell;
     }
 
     public void replaceCellWithNewShiftedBy(int shift){
-        HSSFCell newHSSFCell = row.getHssfRow().getCell(hssfCell.getColumnIndex() + shift);
-        this.hssfCell = newHSSFCell;
+        org.apache.poi.ss.usermodel.Cell newCell = row.getPoiRow().getCell(hssfCell.getColumnIndex() + shift);
+        this.hssfCell = newCell;
     }
 
     public String toCellName() {
-        CellReference cellRef = new CellReference(getRow().getHssfRow().getRowNum(), getHssfCell().getColumnIndex(), false, false);
+        CellReference cellRef = new CellReference(getRow().getPoiRow().getRowNum(), getPoiCell().getColumnIndex(), false, false);
         return cellRef.formatAsString();
     }
 
@@ -140,7 +138,7 @@ public class Cell {
     }
 
 
-    public String getHssfCellValue() {
+    public String getPoiCellValue() {
         return hssfCellValue;
     }
 
@@ -153,15 +151,15 @@ public class Cell {
     }
 
     public boolean isEmpty() {
-        return getHssfCellValue() == null || getHssfCellValue().length() == 0 || getHssfCell().getCellType() == HSSFCell.CELL_TYPE_BLANK;
+        return getPoiCellValue() == null || getPoiCellValue().length() == 0 || getPoiCell().getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK;
     }
 
     public boolean isNull() {
-        return getHssfCell() == null;
+        return getPoiCell() == null;
     }
 
     public String toString() {
-        return getHssfCellValue();
+        return getPoiCellValue();
     }
 
     public void setDependentRowNumber(int dependentRowNumber) {
@@ -172,7 +170,7 @@ public class Cell {
         this.collectionName = collectionName;
     }
 
-    public void setHssfCellValue(String hssfCellValue) {
+    public void setPoiCellValue(String hssfCellValue) {
         this.hssfCellValue = hssfCellValue;
     }
 

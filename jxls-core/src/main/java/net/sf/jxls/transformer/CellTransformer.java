@@ -10,8 +10,6 @@ import net.sf.jxls.parser.Expression;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 
 /**
  * Cell transformation class
@@ -33,30 +31,30 @@ public class CellTransformer {
 
     void transform( Cell cell ){
         try {
-            if (cell.getHssfCell() != null && cell.getHssfCell().getCellType() == HSSFCell.CELL_TYPE_STRING) {
+            if (cell.getPoiCell() != null && cell.getPoiCell().getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING) {
                 if (cell.getCollectionProperty() == null) {
                     if (cell.getFormula() == null) {
                             if( cell.getExpressions().size() == 0 ){
                                 if( cell.getMetaInfo() !=null ){
-                                    cell.getHssfCell().setCellValue(new HSSFRichTextString(cell.getStringCellValue()));
+                                    cell.getPoiCell().setCellValue(cell.getPoiCell().getSheet().getWorkbook().getCreationHelper().createRichTextString(cell.getStringCellValue()));
                                 }
                             }else if (cell.getExpressions().size() == 1) {
                                 Object value = ((Expression) cell.getExpressions().get(0)).evaluate();
                                 if (value == null) {
-                                    cell.getHssfCell().setCellValue(new HSSFRichTextString(""));
-                                    cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
+                                    cell.getPoiCell().setCellValue(cell.getPoiCell().getSheet().getWorkbook().getCreationHelper().createRichTextString(""));
+                                    cell.getPoiCell().setCellType( org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK );
                                 } else if (value instanceof Double) {
-                                    cell.getHssfCell().setCellValue(((Double) value).doubleValue());
+                                    cell.getPoiCell().setCellValue(((Double) value).doubleValue());
                                 } else if (value instanceof BigDecimal) {
-                                    cell.getHssfCell().setCellValue(((BigDecimal) value).doubleValue());
+                                    cell.getPoiCell().setCellValue(((BigDecimal) value).doubleValue());
                                 } else if (value instanceof Date) {
-                                    cell.getHssfCell().setCellValue((Date) value);
+                                    cell.getPoiCell().setCellValue((Date) value);
                                 }else if (value instanceof Calendar) {
-                                    cell.getHssfCell().setCellValue((Calendar) value);
+                                    cell.getPoiCell().setCellValue((Calendar) value);
                                 } else if (value instanceof Integer) {
-                                    cell.getHssfCell().setCellValue(((Integer) value).intValue());
+                                    cell.getPoiCell().setCellValue(((Integer) value).intValue());
                                 }else if (value instanceof Long) {
-                                    cell.getHssfCell().setCellValue(((Long) value).longValue());
+                                    cell.getPoiCell().setCellValue(((Long) value).longValue());
                                 } else {
                                     // fixing possible CR/LF problem
                                     String fixedValue = value.toString();
@@ -64,9 +62,9 @@ public class CellTransformer {
                                         fixedValue = fixedValue.replaceAll("\r\n", "\n");
                                     }
                                     if( fixedValue.length() == 0 ){
-                                        cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
+                                        cell.getPoiCell().setCellType( org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK );
                                     }else{
-                                        cell.getHssfCell().setCellValue(new HSSFRichTextString(fixedValue));
+                                        cell.getPoiCell().setCellValue(cell.getPoiCell().getSheet().getWorkbook().getCreationHelper().createRichTextString(fixedValue));
                                     }
                                 }
                             } else {
@@ -107,9 +105,9 @@ public class CellTransformer {
 
     private void setCellValue(Cell cell, String value) {
         if (value == null || value.length() == 0) {
-            cell.getHssfCell().setCellType( HSSFCell.CELL_TYPE_BLANK );
+            cell.getPoiCell().setCellType( org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK );
         } else {
-            cell.getHssfCell().setCellValue(new HSSFRichTextString(value));
+            cell.getPoiCell().setCellValue(cell.getPoiCell().getSheet().getWorkbook().getCreationHelper().createRichTextString(value));
         }
     }
 
@@ -120,11 +118,11 @@ public class CellTransformer {
             if (cell.getCollectionName() != null) {
         // simple copy of inline formula template
         // it will be processed when individual rows are processed
-                cell.getHssfCell().setCellValue(new HSSFRichTextString(cell.getStringCellValue()));
+                cell.getPoiCell().setCellValue(cell.getPoiCell().getSheet().getWorkbook().getCreationHelper().createRichTextString(cell.getStringCellValue()));
             } else {
         // processing of inline formulaString template
-                String formulaString = formula.getInlineFormula(cell.getRow().getHssfRow().getRowNum() + 1);
-                cell.getHssfCell().setCellFormula(formulaString);
+                String formulaString = formula.getInlineFormula(cell.getRow().getPoiRow().getRowNum() + 1);
+                cell.getPoiCell().setCellFormula(formulaString);
             }
         }
     }

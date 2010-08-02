@@ -10,9 +10,8 @@ import net.sf.jxls.processor.CellProcessor;
 import net.sf.jxls.sample.model.Employee;
 import net.sf.jxls.util.Util;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.CellStyle;
 
 /**
  * WARNING! This class does not work since 0.8.7 jXLS release as there were changes in expression parsing introduced
@@ -23,7 +22,7 @@ import org.apache.poi.hssf.util.HSSFColor;
  */
 public class RedCellProcessor2  implements CellProcessor {
 
-    static HSSFCellStyle hssfCellStyle;
+    static CellStyle hssfCellStyle;
     String beanName;
 
     Map rowStyles = new HashMap();
@@ -39,21 +38,21 @@ public class RedCellProcessor2  implements CellProcessor {
             if (property != null && property.getBeanName() != null && property.getBeanName().indexOf(beanName) >= 0 && property.getBean() instanceof Employee) {
                 Employee employee = (Employee) property.getBean();
                 if (employee.getPayment().doubleValue() >= 2000) {
-                        HSSFCell hssfCell = cell.getHssfCell();
-                        HSSFCellStyle newStyle = duplicateStyle( cell, property.getPropertyNameAfterLastDot() );
+                        org.apache.poi.ss.usermodel.Cell hssfCell = cell.getPoiCell();
+                        CellStyle newStyle = duplicateStyle( cell, property.getPropertyNameAfterLastDot() );
                         newStyle.setFillForegroundColor( HSSFColor.RED.index );
-                        newStyle.setFillPattern( HSSFCellStyle.SOLID_FOREGROUND );
+                        newStyle.setFillPattern( CellStyle.SOLID_FOREGROUND );
                         hssfCell.setCellStyle( newStyle );
                 }
             }
         }
     }
 
-    HSSFCellStyle duplicateStyle( Cell cell, String key ){
+    CellStyle duplicateStyle( Cell cell, String key ){
         if( rowStyles.containsKey( key ) ){
-            return (HSSFCellStyle) rowStyles.get( key );
+            return (CellStyle) rowStyles.get( key );
         }
-        HSSFCellStyle newStyle =  Util.duplicateStyle( cell.getRow().getSheet().getHssfWorkbook(), cell.getHssfCell().getCellStyle() );
+        CellStyle newStyle =  Util.duplicateStyle( cell.getRow().getSheet().getPoiWorkbook(), cell.getPoiCell().getCellStyle() );
         rowStyles.put( key, newStyle );
         return newStyle;
     }

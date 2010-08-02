@@ -12,6 +12,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 import net.sf.jxls.reader.sample.SimpleBean;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.xml.sax.SAXException;
 
 /**
@@ -22,7 +23,7 @@ public class ErrorHandlingTest extends TestCase {
     public static final String data1XLS = "/templates/error1.xls";
     public static final String xmlConfig1 = "/xml/error1.xml";
 
-    public void testExceptionCatch() throws IOException, SAXException {
+    public void testExceptionCatch() throws IOException, SAXException, InvalidFormatException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(data1XLS));
         InputStream inputXML = new BufferedInputStream(getClass().getResourceAsStream(xmlConfig1));
         XLSReader reader = ReaderBuilder.buildFromXML( inputXML );
@@ -40,7 +41,7 @@ public class ErrorHandlingTest extends TestCase {
         }
     }
 
-    public void testSkipErrors() throws IOException, SAXException, ParseException {
+    public void testSkipErrors() throws IOException, SAXException, ParseException, InvalidFormatException {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(data1XLS));
         InputStream inputXML = new BufferedInputStream(getClass().getResourceAsStream(xmlConfig1));
         XLSReader reader = ReaderBuilder.buildFromXML( inputXML );

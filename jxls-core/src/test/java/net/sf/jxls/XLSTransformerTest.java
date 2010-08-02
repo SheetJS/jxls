@@ -7,10 +7,8 @@ import net.sf.jxls.transformer.XLSTransformer;
 import net.sf.jxls.util.Util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
@@ -257,7 +255,7 @@ public class XLSTransformerTest extends TestCase {
 
     Map propertyMap = new HashMap();
 
-    public void testSimpleBeanExport() throws IOException, ParsePropertyException {
+    public void testSimpleBeanExport() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("bean", simpleBean1);
         Calendar calendar = Calendar.getInstance();
@@ -265,14 +263,13 @@ public class XLSTransformerTest extends TestCase {
         beans.put("calendar", calendar);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Numbers differ in source and result sheets", sourceSheet.getLastRowNum(), resultSheet.getLastRowNum());
         CellsChecker checker = new CellsChecker(propertyMap);
@@ -283,20 +280,19 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, simpeBeanDestXLS);
     }
 
-    public void testBeanWithListExport() throws IOException, ParsePropertyException {
+    public void testBeanWithListExport() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("listBean", beanWithList);
         beans.put("beans", beanWithList.getBeans());
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(beanWithListXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(beanWithListXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum() + beanWithList.getBeans().size() - 1, resultSheet.getLastRowNum());
 
@@ -312,20 +308,20 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, beanWithListDestXLS);
     }
 
-    public void testFormulas2() throws IOException {
+    public void testFormulas2() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("departments", departments);
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(formulas2XLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
 
         saveWorkbook(resultWorkbook, formulasDestXLS);
 
     }
 
-    public void testFormulas() throws IOException, ParsePropertyException {
+    public void testFormulas() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("listBean", beanWithList);
         beans.put("departments", departments);
@@ -335,14 +331,13 @@ public class XLSTransformerTest extends TestCase {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(formulasXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(formulasXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         checkRowHeightIsPositive(resultSheet.getRow(43));
 
@@ -412,33 +407,32 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, formulasDestXLS);
     }
 
-    private void checkRowHeightsArePositive(HSSFSheet sheet) {
+    private void checkRowHeightsArePositive(Sheet sheet) {
         for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
-            HSSFRow row = sheet.getRow(i);
+            Row row = sheet.getRow(i);
             if (row != null) {
                 checkRowHeightIsPositive(row);
             }
         }
     }
 
-    private void checkRowHeightIsPositive(HSSFRow row) {
+    private void checkRowHeightIsPositive(Row row) {
         assertTrue("Row height is negative for row num = " + row.getRowNum(), row.getHeight() >= 0);
     }
 
-    public void testMultipleListRows() throws IOException, ParsePropertyException {
+    public void testMultipleListRows() throws IOException, ParsePropertyException, InvalidFormatException {
 
         Map beans = new HashMap();
         beans.put("listBean", beanWithList);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multipleListRowsXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(multipleListRowsXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum() + (beanWithList.getBeans().size() - 1) * 4, resultSheet.getLastRowNum());
 
@@ -477,20 +471,19 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, multipleListRowsDestXLS);
     }
 
-    public void testMergedMultipleListRows() throws IOException, ParsePropertyException {
+    public void testMergedMultipleListRows() throws IOException, ParsePropertyException, InvalidFormatException {
 
         Map beans = new HashMap();
         beans.put("listBean", beanWithList);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(mergeMultipleListRowsXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(mergeMultipleListRowsXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum() + (beanWithList.getBeans().size() - 1) * 4, resultSheet.getLastRowNum());
 
@@ -532,7 +525,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, mergeMultipleListRowsDestXLS);
     }
 
-    public void testGrouping1() throws IOException, ParsePropertyException {
+    public void testGrouping1() throws IOException, ParsePropertyException, InvalidFormatException {
         BeanWithList beanWithList2 = new BeanWithList("2nd bean with list", new Double(22.22));
         List beans2 = new ArrayList();
         beans2.add(new SimpleBean("bean 21", new Double(21.21), new Integer(21), new Date()));
@@ -552,14 +545,13 @@ public class XLSTransformerTest extends TestCase {
         beans.put("mainBean", bean);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(grouping1XLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(grouping1XLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum() + 6, resultSheet.getLastRowNum());
 
@@ -604,19 +596,18 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, grouping1DestXLS);
     }
 
-    public void testMergeCellsList() throws IOException, ParsePropertyException {
+    public void testMergeCellsList() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("listBean", beanWithList);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(mergeCellsListXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(mergeCellsListXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum() + beanWithList.getBeans().size() - 1, resultSheet.getLastRowNum());
 
@@ -636,7 +627,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, mergeCellsListDestXLS);
     }
 
-    protected static boolean isMergedRegion(HSSFSheet sheet, CellRangeAddress region) {
+    protected static boolean isMergedRegion(Sheet sheet, CellRangeAddress region) {
         for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
             CellRangeAddress mgdRegion = sheet.getMergedRegion(i);
             if ( Util.areRegionsEqual(mgdRegion, region)) {
@@ -646,7 +637,7 @@ public class XLSTransformerTest extends TestCase {
         return false;
     }
 
-    public void testGrouping2() throws IOException, ParsePropertyException {
+    public void testGrouping2() throws IOException, ParsePropertyException, InvalidFormatException {
         BeanWithList beanWithList2 = new BeanWithList("2nd bean with list", new Double(22.22));
         List beans2 = new ArrayList();
         beans2.add(new SimpleBean("bean 21", new Double(21.21), new Integer(21), new Date()));
@@ -666,14 +657,13 @@ public class XLSTransformerTest extends TestCase {
         beans.put("mainBean", bean);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(grouping2XLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(grouping2XLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", 14, resultSheet.getLastRowNum());
 
@@ -711,19 +701,18 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, grouping2DestXLS);
     }
 
-    public void testGrouping3() throws IOException, ParsePropertyException {
+    public void testGrouping3() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("departments", departments);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(grouping3XLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(grouping3XLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
 
         Map props = new HashMap();
         props.put("${departments.name}//:4", "IT");
@@ -770,7 +759,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, grouping3DestXLS);
     }
 
-    public void testGroupingFormulas() throws IOException, ParsePropertyException {
+    public void testGroupingFormulas() throws IOException, ParsePropertyException, InvalidFormatException {
         BeanWithList beanWithList2 = new BeanWithList("2nd bean with list", new Double(22.22));
         List beans2 = new ArrayList();
         beans2.add(new SimpleBean("bean 21", new Double(21.21), new Integer(21), new Date()));
@@ -790,15 +779,14 @@ public class XLSTransformerTest extends TestCase {
         beans.put("mainBean", bean);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(groupingFormulasXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(groupingFormulasXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
         is.close();
-//        HSSFWorkbook resultWorkbook = new HSSFWorkbook( new POIFSFileSystem( new BufferedInputStream(getClass().getResourceAsStream(groupingFormulasDestXLS))));
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+//        Workbook resultWorkbook = new Workbook( new POIFSFileSystem( new BufferedInputStream(getClass().getResourceAsStream(groupingFormulasDestXLS))));
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum() + 6, resultSheet.getLastRowNum());
 
@@ -841,20 +829,19 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, groupingFormulasDestXLS);
     }
 
-    public void testSeveralPropertiesInCell() throws IOException, ParsePropertyException {
+    public void testSeveralPropertiesInCell() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("bean", simpleBean1);
         beans.put("listBean", beanWithList);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(severalPropertiesInCellXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(severalPropertiesInCellXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum() + beanWithList.getBeans().size() - 1, resultSheet.getLastRowNum());
         Map props = new HashMap();
@@ -886,20 +873,19 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, severalPropertiesInCellDestXLS);
     }
 
-    public void testParallelTablesExport() throws IOException, ParsePropertyException {
+    public void testParallelTablesExport() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("listBean", beanWithList);
         beans.put("bean", simpleBean2);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(parallelTablesXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(parallelTablesXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
 //        assertEquals("Last Row Number is incorrect", 11, resultSheet.getLastRowNum());
 
@@ -932,7 +918,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, parallelTablesDestXLS);
     }
 
-    public void testSeveralListsInRowExport() throws IOException, ParsePropertyException {
+    public void testSeveralListsInRowExport() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("list1", listBean1);
         beans.put("list2", listBean2);
@@ -940,14 +926,13 @@ public class XLSTransformerTest extends TestCase {
         beans.put("staticBean", simpleBean1);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(severalListsInRowXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(severalListsInRowXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
 //        assertEquals("Last Row Number is incorrect", 10, resultSheet.getLastRowNum());
 
@@ -1006,20 +991,19 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, severalListsInRowDestXLS);
     }
 
-    public void testFixedSizeCollections() throws IOException, ParsePropertyException {
+    public void testFixedSizeCollections() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("employee", itEmployees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(fixedSizeListXLS));
         XLSTransformer transformer = new XLSTransformer();
         transformer.markAsFixedSizeCollection("employee");
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(fixedSizeListXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum(), resultSheet.getLastRowNum());
 
@@ -1037,20 +1021,19 @@ public class XLSTransformerTest extends TestCase {
 
     }
 
-    public void testExpressions1() throws IOException, ParsePropertyException {
+    public void testExpressions1() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("bean", simpleBean1);
         beans.put("listBean", beanWithList);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(expressions1XLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(expressions1XLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum() + beanWithList.getBeans().size() - 1, resultSheet.getLastRowNum());
         Map props = new HashMap();
@@ -1087,7 +1070,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, expressions1DestXLS);
     }
 
-    public void testIfTag() throws IOException, ParsePropertyException {
+    public void testIfTag() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
 
         BeanWithList listBean = new BeanWithList("Main bean", new Double(10.0));
@@ -1100,14 +1083,13 @@ public class XLSTransformerTest extends TestCase {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(iftagXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(iftagXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
 //        assertEquals("Last Row Number is incorrect", 11, resultSheet.getLastRowNum());
         Map props = new HashMap();
@@ -1134,7 +1116,7 @@ public class XLSTransformerTest extends TestCase {
     }
 
 
-    public void testEmptyBeansExport() throws IOException, ParsePropertyException {
+    public void testEmptyBeansExport() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
 
         BeanWithList listBean = new BeanWithList("Main bean", new Double(10.0));
@@ -1144,14 +1126,13 @@ public class XLSTransformerTest extends TestCase {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(emptyBeansXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(emptyBeansXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals("Last Row Number is incorrect", sourceSheet.getLastRowNum(), resultSheet.getLastRowNum());
         Map props = new HashMap();
@@ -1164,20 +1145,19 @@ public class XLSTransformerTest extends TestCase {
     }
 
 
-    public void testListOfStringsExport() throws IOException, ParsePropertyException {
+    public void testListOfStringsExport() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("employee", itEmployees.get(0));
         beans.put("employees", itEmployees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(employeeNotesXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(employeeNotesXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         Map props = new HashMap();
         CellsChecker checker = new CellsChecker(props);
         checker.checkListCells(sourceSheet, 2, resultSheet, 2, (short) 1, ((Employee) itEmployees.get(0)).getNotes().toArray());
@@ -1186,19 +1166,18 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, employeeNotesDestXLS);
     }
 
-    public void testVarStatusAttrInForEach() throws IOException, ParsePropertyException {
+    public void testVarStatusAttrInForEach() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("employees", itEmployees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(varStatusXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(varStatusXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         Map props = new HashMap();
         CellsChecker checker = new CellsChecker(props);
         checker.checkListCells(sourceSheet, 3, resultSheet, 2, (short) 0, new Object[]{new Integer(0), new Integer(1), new Integer(2), new Integer(3), new Integer(4)});
@@ -1215,19 +1194,18 @@ public class XLSTransformerTest extends TestCase {
      * into a range like B3:B7. This is not currently possible with jXLS
      * TODO: fix this issue with formulas in the future
      */
-    public void atestOutlineInForEach() throws IOException, ParsePropertyException {
+    public void atestOutlineInForEach() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("employees", itEmployees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(outlineXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
 //        is = new BufferedInputStream(getClass().getResourceAsStream(outlineXLS));
-//        POIFSFileSystem fs = new POIFSFileSystem(is);
-//        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+//        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-//        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-//        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+//        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+//        Sheet resultSheet = resultWorkbook.getSheetAt(0);
 //        Map props = new HashMap();
 //        CellsChecker checker = new CellsChecker(props);
 //        checker.checkListCells( sourceSheet, 3, resultSheet, 2, (short)0, new Object[]{ new Integer(0), new Integer(1), new Integer(2), new Integer(3), new Integer(4)} );
@@ -1235,7 +1213,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, outlineDestXLS);
     }
 
-    public void testExtendedEncodingExport() throws IOException, ParsePropertyException {
+    public void testExtendedEncodingExport() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         Employee emp = (Employee) itEmployees.get(0);
         emp.setName("Леонид");
@@ -1249,14 +1227,13 @@ public class XLSTransformerTest extends TestCase {
         beans.put("employees", itEmployees);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(employeeNotesXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(employeeNotesXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         Map props = new HashMap();
         CellsChecker checker = new CellsChecker(props);
         checker.checkListCells(sourceSheet, 2, resultSheet, 2, (short) 1, emp.getNotes().toArray());
@@ -1266,7 +1243,7 @@ public class XLSTransformerTest extends TestCase {
 
     }
 
-    public void testDynamicColumns() throws IOException, ParsePropertyException {
+    public void testDynamicColumns() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         List cols = new ArrayList();
         String[] colNames = new String[]{"Column 1", "Column 2", "Column 3"};
@@ -1284,13 +1261,12 @@ public class XLSTransformerTest extends TestCase {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(dynamicColumnsXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(dynamicColumnsXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
 
         Map props = new HashMap();
         props.put("${col.text}", colNames[0]);
@@ -1304,7 +1280,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, dynamicColumnsDestXLS);
     }
 
-    public void testForIfTagOneRowExport2() throws IOException, ParsePropertyException {
+    public void testForIfTagOneRowExport2() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         List items = new ArrayList();
         items.add(new Item("Item 1"));
@@ -1313,26 +1289,25 @@ public class XLSTransformerTest extends TestCase {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(forifTagOneRow2XLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         //todo: complete test
 //        is = new BufferedInputStream(getClass().getResourceAsStream(forifTagOneRow2XLS));
-//        POIFSFileSystem fs = new POIFSFileSystem(is);
-//        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
-//        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-//        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+//        Workbook sourceWorkbook = WorkbookFactory.create(is);
+//        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+//        Sheet resultSheet = resultWorkbook.getSheetAt(0);
 
 //        is.close();
         saveWorkbook(resultWorkbook, forifTagOneRowDest2XLS);
     }
 
-    public void testHiddenSheetsExport() throws IOException, ParsePropertyException {
+    public void testHiddenSheetsExport() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("bean", simpleBean1);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(hideSheetsXLS));
         XLSTransformer transformer = new XLSTransformer();
         transformer.setSpreadsheetsToRemove(new String[]{"Sheet 2", "Sheet 3"});
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         assertEquals("Number of sheets in result workbook is incorrect", 1, resultWorkbook.getNumberOfSheets());
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(hideSheetsXLS));
@@ -1344,7 +1319,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, hideSheetsDestXLS);
     }
 
-    public void testMultipleSheetList() throws IOException, ParsePropertyException {
+    public void testMultipleSheetList() throws IOException, ParsePropertyException, InvalidFormatException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetListXLS));
         XLSTransformer transformer = new XLSTransformer();
         List sheetNames = new ArrayList();
@@ -1354,19 +1329,18 @@ public class XLSTransformerTest extends TestCase {
             sheetNames.add(department.getName());
         }
 
-        HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, departments, sheetNames, "department", new HashMap(), 0);
+        Workbook resultWorkbook = transformer.transformMultipleSheetsList(is, departments, sheetNames, "department", new HashMap(), 0);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetListXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
         assertEquals("Number of result worksheets is incorrect ", sourceWorkbook.getNumberOfSheets() + departments.size() - 1, resultWorkbook.getNumberOfSheets());
 //        for (int sheetNo = 0; sheetNo < resultWorkbook.getNumberOfSheets() && sheetNo < sheetNames.size(); sheetNo++) {
 //             assertEquals( "Result worksheet name is incorrect", sheetNames.get(sheetNo), resultWorkbook.getSheetName(sheetNo));
 //        }
 // todo create all necessary checks
-//        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-//        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+//        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+//        Sheet resultSheet = resultWorkbook.getSheetAt(0);
 //
 //        Map props = new HashMap();
 //        props.put("${departments.name}//:4", "IT");
@@ -1383,7 +1357,7 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, multipleSheetListDestXLS);
     }
 
-    public void testMultiTab() throws IOException, ParsePropertyException {
+    public void testMultiTab() throws IOException, ParsePropertyException, InvalidFormatException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multiTabXLS));
         XLSTransformer transformer = new XLSTransformer();
         List sheetNames = new ArrayList();
@@ -1399,13 +1373,13 @@ public class XLSTransformerTest extends TestCase {
         }
 
 
-        HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, maps, sheetNames, "map", new HashMap(), 0);
+        Workbook resultWorkbook = transformer.transformMultipleSheetsList(is, maps, sheetNames, "map", new HashMap(), 0);
         is.close();
         saveWorkbook(resultWorkbook, multiTabDestXLS);
     }
 
     // todo complete this test
-    public void atestMultipleSheetList2() throws IOException, ParsePropertyException {
+    public void atestMultipleSheetList2() throws IOException, ParsePropertyException, InvalidFormatException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetList2XLS));
         XLSTransformer transformer = new XLSTransformer();
         List sheetNames = new ArrayList();
@@ -1420,12 +1394,11 @@ public class XLSTransformerTest extends TestCase {
         List sheetNameList = new ArrayList();
         List beanParamList = new ArrayList();
 
-        HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, departments, sheetNames, "department", new HashMap(), 0);
+        Workbook resultWorkbook = transformer.transformMultipleSheetsList(is, departments, sheetNames, "department", new HashMap(), 0);
         transformer.transformXLS(is, templateSheetList, sheetNameList, beanParamList);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetList2XLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
         assertEquals("Number of result worksheets is incorrect ", sourceWorkbook.getNumberOfSheets() + departments.size() - 1, resultWorkbook.getNumberOfSheets());
         for (int sheetNo = 0; sheetNo < resultWorkbook.getNumberOfSheets() && sheetNo < sheetNames.size(); sheetNo++) {
@@ -1434,26 +1407,25 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, multipleSheetList2DestXLS);
     }
 
-    public void testGroupTag() throws IOException, ParsePropertyException {
+    public void testGroupTag() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("departments", departments);
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(groupTagXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         // todo complete test checks
 //        is = new BufferedInputStream(getClass().getResourceAsStream(groupTagXLS));
-//        POIFSFileSystem fs = new POIFSFileSystem(is);
-//        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+//        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-//        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-//        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+//        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+//        Sheet resultSheet = resultWorkbook.getSheetAt(0);
 
         saveWorkbook(resultWorkbook, groupTagDestXLS);
     }
 
-    public void testJEXLExpressions() throws IOException {
+    public void testJEXLExpressions() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         beans.put("dateFormat", dateFormat);
@@ -1484,14 +1456,13 @@ public class XLSTransformerTest extends TestCase {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(jexlXLS));
         XLSTransformer transformer = new XLSTransformer();
         transformer.setJexlInnerCollectionsAccess(true);
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(jexlXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         Map props = new HashMap();
         props.put("${obj.name}", obj.getName());
         props.put("${\"Hello, World\"}", "Hello, World");
@@ -1527,7 +1498,7 @@ public class XLSTransformerTest extends TestCase {
 
     }
 
-    public void testPoiObjectsExpose() throws IOException, ParsePropertyException {
+    public void testPoiObjectsExpose() throws IOException, ParsePropertyException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("departments", departments);
         beans.put("itDepartment", itDepartment);
@@ -1548,14 +1519,13 @@ public class XLSTransformerTest extends TestCase {
 
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(poiobjectsXLS));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
         is.close();
         is = new BufferedInputStream(getClass().getResourceAsStream(poiobjectsXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook sourceWorkbook = new HSSFWorkbook(fs);
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
 
-        HSSFSheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        HSSFSheet resultSheet = resultWorkbook.getSheetAt(0);
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
         assertEquals("First Row Numbers differ in source and result sheets", sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum());
         assertEquals(resultSheet.getHeader().getLeft(), "Test Left Header");
         assertEquals(resultSheet.getHeader().getCenter(), itDepartment.getName());
@@ -1591,16 +1561,16 @@ public class XLSTransformerTest extends TestCase {
     }
 
 
-    public void testSyntaxError() throws IOException {
+    public void testSyntaxError() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
         beans.put("value", "A Test");
         beans.put("value2", "Second value");
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream("/templates/syntaxerror.xls"));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
-        HSSFSheet sheet = resultWorkbook.getSheetAt(0);
-        HSSFRow row = sheet.getRow(0);
-        HSSFCell cell = row.getCell((short) 0);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
+        Sheet sheet = resultWorkbook.getSheetAt(0);
+        Row row = sheet.getRow(0);
+        Cell cell = row.getCell((short) 0);
         assertEquals("Incorrect cell value", "${value", cell.getRichStringCellValue().getString());
         row = sheet.getRow(1);
         cell = row.getCell((short) 0);
@@ -1608,22 +1578,22 @@ public class XLSTransformerTest extends TestCase {
         is.close();
     }
 
-    public void testBeanNameTheSameAsMemberName() throws IOException {
+    public void testBeanNameTheSameAsMemberName() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
         TestNumber testNumber = new TestNumber(10);
         beans.put("test", testNumber);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream("/templates/beandata.xls"));
         XLSTransformer transformer = new XLSTransformer();
-        HSSFWorkbook resultWorkbook = transformer.transformXLS(is, beans);
-        HSSFSheet sheet = resultWorkbook.getSheetAt(0);
-        HSSFRow row = sheet.getRow(0);
-        HSSFCell cell = row.getCell((short) 0);
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
+        Sheet sheet = resultWorkbook.getSheetAt(0);
+        Row row = sheet.getRow(0);
+        Cell cell = row.getCell((short) 0);
         assertEquals("Incorrect cell value", testNumber.getTestNumber(), (int) cell.getNumericCellValue());
         is.close();
     }
 
 
-    private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
+    private void saveWorkbook(Workbook resultWorkbook, String fileName) throws IOException {
         String saveResultsProp = System.getProperty("saveResults");
         if ("true".equalsIgnoreCase(saveResultsProp)) {
             if (log.isInfoEnabled()) {

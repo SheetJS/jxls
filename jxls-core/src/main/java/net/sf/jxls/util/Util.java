@@ -1,14 +1,17 @@
 package net.sf.jxls.util;
 
-import net.sf.jxls.parser.Cell;
-import net.sf.jxls.transformer.Row;
-import net.sf.jxls.transformer.RowCollection;
+import net.sf.jxls.transformer.*;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Footer;
+import org.apache.poi.ss.usermodel.Header;
+import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -47,29 +50,29 @@ public final class Util {
 
 	public static void removeRowCollectionPropertiesFromRow(
 			RowCollection rowCollection) {
-		int startRow = rowCollection.getParentRow().getHssfRow().getRowNum();
-		HSSFSheet sheet = rowCollection.getParentRow().getSheet()
-				.getHssfSheet();
+		int startRow = rowCollection.getParentRow().getPoiRow().getRowNum();
+		Sheet sheet = rowCollection.getParentRow().getSheet()
+				.getPoiSheet();
 		for (int i = 0; i <= rowCollection.getDependentRowNumber(); i++) {
-			HSSFRow hssfRow = sheet.getRow(startRow + i);
+			org.apache.poi.ss.usermodel.Row hssfRow = sheet.getRow(startRow + i);
 			for (int j = hssfRow.getFirstCellNum(); j <= hssfRow
 					.getLastCellNum(); j++) {
-				HSSFCell cell = hssfRow.getCell(j);
+				org.apache.poi.ss.usermodel.Cell cell = hssfRow.getCell(j);
 				removeRowCollectionPropertyFromCell(cell, rowCollection
 						.getCollectionProperty().getFullCollectionName());
 			}
 		}
 	}
 
-	private static void removeRowCollectionPropertyFromCell(HSSFCell cell,
+	private static void removeRowCollectionPropertyFromCell(org.apache.poi.ss.usermodel.Cell cell,
 			String collectionName) {
 		String regex = "[-+*/().A-Za-z_0-9\\s]*";
-		if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+		if (cell != null && cell.getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING) {
 			String cellValue = cell.getRichStringCellValue().getString();
 			String strToReplace = "\\$\\{" + regex
 					+ collectionName.replaceAll("\\.", "\\\\.") + "\\." + regex
 					+ "\\}";
-			cell.setCellValue(new HSSFRichTextString(cellValue.replaceAll(
+			cell.setCellValue(cell.getSheet().getWorkbook().getCreationHelper().createRichTextString(cellValue.replaceAll(
 					strToReplace, "")));
 		}
 	}
@@ -80,7 +83,7 @@ public final class Util {
 	 * @param sheet
 	 * @param region
 	 */
-	public static void removeMergedRegion(HSSFSheet sheet,
+	public static void removeMergedRegion(Sheet sheet,
 			CellRangeAddress region) {
 		int index = getMergedRegionIndex(sheet, region);
 		if (index >= 0) {
@@ -95,7 +98,7 @@ public final class Util {
 	 * @param mergedRegion
 	 * @return index of mergedRegion or -1 if the region not found
 	 */
-	private static int getMergedRegionIndex(HSSFSheet sheet,
+	private static int getMergedRegionIndex(Sheet sheet,
 			CellRangeAddress mergedRegion) {
 		for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
 			CellRangeAddress region = getMergedRegion(sheet, i);
@@ -121,7 +124,7 @@ public final class Util {
 				.getLastRow() == region2.getLastRow());
 	}
 
-	private static CellRangeAddress getMergedRegion(HSSFSheet sheet, int i) {
+	private static CellRangeAddress getMergedRegion(Sheet sheet, int i) {
 		CellRangeAddress region = sheet.getMergedRegion(i);
 		return region;
 	}
@@ -138,7 +141,7 @@ public final class Util {
 		return true;
 	}
 
-	public static CellRangeAddress getMergedRegion(HSSFSheet sheet, int rowNum,
+	public static CellRangeAddress getMergedRegion(Sheet sheet, int rowNum,
 			int cellNum) {
 		for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
 			CellRangeAddress merged = getMergedRegion(sheet, i);
@@ -159,7 +162,7 @@ public final class Util {
 		return false;
 	}
 
-	public static boolean removeMergedRegion(HSSFSheet sheet, int rowNum,
+	public static boolean removeMergedRegion(Sheet sheet, int rowNum,
 			int cellNum) {
 		Set mergedRegionNumbersToRemove = new TreeSet();
 		for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
@@ -178,14 +181,14 @@ public final class Util {
 
 	public static void prepareCollectionPropertyInRowForDuplication(
 			RowCollection rowCollection, String collectionItemName) {
-		int startRow = rowCollection.getParentRow().getHssfRow().getRowNum();
-		HSSFSheet sheet = rowCollection.getParentRow().getSheet()
-				.getHssfSheet();
+		int startRow = rowCollection.getParentRow().getPoiRow().getRowNum();
+		Sheet sheet = rowCollection.getParentRow().getSheet()
+				.getPoiSheet();
 		for (int i = 0; i <= rowCollection.getDependentRowNumber(); i++) {
-			HSSFRow hssfRow = sheet.getRow(startRow + i);
+			org.apache.poi.ss.usermodel.Row hssfRow = sheet.getRow(startRow + i);
 			for (int j = hssfRow.getFirstCellNum(); j <= hssfRow
 					.getLastCellNum(); j++) {
-				HSSFCell cell = hssfRow.getCell(j);
+				org.apache.poi.ss.usermodel.Cell cell = hssfRow.getCell(j);
 				prepareCollectionPropertyInCellForDuplication(cell,
 						rowCollection.getCollectionProperty()
 								.getFullCollectionName(), collectionItemName);
@@ -194,14 +197,14 @@ public final class Util {
 	}
 
 	private static void prepareCollectionPropertyInCellForDuplication(
-			HSSFCell cell, String collectionName, String collectionItemName) {
-		if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+			org.apache.poi.ss.usermodel.Cell cell, String collectionName, String collectionItemName) {
+		if (cell != null && cell.getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING) {
 			String cellValue = cell.getRichStringCellValue().getString();
 			String newValue = replaceCollectionProperty(cellValue,
 					collectionName, collectionItemName);
 			// String newValue = cellValue.replaceFirst(collectionName,
 			// collectionItemName);
-			cell.setCellValue(new HSSFRichTextString(newValue));
+			cell.setCellValue(cell.getSheet().getWorkbook().getCreationHelper().createRichTextString(newValue));
 		}
 	}
 
@@ -213,8 +216,8 @@ public final class Util {
 	public static void prepareCollectionPropertyInRowForContentDuplication(
 			RowCollection rowCollection) {
 		for (int i = 0; i < rowCollection.getCells().size(); i++) {
-			Cell cell = (Cell) rowCollection.getCells().get(i);
-			prepareCollectionPropertyInCellForDuplication(cell.getHssfCell(),
+			net.sf.jxls.parser.Cell cell = (net.sf.jxls.parser.Cell) rowCollection.getCells().get(i);
+			prepareCollectionPropertyInCellForDuplication(cell.getPoiCell(),
 					rowCollection.getCollectionProperty()
 							.getFullCollectionName(), rowCollection
 							.getCollectionItemName());
@@ -225,23 +228,23 @@ public final class Util {
 			RowCollection rowCollection) {
 		Collection collection = rowCollection.getCollectionProperty()
 				.getCollection();
-		int rowNum = rowCollection.getParentRow().getHssfRow().getRowNum();
-		HSSFRow srcRow = rowCollection.getParentRow().getHssfRow();
-		HSSFSheet sheet = rowCollection.getParentRow().getSheet()
-				.getHssfSheet();
+		int rowNum = rowCollection.getParentRow().getPoiRow().getRowNum();
+		org.apache.poi.ss.usermodel.Row srcRow = rowCollection.getParentRow().getPoiRow();
+		Sheet sheet = rowCollection.getParentRow().getSheet()
+				.getPoiSheet();
 		if (collection.size() > 1) {
 			for (int i = 1; i < collection.size(); i++) {
-				HSSFRow destRow = sheet.getRow(rowNum + i);
+				org.apache.poi.ss.usermodel.Row destRow = sheet.getRow(rowNum + i);
 				for (int j = 0; j < rowCollection.getCells().size(); j++) {
-					Cell cell = (Cell) rowCollection.getCells().get(j);
+					net.sf.jxls.parser.Cell cell = (net.sf.jxls.parser.Cell) rowCollection.getCells().get(j);
 					if (!cell.isEmpty()) {
-						HSSFCell destCell = destRow.getCell(cell.getHssfCell()
+						org.apache.poi.ss.usermodel.Cell destCell = destRow.getCell(cell.getPoiCell()
 								.getColumnIndex());
 						if (destCell == null) {
-							destCell = destRow.createCell(cell.getHssfCell()
+							destCell = destRow.createCell(cell.getPoiCell()
 									.getColumnIndex());
 						}
-						copyCell(srcRow.getCell(cell.getHssfCell()
+						copyCell(srcRow.getCell(cell.getPoiCell()
 								.getColumnIndex()), destCell, false);
 					}
 				}
@@ -252,9 +255,9 @@ public final class Util {
 	public static int duplicateRow(RowCollection rowCollection) {
 		Collection collection = rowCollection.getCollectionProperty()
 				.getCollection();
-		int row = rowCollection.getParentRow().getHssfRow().getRowNum();
-		HSSFSheet sheet = rowCollection.getParentRow().getSheet()
-				.getHssfSheet();
+		int row = rowCollection.getParentRow().getPoiRow().getRowNum();
+		Sheet sheet = rowCollection.getParentRow().getSheet()
+				.getPoiSheet();
 		if (collection.size() > 1) {
 			if (rowCollection.getDependentRowNumber() == 0) {
 				shiftRows(sheet, row + 1, sheet.getLastRowNum(), collection
@@ -274,9 +277,9 @@ public final class Util {
 	}
 
 	private static void shiftCopyRowCollection(RowCollection rowCollection) {
-		HSSFSheet hssfSheet = rowCollection.getParentRow().getSheet()
-				.getHssfSheet();
-		int startRow = rowCollection.getParentRow().getHssfRow().getRowNum();
+		Sheet hssfSheet = rowCollection.getParentRow().getSheet()
+				.getPoiSheet();
+		int startRow = rowCollection.getParentRow().getPoiRow().getRowNum();
 		int num = rowCollection.getDependentRowNumber();
 		shiftRows(hssfSheet, startRow + num + 1, hssfSheet.getLastRowNum(),
 				num + 1);
@@ -284,15 +287,15 @@ public final class Util {
 	}
 
 	private static void copyRowCollection(RowCollection rowCollection) {
-		HSSFSheet sheet = rowCollection.getParentRow().getSheet()
-				.getHssfSheet();
-		int from = rowCollection.getParentRow().getHssfRow().getRowNum();
+		Sheet sheet = rowCollection.getParentRow().getSheet()
+				.getPoiSheet();
+		int from = rowCollection.getParentRow().getPoiRow().getRowNum();
 		int num = rowCollection.getDependentRowNumber() + 1;
 		int to = from + num;
 		Set mergedRegions = new HashSet();
 		for (int i = from; i < from + num; i++) {
-			HSSFRow srcRow = sheet.getRow(i);
-			HSSFRow destRow = sheet.getRow(to + i - from);
+			org.apache.poi.ss.usermodel.Row srcRow = sheet.getRow(i);
+			org.apache.poi.ss.usermodel.Row destRow = sheet.getRow(to + i - from);
 			if (destRow == null) {
 				destRow = sheet.createRow(to + i - from);
 			}
@@ -300,9 +303,9 @@ public final class Util {
 				destRow.setHeight(srcRow.getHeight());
 			}
 			for (int j = srcRow.getFirstCellNum(); j <= srcRow.getLastCellNum(); j++) {
-				HSSFCell srcCell = srcRow.getCell(j);
+				org.apache.poi.ss.usermodel.Cell srcCell = srcRow.getCell(j);
 				if (srcCell != null) {
-					HSSFCell destCell = destRow.createCell(j);
+					org.apache.poi.ss.usermodel.Cell destCell = destRow.createCell(j);
 					copyCell(srcCell, destCell, true);
 					CellRangeAddress mergedRegion = getMergedRegion(sheet, i, j);
 					if (mergedRegion != null) {
@@ -326,12 +329,12 @@ public final class Util {
 	}
 
 	private static void shiftUncoupledCellsUp(RowCollection rowCollection) {
-		Row row = rowCollection.getParentRow();
+		net.sf.jxls.transformer.Row row = rowCollection.getParentRow();
 		if (row.getCells().size() > rowCollection.getCells().size()) {
 			for (int i = 0; i < row.getCells().size(); i++) {
-				Cell cell = (Cell) row.getCells().get(i);
+				net.sf.jxls.parser.Cell cell = (net.sf.jxls.parser.Cell) row.getCells().get(i);
 				if (!rowCollection.containsCell(cell)) {
-					shiftColumnUp(cell, row.getHssfRow().getRowNum()
+					shiftColumnUp(cell, row.getPoiRow().getRowNum()
 							+ rowCollection.getCollectionProperty()
 									.getCollection().size(), rowCollection
 							.getCollectionProperty().getCollection().size() - 1);
@@ -340,9 +343,9 @@ public final class Util {
 		}
 	}
 
-	private static void shiftColumnUp(Cell cell, int startRow, int shiftNumber) {
-		HSSFSheet sheet = cell.getRow().getSheet().getHssfSheet();
-		int cellNum = cell.getHssfCell().getColumnIndex();
+	private static void shiftColumnUp(net.sf.jxls.parser.Cell cell, int startRow, int shiftNumber) {
+		Sheet sheet = cell.getRow().getSheet().getPoiSheet();
+		int cellNum = cell.getPoiCell().getColumnIndex();
 		List hssfMergedRegions = new ArrayList();
 		// find all merged regions in this area
 		for (int i = startRow; i <= sheet.getLastRowNum(); i++) {
@@ -354,7 +357,7 @@ public final class Util {
 		// move all related cells up
 		for (int i = startRow; i <= sheet.getLastRowNum(); i++) {
 			if (sheet.getRow(i).getCell(cellNum) != null) {
-				HSSFCell destCell = sheet.getRow(i - shiftNumber).getCell(
+				org.apache.poi.ss.usermodel.Cell destCell = sheet.getRow(i - shiftNumber).getCell(
 						cellNum);
 				if (destCell == null) {
 					destCell = sheet.getRow(i - shiftNumber)
@@ -390,40 +393,40 @@ public final class Util {
 		}
 	}
 
-	private static void moveCell(HSSFCell srcCell, HSSFCell destCell) {
+	private static void moveCell(org.apache.poi.ss.usermodel.Cell srcCell, org.apache.poi.ss.usermodel.Cell destCell) {
 		destCell.setCellStyle(srcCell.getCellStyle());
 		switch (srcCell.getCellType()) {
-		case HSSFCell.CELL_TYPE_STRING:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING:
 			destCell.setCellValue(srcCell.getRichStringCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_NUMERIC:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC:
 			destCell.setCellValue(srcCell.getNumericCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_BLANK:
-			destCell.setCellType(HSSFCell.CELL_TYPE_BLANK);
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK:
+			destCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK);
 			break;
-		case HSSFCell.CELL_TYPE_BOOLEAN:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BOOLEAN:
 			destCell.setCellValue(srcCell.getBooleanCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_ERROR:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_ERROR:
 			destCell.setCellErrorValue(srcCell.getErrorCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_FORMULA:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_FORMULA:
 			break;
 		default:
 			break;
 		}
-		srcCell.setCellType(HSSFCell.CELL_TYPE_BLANK);
+		srcCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK);
 	}
 
 	private static void duplicateStyle(RowCollection rowCollection,
 			int rowToCopy, int startRow, int num) {
-		HSSFSheet sheet = rowCollection.getParentRow().getSheet()
-				.getHssfSheet();
+		Sheet sheet = rowCollection.getParentRow().getSheet()
+				.getPoiSheet();
 		Set mergedRegions = new HashSet();
-		HSSFRow srcRow = sheet.getRow(rowToCopy);
+		org.apache.poi.ss.usermodel.Row srcRow = sheet.getRow(rowToCopy);
 		for (int i = startRow; i < startRow + num; i++) {
-			HSSFRow destRow = sheet.getRow(i);
+			org.apache.poi.ss.usermodel.Row destRow = sheet.getRow(i);
 			if (destRow == null) {
 				destRow = sheet.createRow(i);
 			}
@@ -431,10 +434,10 @@ public final class Util {
 				destRow.setHeight(srcRow.getHeight());
 			}
 			for (int j = 0; j < rowCollection.getCells().size(); j++) {
-				Cell cell = (Cell) rowCollection.getCells().get(j);
-				HSSFCell hssfCell = cell.getHssfCell();
+				net.sf.jxls.parser.Cell cell = (net.sf.jxls.parser.Cell) rowCollection.getCells().get(j);
+				org.apache.poi.ss.usermodel.Cell hssfCell = cell.getPoiCell();
 				if (hssfCell != null) {
-					HSSFCell newCell = destRow.createCell(hssfCell
+					org.apache.poi.ss.usermodel.Cell newCell = destRow.createCell(hssfCell
 							.getColumnIndex());
 					copyCell(hssfCell, newCell, true);
 					CellRangeAddress mergedRegion = getMergedRegion(sheet,
@@ -455,14 +458,14 @@ public final class Util {
 		}
 	}
 
-	public static void copyRow(HSSFSheet sheet, HSSFRow oldRow, HSSFRow newRow) {
+	public static void copyRow(Sheet sheet, org.apache.poi.ss.usermodel.Row oldRow, org.apache.poi.ss.usermodel.Row newRow) {
 		Set mergedRegions = new HashSet();
 		if (oldRow.getHeight() >= 0) {
 			newRow.setHeight(oldRow.getHeight());
 		}
 		for (int j = oldRow.getFirstCellNum(); j <= oldRow.getLastCellNum(); j++) {
-			HSSFCell oldCell = oldRow.getCell(j);
-			HSSFCell newCell = newRow.getCell(j);
+			org.apache.poi.ss.usermodel.Cell oldCell = oldRow.getCell(j);
+			org.apache.poi.ss.usermodel.Cell newCell = newRow.getCell(j);
 			if (oldCell != null) {
 				if (newCell == null) {
 					newCell = newRow.createCell(j);
@@ -486,15 +489,15 @@ public final class Util {
 		}
 	}
 
-	public static void copyRow(HSSFSheet srcSheet, HSSFSheet destSheet,
-			HSSFRow srcRow, HSSFRow destRow) {
+	public static void copyRow(Sheet srcSheet, Sheet destSheet,
+			org.apache.poi.ss.usermodel.Row srcRow, org.apache.poi.ss.usermodel.Row destRow) {
 		Set mergedRegions = new TreeSet();
 		if (srcRow.getHeight() >= 0) {
 			destRow.setHeight(srcRow.getHeight());
 		}
 		for (int j = srcRow.getFirstCellNum(); j <= srcRow.getLastCellNum(); j++) {
-			HSSFCell oldCell = srcRow.getCell(j);
-			HSSFCell newCell = destRow.getCell(j);
+			org.apache.poi.ss.usermodel.Cell oldCell = srcRow.getCell(j);
+			org.apache.poi.ss.usermodel.Cell newCell = destRow.getCell(j);
 			if (oldCell != null) {
 				if (newCell == null) {
 					newCell = destRow.createCell(j);
@@ -521,16 +524,16 @@ public final class Util {
 		}
 	}
 
-	public static void copyRow(HSSFSheet srcSheet, HSSFSheet destSheet,
-			HSSFRow srcRow, HSSFRow destRow, String expressionToReplace,
+	public static void copyRow(Sheet srcSheet, Sheet destSheet,
+			org.apache.poi.ss.usermodel.Row srcRow, org.apache.poi.ss.usermodel.Row destRow, String expressionToReplace,
 			String expressionReplacement) {
 		Set mergedRegions = new HashSet();
 		if (srcRow.getHeight() >= 0) {
 			destRow.setHeight(srcRow.getHeight());
 		}
 		for (int j = srcRow.getFirstCellNum(); j <= srcRow.getLastCellNum(); j++) {
-			HSSFCell oldCell = srcRow.getCell(j);
-			HSSFCell newCell = destRow.getCell(j);
+			org.apache.poi.ss.usermodel.Cell oldCell = srcRow.getCell(j);
+			org.apache.poi.ss.usermodel.Cell newCell = destRow.getCell(j);
 			if (oldCell != null) {
 				if (newCell == null) {
 					newCell = destRow.createCell(j);
@@ -558,11 +561,11 @@ public final class Util {
 		}
 	}
 
-	public static void copySheets(HSSFSheet newSheet, HSSFSheet sheet) {
+	public static void copySheets(Sheet newSheet, Sheet sheet) {
 		int maxColumnNum = 0;
 		for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
-			HSSFRow srcRow = sheet.getRow(i);
-			HSSFRow destRow = newSheet.createRow(i);
+			org.apache.poi.ss.usermodel.Row srcRow = sheet.getRow(i);
+			org.apache.poi.ss.usermodel.Row destRow = newSheet.createRow(i);
 			if (srcRow != null) {
 				Util.copyRow(sheet, newSheet, srcRow, destRow);
 				if (srcRow.getLastCellNum() > maxColumnNum) {
@@ -575,12 +578,12 @@ public final class Util {
 		}
 	}
 
-	public static void copySheets(HSSFSheet newSheet, HSSFSheet sheet,
+	public static void copySheets(Sheet newSheet, Sheet sheet,
 			String expressionToReplace, String expressionReplacement) {
 		int maxColumnNum = 0;
 		for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
-			HSSFRow srcRow = sheet.getRow(i);
-			HSSFRow destRow = newSheet.createRow(i);
+			org.apache.poi.ss.usermodel.Row srcRow = sheet.getRow(i);
+			org.apache.poi.ss.usermodel.Row destRow = newSheet.createRow(i);
 			if (srcRow != null) {
 				Util.copyRow(sheet, newSheet, srcRow, destRow,
 						expressionToReplace, expressionReplacement);
@@ -594,28 +597,28 @@ public final class Util {
 		}
 	}
 
-	public static void copyCell(HSSFCell oldCell, HSSFCell newCell,
+	public static void copyCell(org.apache.poi.ss.usermodel.Cell oldCell, org.apache.poi.ss.usermodel.Cell newCell,
 			boolean copyStyle) {
 		if (copyStyle) {
 			newCell.setCellStyle(oldCell.getCellStyle());
 		}
 		switch (oldCell.getCellType()) {
-		case HSSFCell.CELL_TYPE_STRING:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING:
 			newCell.setCellValue(oldCell.getRichStringCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_NUMERIC:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC:
 			newCell.setCellValue(oldCell.getNumericCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_BLANK:
-			newCell.setCellType(HSSFCell.CELL_TYPE_BLANK);
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK:
+			newCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK);
 			break;
-		case HSSFCell.CELL_TYPE_BOOLEAN:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BOOLEAN:
 			newCell.setCellValue(oldCell.getBooleanCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_ERROR:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_ERROR:
 			newCell.setCellErrorValue(oldCell.getErrorCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_FORMULA:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_FORMULA:
 			newCell.setCellFormula(oldCell.getCellFormula());
 			break;
 		default:
@@ -623,31 +626,31 @@ public final class Util {
 		}
 	}
 
-	public static void copyCell(HSSFCell oldCell, HSSFCell newCell,
+	public static void copyCell(org.apache.poi.ss.usermodel.Cell oldCell, org.apache.poi.ss.usermodel.Cell newCell,
 			boolean copyStyle, String expressionToReplace,
 			String expressionReplacement) {
 		if (copyStyle) {
 			newCell.setCellStyle(oldCell.getCellStyle());
 		}
 		switch (oldCell.getCellType()) {
-		case HSSFCell.CELL_TYPE_STRING:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING:
 			String oldValue = oldCell.getRichStringCellValue().getString();
-			newCell.setCellValue(new HSSFRichTextString(oldValue.replaceAll(
+			newCell.setCellValue(newCell.getSheet().getWorkbook().getCreationHelper().createRichTextString(oldValue.replaceAll(
 					expressionToReplace, expressionReplacement)));
 			break;
-		case HSSFCell.CELL_TYPE_NUMERIC:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC:
 			newCell.setCellValue(oldCell.getNumericCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_BLANK:
-			newCell.setCellType(HSSFCell.CELL_TYPE_BLANK);
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK:
+			newCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK);
 			break;
-		case HSSFCell.CELL_TYPE_BOOLEAN:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BOOLEAN:
 			newCell.setCellValue(oldCell.getBooleanCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_ERROR:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_ERROR:
 			newCell.setCellErrorValue(oldCell.getErrorCellValue());
 			break;
-		case HSSFCell.CELL_TYPE_FORMULA:
+		case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_FORMULA:
 			newCell.setCellFormula(oldCell.getCellFormula());
 			break;
 		default:
@@ -685,7 +688,7 @@ public final class Util {
 	 * @param workbook
 	 *            - Workbook to save
 	 */
-	public static void writeToFile(String fileName, HSSFWorkbook workbook) {
+	public static void writeToFile(String fileName, Workbook workbook) {
 		OutputStream os;
 		try {
 			os = new BufferedOutputStream(new FileOutputStream(fileName));
@@ -698,17 +701,17 @@ public final class Util {
 	}
 
 	/**
-	 * Duplicates given HSSFCellStyle object
+	 * Duplicates given CellStyle object
 	 * 
 	 * @param workbook
-	 *            - source HSSFWorkbook object
+	 *            - source Workbook object
 	 * @param style
-	 *            - HSSFCellStyle object to duplicate
-	 * @return HSSFCellStyle
+	 *            - CellStyle object to duplicate
+	 * @return CellStyle
 	 */
-	public static HSSFCellStyle duplicateStyle(HSSFWorkbook workbook,
-			HSSFCellStyle style) {
-		HSSFCellStyle newStyle = workbook.createCellStyle();
+	public static CellStyle duplicateStyle(Workbook workbook,
+			CellStyle style) {
+		CellStyle newStyle = workbook.createCellStyle();
 		newStyle.setAlignment(style.getAlignment());
 		newStyle.setBorderBottom(style.getBorderBottom());
 		newStyle.setBorderLeft(style.getBorderLeft());
@@ -814,7 +817,7 @@ public final class Util {
 		return (String) xmlEntities.get(Integer.toString(ch));
 	}
 
-    protected static void updateMergedRegionInRow(HSSFSheet sheet, Set mergedRegions, int rowNum, int cellNum, int destCellNum, boolean removeSourceMergedRegion) {
+    protected static void updateMergedRegionInRow(Sheet sheet, Set mergedRegions, int rowNum, int cellNum, int destCellNum, boolean removeSourceMergedRegion) {
         CellRangeAddress mergedRegion = Util.getMergedRegion(sheet, rowNum, cellNum);
         if (mergedRegion != null && Util.isNewMergedRegion(mergedRegion, mergedRegions)) {
             CellRangeAddress newMergedRegion = new CellRangeAddress(
@@ -831,21 +834,21 @@ public final class Util {
     }
 
 
-	public static void shiftCellsLeft(HSSFSheet sheet, int startRow,
+	public static void shiftCellsLeft(Sheet sheet, int startRow,
                                       int startCol, int endRow, int endCol, int shiftNumber, boolean removeSourceMergedRegion) {
         Set mergedRegions = new HashSet();
 		for (int rowNum = startRow; rowNum <= endRow; rowNum++) {
 			boolean doSetWidth = true;
-			HSSFRow row = sheet.getRow(rowNum);
+			org.apache.poi.ss.usermodel.Row row = sheet.getRow(rowNum);
 			if (row != null) {
 				for (int colNum = startCol; colNum <= endCol; colNum++) {
-					HSSFCell cell = row.getCell(colNum);
+					org.apache.poi.ss.usermodel.Cell cell = row.getCell(colNum);
 					if (cell == null) {
 						cell = row.createCell(colNum);
 						doSetWidth = false;
 					}
                     int destColNum = colNum - shiftNumber;
-                    HSSFCell destCell = row.getCell(destColNum);
+                    org.apache.poi.ss.usermodel.Cell destCell = row.getCell(destColNum);
 					if (destCell == null) {
 						destCell = row.createCell( destColNum);
 					}
@@ -860,7 +863,7 @@ public final class Util {
 		}
 	}
 
-	static int getWidth(HSSFSheet sheet, int col) {
+	static int getWidth(Sheet sheet, int col) {
 		int width = sheet.getColumnWidth(col);
 		if (width == sheet.getDefaultColumnWidth()) {
 			width = (int) (width * 256);
@@ -868,20 +871,20 @@ public final class Util {
 		return width;
 	}
 
-	public static void shiftCellsRight(HSSFSheet sheet, int startRow,
+	public static void shiftCellsRight(Sheet sheet, int startRow,
                                        int endRow, int startCol, int shiftNumber, boolean removeSourceMergedRegion) {
         Set mergedRegions = new HashSet();
 		for (int rowNum = startRow; rowNum <= endRow; rowNum++) {
-			HSSFRow row = sheet.getRow(rowNum);
+			org.apache.poi.ss.usermodel.Row row = sheet.getRow(rowNum);
 			if (row != null) {
 				int lastCellNum = row.getLastCellNum();
 				for (int colNum = lastCellNum; colNum >= startCol; colNum--) {
                     int destColNum = colNum + shiftNumber;
-                    HSSFCell destCell = row.getCell( destColNum);
+                    org.apache.poi.ss.usermodel.Cell destCell = row.getCell( destColNum);
 					if (destCell == null) {
 						destCell = row.createCell(destColNum);
 					}
-					HSSFCell cell = row.getCell(colNum);
+					org.apache.poi.ss.usermodel.Cell cell = row.getCell(colNum);
 					if (cell == null) {
 						cell = row.createCell(colNum);
 					}
@@ -892,16 +895,16 @@ public final class Util {
 		}
 	}
 
-	public static void updateCellValue(HSSFSheet sheet, int rowNum, int colNum,
+	public static void updateCellValue(Sheet sheet, int rowNum, int colNum,
 			String cellValue) {
-		HSSFRow hssfRow = sheet.getRow(rowNum);
-		HSSFCell hssfCell = hssfRow.getCell(colNum);
-		hssfCell.setCellValue(new HSSFRichTextString(cellValue));
+		org.apache.poi.ss.usermodel.Row hssfRow = sheet.getRow(rowNum);
+		org.apache.poi.ss.usermodel.Cell hssfCell = hssfRow.getCell(colNum);
+		hssfCell.setCellValue(hssfCell.getSheet().getWorkbook().getCreationHelper().createRichTextString(cellValue));
 	}
 
-	public static void copyPageSetup(HSSFSheet destSheet, HSSFSheet srcSheet) {
-		HSSFHeader header = srcSheet.getHeader();
-		HSSFFooter footer = srcSheet.getFooter();
+	public static void copyPageSetup(Sheet destSheet, Sheet srcSheet) {
+		Header header = srcSheet.getHeader();
+		Footer footer = srcSheet.getFooter();
 		if (footer != null) {
 			destSheet.getFooter().setLeft(footer.getLeft());
 			destSheet.getFooter().setCenter(footer.getCenter());
@@ -914,8 +917,8 @@ public final class Util {
 		}
 	}
 
-	public static void copyPrintSetup(HSSFSheet destSheet, HSSFSheet srcSheet) {
-		HSSFPrintSetup setup = srcSheet.getPrintSetup();
+	public static void copyPrintSetup(Sheet destSheet, Sheet srcSheet) {
+		PrintSetup setup = srcSheet.getPrintSetup();
 		if (setup != null) {
 			destSheet.getPrintSetup().setLandscape(setup.getLandscape());
 			destSheet.getPrintSetup().setPaperSize(setup.getPaperSize());
@@ -929,11 +932,11 @@ public final class Util {
 		}
 	}
 
-	public static void setPrintArea(HSSFWorkbook resultWorkbook, int sheetNum) {
+	public static void setPrintArea(Workbook resultWorkbook, int sheetNum) {
 		int maxColumnNum = 0;
 		for (int j = resultWorkbook.getSheetAt(sheetNum).getFirstRowNum(); j <= resultWorkbook
 				.getSheetAt(sheetNum).getLastRowNum(); j++) {
-			HSSFRow row = resultWorkbook.getSheetAt(sheetNum).getRow(j);
+			org.apache.poi.ss.usermodel.Row row = resultWorkbook.getSheetAt(sheetNum).getRow(j);
 			if (row != null) {
 				maxColumnNum = row.getLastCellNum();
 			}
@@ -1028,7 +1031,7 @@ public final class Util {
 		return refSheetName + "!" + cellName.toUpperCase();
 	}
 
-	public static void shiftRows(HSSFSheet sheet, int startRow, int endRow,
+	public static void shiftRows(Sheet sheet, int startRow, int endRow,
 			int shiftNum) {
 		if (startRow <= endRow) {
 			short[] rowHeights = getRowHeights(sheet, startRow, endRow);
@@ -1037,14 +1040,14 @@ public final class Util {
 		}
 	}
 
-	private static short[] getRowHeights(HSSFSheet sheet, int startRow,
+	private static short[] getRowHeights(Sheet sheet, int startRow,
 			int endRow) {
 		if (endRow - startRow + 1 < 0) {
 			return new short[0];
 		}
 		short[] rowHeights = new short[endRow - startRow + 1];
 		for (int i = startRow; i <= endRow; i++) {
-			HSSFRow row = sheet.getRow(i);
+			org.apache.poi.ss.usermodel.Row row = sheet.getRow(i);
 			if (row != null) {
 				rowHeights[i - startRow] = row.getHeight();
 			} else {
@@ -1054,14 +1057,14 @@ public final class Util {
 		return rowHeights;
 	}
 
-	static void copyPositiveRowHeight(HSSFSheet sheet, int startRow,
+	static void copyPositiveRowHeight(Sheet sheet, int startRow,
 			int endRow, int shiftNum, short[] rowHeights) {
 		for (int i = startRow; i <= endRow; i++) {
-			HSSFRow destRow = sheet.getRow(i + shiftNum);
+			org.apache.poi.ss.usermodel.Row destRow = sheet.getRow(i + shiftNum);
 			if (destRow != null && rowHeights[i - startRow] >= 0) {
 				destRow.setHeight(rowHeights[i - startRow]);
 			}
-			// HSSFRow srcRow = sheet.getRow(i);
+			// Row srcRow = sheet.getRow(i);
 			// if( srcRow != null && destRow != null ){
 			// if( srcRow.getHeight() >= 0 ){
 			// destRow.setHeight( srcRow.getHeight() );

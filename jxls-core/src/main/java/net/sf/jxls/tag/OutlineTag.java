@@ -6,7 +6,7 @@ import net.sf.jxls.transformer.SheetTransformer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * @author Leonid Vysochyn
@@ -58,7 +58,7 @@ public class OutlineTag extends BaseTag{
     }
 
     private void groupRows(int startRowNum, int endRowNum) {
-        HSSFSheet hssfSheet = tagContext.getSheet().getHssfSheet();
+        Sheet hssfSheet = tagContext.getSheet().getPoiSheet();
         hssfSheet.groupRow( startRowNum, endRowNum );
         hssfSheet.setRowGroupCollapsed( startRowNum, !detail);
     }

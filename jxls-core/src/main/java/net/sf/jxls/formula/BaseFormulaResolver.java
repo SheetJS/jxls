@@ -11,7 +11,7 @@ import net.sf.jxls.transformer.Sheet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 
 /**
  * Base class for {@link FormulaResolver} interface implementations

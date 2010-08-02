@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 
 /**
  * Simple implementation of {@link net.sf.jxls.controller.WorkbookCellFinder} based on SheetCellFinder mapping to corresponding worksheets

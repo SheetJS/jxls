@@ -2,10 +2,10 @@ package net.sf.jxls.reader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellReference;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -66,29 +66,29 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
         return readStatus;
     }
 
-    private String readCellString(HSSFSheet sheet, int rowNum, short cellNum) {
-        HSSFCell cell = getCell(sheet, rowNum, cellNum);
+    private String readCellString(Sheet sheet, int rowNum, short cellNum) {
+        Cell cell = getCell(sheet, rowNum, cellNum);
         return getCellString(cell);
     }
 
-    private String getCellString(HSSFCell cell) {
+    private String getCellString(Cell cell) {
         String dataString = null;
         if (cell != null) {
             switch (cell.getCellType()) {
-                case HSSFCell.CELL_TYPE_STRING:
+                case Cell.CELL_TYPE_STRING:
                     dataString = cell.getRichStringCellValue().getString();
                     break;
-                case HSSFCell.CELL_TYPE_NUMERIC:
+                case Cell.CELL_TYPE_NUMERIC:
                     dataString = readNumericCell(cell);
                     break;
-                case HSSFCell.CELL_TYPE_BOOLEAN:
+                case Cell.CELL_TYPE_BOOLEAN:
                     dataString = Boolean.toString(cell.getBooleanCellValue());
                     break;
-                case HSSFCell.CELL_TYPE_BLANK:
+                case Cell.CELL_TYPE_BLANK:
                     break;
-                case HSSFCell.CELL_TYPE_ERROR:
+                case Cell.CELL_TYPE_ERROR:
                     break;
-                case HSSFCell.CELL_TYPE_FORMULA:
+                case Cell.CELL_TYPE_FORMULA:
                     // attempt to read formula cell as numeric cell
                     dataString = readNumericCell(cell);
                     break;
@@ -99,7 +99,7 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
         return dataString;
     }
 
-    private String readNumericCell(HSSFCell cell) {
+    private String readNumericCell(Cell cell) {
         double value;
         String dataString;
         value = cell.getNumericCellValue();
@@ -133,8 +133,8 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
         return beanCellMappings;
     }
 
-    private HSSFCell getCell(HSSFSheet sheet, int rowNum, int cellNum) {
-        HSSFRow row = sheet.getRow(rowNum);
+    private Cell getCell(Sheet sheet, int rowNum, int cellNum) {
+        Row row = sheet.getRow(rowNum);
         if (row == null) {
             return null;
         }

@@ -17,7 +17,7 @@ import net.sf.jxls.util.Util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.ss.usermodel.Row;
 
 /**
  * jx:forEach tag implementation
@@ -253,7 +253,7 @@ public class ForEachTag extends BaseTag {
             return shift;
         }
         log.warn("Collection " + items + " is empty");
-        HSSFRow currentRow = tagContext.getSheet().getHssfSheet().getRow(body.getStartRowNum());
+        Row currentRow = tagContext.getSheet().getPoiSheet().getRow(body.getStartRowNum());
         tagContext.getSheetTransformationController().removeRowCells(currentRow, body.getStartCellNum(), body.getEndCellNum());
         ResultTransformation shift = new ResultTransformation(0);
         shift.add( new ResultTransformation((short)-body.getNumberOfColumns(), (short)(-body.getNumberOfColumns() )));
@@ -293,7 +293,7 @@ public class ForEachTag extends BaseTag {
             try {
                 startColNum = (short) (body.getStartCellNum() + shift.getLastCellShift() + body.getNumberOfColumns() * k++);
                 endColNum = (short) (startColNum + body.getNumberOfColumns() - 1);
-                processResult = sheetTransformer.processRow(tagContext.getSheetTransformationController(), tagContext.getSheet(), tagContext.getSheet().getHssfSheet().getRow(body.getStartRowNum()),
+                processResult = sheetTransformer.processRow(tagContext.getSheetTransformationController(), tagContext.getSheet(), tagContext.getSheet().getPoiSheet().getRow(body.getStartRowNum()),
                         startColNum, endColNum, beans, null);
                 shift.add(processResult);
             } catch (ParsePropertyException e) {
@@ -344,7 +344,7 @@ public class ForEachTag extends BaseTag {
                 short startCellNum = (short) (body.getStartCellNum() + shift.getLastCellShift() + body.getNumberOfColumns() * k++);
                 short endCellNum = (short) (startCellNum + body.getNumberOfColumns() - 1);
                 ResultTransformation processResult = sheetTransformer.processRow(tagContext.getSheetTransformationController(), tagContext.getSheet(),
-                        tagContext.getSheet().getHssfSheet().getRow(body.getStartRowNum()),
+                        tagContext.getSheet().getPoiSheet().getRow(body.getStartRowNum()),
                         startCellNum, endCellNum, beans, null);
                 shift.add(processResult);
             } catch (Exception e) {

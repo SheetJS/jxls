@@ -9,6 +9,7 @@ import java.util.Map;
 
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.XLSTransformer;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
  * This sample was contributed by Senthur Selvi Karunakaran
@@ -19,7 +20,7 @@ public class DynamicXLSGeneration {
     private static String destFileName = "build/ex_output.xls";
 
 	@SuppressWarnings("unchecked")
-	public static void main(String[] args)throws ParsePropertyException, IOException {
+	public static void main(String[] args) throws ParsePropertyException, IOException, InvalidFormatException {
         if (args.length >= 2) {
             templateFileName = args[0];
             destFileName = args[1];

@@ -3,8 +3,8 @@ package net.sf.jxls.reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 /**
  * @author Leonid Vysochyn
@@ -42,7 +42,7 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
         this.cellChecks = cellChecks;
     }
 
-    public boolean isCheckSuccessful(HSSFRow row) {
+    public boolean isCheckSuccessful(Row row) {
         if( cellChecks.isEmpty() ){
             return isRowEmpty( row );
         }
@@ -59,7 +59,7 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
         if( !cursor.hasNext() ){
             return isCellChecksEmpty();
         }
-        HSSFRow row = cursor.getSheet().getRow( offset + cursor.getCurrentRowNum() );
+        Row row = cursor.getSheet().getRow( offset + cursor.getCurrentRowNum() );
         if( row == null ){
             return cellChecks.isEmpty();
         }
@@ -94,12 +94,12 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
         cellChecks.add( cellCheck );
     }
 
-    private boolean isRowEmpty(HSSFRow row) {
+    private boolean isRowEmpty(Row row) {
         if( row == null ){
             return true;
         }
         for(short i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++){
-            HSSFCell cell = row.getCell( i );
+            Cell cell = row.getCell( i );
             if( !isCellEmpty( cell ) ){
                 return false;
             }
@@ -107,14 +107,14 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
         return true;
     }
 
-    private boolean isCellEmpty(HSSFCell cell) {
+    private boolean isCellEmpty(Cell cell) {
         if( cell == null ){
             return true;
         }
         switch( cell.getCellType() ){
-            case HSSFCell.CELL_TYPE_BLANK:
+            case Cell.CELL_TYPE_BLANK:
                 return true;
-            case HSSFCell.CELL_TYPE_STRING:
+            case Cell.CELL_TYPE_STRING:
                 String cellValue = cell.getRichStringCellValue().getString();
                 return cellValue == null || cellValue.length() == 0 || cellValue.trim().length() == 0;
             default:

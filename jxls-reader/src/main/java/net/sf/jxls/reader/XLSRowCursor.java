@@ -1,19 +1,19 @@
 package net.sf.jxls.reader;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * @author Leonid Vysochyn
  */
 public interface XLSRowCursor {
     int getCurrentRowNum();
-    HSSFRow getCurrentRow();
-    HSSFSheet getSheet();
-    void setSheet(HSSFSheet sheet);
+    Row getCurrentRow();
+    Sheet getSheet();
+    void setSheet(Sheet sheet);
     String getSheetName();
     void setSheetName(String sheetName);
-    HSSFRow next();
+    Row next();
     boolean hasNext();
     void reset();
     void setCurrentRowNum(int rowNum);

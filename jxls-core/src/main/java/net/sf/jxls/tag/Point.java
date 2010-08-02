@@ -1,6 +1,6 @@
 package net.sf.jxls.tag;
 
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 
 /**
  * Represents a single cell

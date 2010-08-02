@@ -9,9 +9,8 @@ import net.sf.jxls.sample.model.Employee;
 import net.sf.jxls.transformer.Row;
 import net.sf.jxls.transformer.RowCollection;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * @author Leonid Vysochyn
@@ -40,9 +39,9 @@ public class StyleRowProcessor implements RowProcessor {
                         Cell customCell = (Cell) namedCells.get( styleCellLabel );
                         for (int i = 0; i < row.getCells().size(); i++) {
                             Cell cell = (Cell) row.getCells().get(i);
-                            HSSFCell hssfCell = cell.getHssfCell();
+                            org.apache.poi.ss.usermodel.Cell hssfCell = cell.getPoiCell();
                             if( hssfCell!=null ){
-                                copyStyle( row.getSheet().getHssfWorkbook(), customCell.getHssfCell(), hssfCell );
+                                copyStyle( row.getSheet().getPoiWorkbook(), customCell.getPoiCell(), hssfCell );
                             }
                         }
                     }
@@ -51,13 +50,13 @@ public class StyleRowProcessor implements RowProcessor {
         }
     }
 
-    private void copyStyle(HSSFWorkbook workbook, HSSFCell fromCell, HSSFCell toCell){
-        HSSFCellStyle toStyle = toCell.getCellStyle();
-        HSSFCellStyle fromStyle = fromCell.getCellStyle();
+    private void copyStyle(Workbook workbook, org.apache.poi.ss.usermodel.Cell fromCell, org.apache.poi.ss.usermodel.Cell toCell){
+        CellStyle toStyle = toCell.getCellStyle();
+        CellStyle fromStyle = fromCell.getCellStyle();
         if( fromStyle.getDataFormat() == toStyle.getDataFormat() ){
             toCell.setCellStyle( fromStyle );
         }else{
-            HSSFCellStyle newStyle = workbook.createCellStyle();
+            CellStyle newStyle = workbook.createCellStyle();
             newStyle.setAlignment( toStyle.getAlignment() );
             newStyle.setBorderBottom( toStyle.getBorderBottom() );
             newStyle.setBorderLeft( toStyle.getBorderLeft() );

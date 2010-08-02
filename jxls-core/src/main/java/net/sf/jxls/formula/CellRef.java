@@ -3,7 +3,7 @@ package net.sf.jxls.formula;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 
 /**
  * @author Leonid Vysochyn

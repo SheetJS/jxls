@@ -2,7 +2,7 @@ package net.sf.jxls.reader;
 
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.Converter;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.ss.usermodel.DateUtil;
 
 /**
  * @author Leonid Vysochyn
@@ -29,6 +29,6 @@ public class DateConverter implements Converter {
         }else{
             throw new ConversionException("No value specified");
         }
-        return HSSFDateUtil.getJavaDate( date );
+        return DateUtil.getJavaDate( date );
     }
 }

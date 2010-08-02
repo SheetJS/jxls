@@ -53,7 +53,7 @@ public class SimpleRowTransformer extends BaseRowTransformer {
         }else{
             for (int i = 0; i < cells.size(); i++) {
                 Cell cell = (Cell) cells.get(i);
-                if( previousTransformation != null && cell.getHssfCell().getColumnIndex()>= previousTransformation.getStartCellShift()
+                if( previousTransformation != null && cell.getPoiCell().getColumnIndex()>= previousTransformation.getStartCellShift()
                         && previousTransformation.getStartCellShift() != 0){
                     cell.replaceCellWithNewShiftedBy(previousTransformation.getLastCellShift());
                 }

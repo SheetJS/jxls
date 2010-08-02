@@ -2,24 +2,24 @@ package net.sf.jxls.reader;
 
 import java.util.NoSuchElementException;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * @author Leonid Vysochyn
  */
 public class XLSRowCursorImpl implements XLSRowCursor {
     int currentRowNum;
-    HSSFSheet sheet;
+    Sheet sheet;
     String sheetName;
 
 
-    public XLSRowCursorImpl(HSSFSheet sheet) {
+    public XLSRowCursorImpl(Sheet sheet) {
         this.sheet = sheet;
     }
 
 
-    public XLSRowCursorImpl(String sheetName, HSSFSheet sheet) {
+    public XLSRowCursorImpl(String sheetName, Sheet sheet) {
         this.sheetName = sheetName;
         this.sheet = sheet;
     }
@@ -28,16 +28,16 @@ public class XLSRowCursorImpl implements XLSRowCursor {
         return currentRowNum;
     }
 
-    public HSSFRow getCurrentRow() {
+    public Row getCurrentRow() {
         return sheet.getRow( currentRowNum );
     }
 
 
-    public HSSFSheet getSheet() {
+    public Sheet getSheet() {
         return sheet;
     }
 
-    public void setSheet(HSSFSheet sheet) {
+    public void setSheet(Sheet sheet) {
         this.sheet = sheet;
     }
 
@@ -49,7 +49,7 @@ public class XLSRowCursorImpl implements XLSRowCursor {
         this.sheetName = sheetName;
     }
 
-    public HSSFRow next() {
+    public Row next() {
         if( hasNext() ){
             return sheet.getRow( currentRowNum++ );
         }

@@ -9,8 +9,6 @@ import net.sf.jxls.formula.FormulaController;
 import net.sf.jxls.formula.FormulaControllerImpl;
 import net.sf.jxls.util.SheetHelper;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
 /**
  * Represents excel workbook
  * @author Leonid Vysochyn
@@ -20,37 +18,37 @@ public class Workbook {
     /**
      * POI Excel workbook object
      */
-    HSSFWorkbook hssfWorkbook;
+    org.apache.poi.ss.usermodel.Workbook hssfWorkbook;
 
     FormulaController formulaController;
 
     Configuration configuration = new Configuration();
 
-    public Workbook(HSSFWorkbook hssfWorkbook) {
+    public Workbook(org.apache.poi.ss.usermodel.Workbook hssfWorkbook) {
         this.hssfWorkbook = hssfWorkbook;
     }
 
-    public Workbook(HSSFWorkbook hssfWorkbook, Configuration configuration) {
+    public Workbook(org.apache.poi.ss.usermodel.Workbook hssfWorkbook, Configuration configuration) {
         this.hssfWorkbook = hssfWorkbook;
         this.configuration = configuration;
     }
 
-    public Workbook(HSSFWorkbook hssfWorkbook, List sheets) {
+    public Workbook(org.apache.poi.ss.usermodel.Workbook hssfWorkbook, List sheets) {
         this.hssfWorkbook = hssfWorkbook;
         this.sheets = sheets;
     }
 
-    public Workbook(HSSFWorkbook hssfWorkbook, List sheets, Configuration configuration) {
+    public Workbook(org.apache.poi.ss.usermodel.Workbook hssfWorkbook, List sheets, Configuration configuration) {
         this.hssfWorkbook = hssfWorkbook;
         this.sheets = sheets;
         this.configuration = configuration;
     }
 
-    public HSSFWorkbook getHssfWorkbook() {
+    public org.apache.poi.ss.usermodel.Workbook getPoiWorkbook() {
         return hssfWorkbook;
     }
 
-    public void setHssfWorkbook(HSSFWorkbook hssfWorkbook) {
+    public void setPoiWorkbook(org.apache.poi.ss.usermodel.Workbook hssfWorkbook) {
         this.hssfWorkbook = hssfWorkbook;
     }
 

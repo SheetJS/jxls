@@ -6,8 +6,8 @@ import net.sf.jxls.transformation.DuplicateTransformation;
 import net.sf.jxls.transformer.Workbook;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 import java.util.*;
 
@@ -123,8 +123,8 @@ public class FormulaControllerImpl implements FormulaController {
             for (int i = 0; i < formulas.size(); i++) {
                 Formula formula = (Formula) formulas.get(i);
                 String formulaString = formulaResolver.resolve( formula, null);
-                HSSFRow hssfRow = formula.getSheet().getHssfSheet().getRow(formula.getRowNum().intValue());
-                HSSFCell hssfCell = hssfRow.getCell(formula.getCellNum().intValue());
+                Row hssfRow = formula.getSheet().getPoiSheet().getRow(formula.getRowNum().intValue());
+                Cell hssfCell = hssfRow.getCell(formula.getCellNum().intValue());
                 if (formulaString != null) {
                     if( hssfCell == null ){
                         hssfCell = hssfRow.createCell( formula.getCellNum().intValue() );
@@ -133,7 +133,7 @@ public class FormulaControllerImpl implements FormulaController {
                         hssfCell.setCellFormula(formulaString);
                     } catch (RuntimeException e) {
                         log.error("Can't set formula: " + formulaString, e);
-//                        hssfCell.setCellType( HSSFCell.CELL_TYPE_BLANK );
+//                        hssfCell.setCellType( Cell.CELL_TYPE_BLANK );
                         throw new RuntimeException("Can't set formula: " + formulaString, e );
                     }
                 }

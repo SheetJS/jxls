@@ -5,9 +5,11 @@ import net.sf.jxls.tag.Block;
 import net.sf.jxls.util.TagBodyHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.*;
 import java.util.HashMap;
@@ -26,11 +28,10 @@ public class TagBodyHelperTest extends TestCase {
 
 
 
-    public void testDuplicateDown() throws IOException {
+    public void testDuplicateDown() throws IOException, InvalidFormatException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook workbook = new HSSFWorkbook(fs);
-        HSSFSheet sheet = workbook.getSheetAt( 0 );
+        Workbook workbook = WorkbookFactory.create(is);
+        Sheet sheet = workbook.getSheetAt( 0 );
         int lastRowNum = sheet.getLastRowNum();
         Block block = new Block(null, 1, 3);
         TagBodyHelper.duplicateDown( sheet, block, 2);
@@ -47,11 +48,10 @@ public class TagBodyHelperTest extends TestCase {
         saveWorkbook( workbook, simpeBeanDestXLS);
     }
 
-    public void testReplaceProperty() throws IOException {
+    public void testReplaceProperty() throws IOException, InvalidFormatException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(grouping1XLS));
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook workbook = new HSSFWorkbook(fs);
-        HSSFSheet sheet = workbook.getSheetAt( 0 );
+        Workbook workbook = WorkbookFactory.create(is);
+        Sheet sheet = workbook.getSheetAt( 0 );
         int lastRowNum = sheet.getLastRowNum();
         Block block = new Block(null, 0, 4);
         TagBodyHelper.replaceProperty( sheet, block, "mainBean.beans", "item");
@@ -66,7 +66,7 @@ public class TagBodyHelperTest extends TestCase {
         saveWorkbook( workbook, grouping1DestXLS);
     }
 
-    private void saveWorkbook(HSSFWorkbook resultWorkbook, String fileName) throws IOException {
+    private void saveWorkbook(Workbook resultWorkbook, String fileName) throws IOException {
         String saveResultsProp = System.getProperty("saveResults");
         if( "true".equalsIgnoreCase(saveResultsProp) ){
             OutputStream os = new BufferedOutputStream(new FileOutputStream(fileName));

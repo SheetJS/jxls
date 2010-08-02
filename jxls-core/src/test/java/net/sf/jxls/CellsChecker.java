@@ -1,10 +1,10 @@
 package net.sf.jxls;
 
 import junit.framework.Assert;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -43,10 +43,10 @@ public class CellsChecker extends Assert {
         this.ignoreFirstLastCellNums = ignoreFirstLastCellNums;
     }
 
-    void checkSection(HSSFSheet srcSheet, HSSFSheet destSheet, int srcRowNum, int destRowNum, short fromCellNum, short toCellNum, int numberOfRows, boolean ignoreHeight, boolean ignoreNullRows) {
+    void checkSection(Sheet srcSheet, Sheet destSheet, int srcRowNum, int destRowNum, short fromCellNum, short toCellNum, int numberOfRows, boolean ignoreHeight, boolean ignoreNullRows) {
         for (int i = 0; i < numberOfRows; i++) {
-            HSSFRow sourceRow = srcSheet.getRow(srcRowNum + i);
-            HSSFRow destRow = destSheet.getRow(destRowNum + i);
+            Row sourceRow = srcSheet.getRow(srcRowNum + i);
+            Row destRow = destSheet.getRow(destRowNum + i);
             if (!ignoreNullRows) {
                 assertTrue("Null Row problem found", (sourceRow != null && destRow != null) || (sourceRow == null && destRow == null));
                 if (sourceRow != null) {
@@ -72,11 +72,11 @@ public class CellsChecker extends Assert {
         }
     }
 
-    void checkRow(HSSFSheet sheet, int rowNum, int startCellNum, int endCellNum, Object[] values){
-        HSSFRow row  = sheet.getRow(rowNum);
+    void checkRow(Sheet sheet, int rowNum, int startCellNum, int endCellNum, Object[] values){
+        Row row  = sheet.getRow(rowNum);
         if( row != null){
             for(int i = startCellNum; i<=endCellNum; i++){
-                HSSFCell cell = row.getCell(i);
+                Cell cell = row.getCell(i);
                 if( cell != null ){
                     Object cellValue = getCellValue(cell, values[i]);
                     assertEquals("Result cell values incorrect in row=" + row + ", cell=" + i, values[i], cellValue);
@@ -90,7 +90,7 @@ public class CellsChecker extends Assert {
 
     }
 
-    private void checkEmptyCells(HSSFRow destRow, short fromCellNum, short toCellNum) {
+    private void checkEmptyCells(Row destRow, short fromCellNum, short toCellNum) {
         if (destRow != null) {
             for (short i = fromCellNum; i <= toCellNum; i++) {
                 assertNull("Cell " + i + " in " + destRow.getRowNum() + " row is not null", destRow.getCell(i));
@@ -98,56 +98,56 @@ public class CellsChecker extends Assert {
         }
     }
 
-    void checkListCells(HSSFSheet srcSheet, int srcRowNum, HSSFSheet sheet, int startRowNum, short cellNum, Object[] values) {
-        HSSFRow srcRow = srcSheet.getRow(srcRowNum);
-        HSSFCell srcCell = srcRow.getCell(cellNum);
+    void checkListCells(Sheet srcSheet, int srcRowNum, Sheet sheet, int startRowNum, short cellNum, Object[] values) {
+        Row srcRow = srcSheet.getRow(srcRowNum);
+        Cell srcCell = srcRow.getCell(cellNum);
         for (int i = 0; i < values.length; i++) {
-            HSSFRow row = sheet.getRow(startRowNum + i);
-            HSSFCell cell = row.getCell(cellNum);
+            Row row = sheet.getRow(startRowNum + i);
+            Cell cell = row.getCell(cellNum);
             Object cellValue = getCellValue(cell, values[i]);
             assertEquals("List property cell is incorrect", values[i], cellValue);
             checkCellStyle(srcCell.getCellStyle(), cell.getCellStyle());
         }
     }
 
-    void checkFixedListCells(HSSFSheet srcSheet, int srcRowNum, HSSFSheet destSheet, int startRowNum, short cellNum, Object[] values) {
+    void checkFixedListCells(Sheet srcSheet, int srcRowNum, Sheet destSheet, int startRowNum, short cellNum, Object[] values) {
         for (int i = 0; i < values.length; i++) {
-            HSSFRow srcRow = srcSheet.getRow(srcRowNum);
-            HSSFCell srcCell = srcRow.getCell(cellNum);
-            HSSFRow destRow = destSheet.getRow(startRowNum + i);
-            HSSFCell destCell = destRow.getCell(cellNum);
+            Row srcRow = srcSheet.getRow(srcRowNum);
+            Cell srcCell = srcRow.getCell(cellNum);
+            Row destRow = destSheet.getRow(startRowNum + i);
+            Cell destCell = destRow.getCell(cellNum);
             Object cellValue = getCellValue(destCell, values[i]);
             assertEquals("List property cell is incorrect", values[i], cellValue);
             checkCellStyle(srcCell.getCellStyle(), destCell.getCellStyle());
         }
     }
 
-    void checkFormulaCell(HSSFSheet srcSheet, int srcRowNum, HSSFSheet destSheet, int destRowNum, short cellNum, String formula) {
-        HSSFRow srcRow = srcSheet.getRow(srcRowNum);
-        HSSFCell srcCell = srcRow.getCell(cellNum);
-        HSSFRow destRow = destSheet.getRow(destRowNum);
-        HSSFCell destCell = destRow.getCell(cellNum);
+    void checkFormulaCell(Sheet srcSheet, int srcRowNum, Sheet destSheet, int destRowNum, short cellNum, String formula) {
+        Row srcRow = srcSheet.getRow(srcRowNum);
+        Cell srcCell = srcRow.getCell(cellNum);
+        Row destRow = destSheet.getRow(destRowNum);
+        Cell destCell = destRow.getCell(cellNum);
         checkCellStyle(srcCell.getCellStyle(), destCell.getCellStyle());
-        assertEquals("Result Cell is not a formula", destCell.getCellType(), HSSFCell.CELL_TYPE_FORMULA);
+        assertEquals("Result Cell is not a formula", destCell.getCellType(), Cell.CELL_TYPE_FORMULA);
         assertEquals("Formula is incorrect", formula, destCell.getCellFormula());
     }
 
-    void checkFormulaCell(HSSFSheet srcSheet, int srcRowNum, HSSFSheet destSheet, int destRowNum, short cellNum, String formula, boolean ignoreCellStyle) {
-        HSSFRow srcRow = srcSheet.getRow(srcRowNum);
-        HSSFCell srcCell = srcRow.getCell(cellNum);
-        HSSFRow destRow = destSheet.getRow(destRowNum);
-        HSSFCell destCell = destRow.getCell(cellNum);
+    void checkFormulaCell(Sheet srcSheet, int srcRowNum, Sheet destSheet, int destRowNum, short cellNum, String formula, boolean ignoreCellStyle) {
+        Row srcRow = srcSheet.getRow(srcRowNum);
+        Cell srcCell = srcRow.getCell(cellNum);
+        Row destRow = destSheet.getRow(destRowNum);
+        Cell destCell = destRow.getCell(cellNum);
         if (!ignoreCellStyle) {
             checkCellStyle(srcCell.getCellStyle(), destCell.getCellStyle());
         }
-        assertEquals("Result Cell is not a formula", destCell.getCellType(), HSSFCell.CELL_TYPE_FORMULA);
+        assertEquals("Result Cell is not a formula", destCell.getCellType(), Cell.CELL_TYPE_FORMULA);
         assertEquals("Formula is incorrect", formula, destCell.getCellFormula());
     }
 
-    void checkRows(HSSFSheet sourceSheet, HSSFSheet destSheet, int sourceRowNum, int destRowNum, int numberOfRows) {
+    void checkRows(Sheet sourceSheet, Sheet destSheet, int sourceRowNum, int destRowNum, int numberOfRows) {
         for (int i = 0; i < numberOfRows; i++) {
-            HSSFRow sourceRow = sourceSheet.getRow(sourceRowNum + i);
-            HSSFRow destRow = destSheet.getRow(destRowNum + i);
+            Row sourceRow = sourceSheet.getRow(sourceRowNum + i);
+            Row destRow = destSheet.getRow(destRowNum + i);
             assertTrue("Null Row problem found", (sourceRow != null && destRow != null) || (sourceRow == null && destRow == null));
             if (sourceRow != null && destRow != null) {
                 if (!ignoreFirstLastCellNums) {
@@ -161,10 +161,10 @@ public class CellsChecker extends Assert {
         }
     }
 
-    private void checkCells(HSSFRow sourceRow, HSSFRow resultRow, short startCell, short endCell) {
+    private void checkCells(Row sourceRow, Row resultRow, short startCell, short endCell) {
         for (short i = startCell; i <= endCell; i++) {
-            HSSFCell sourceCell = sourceRow.getCell(i);
-            HSSFCell resultCell = resultRow.getCell(i);
+            Cell sourceCell = sourceRow.getCell(i);
+            Cell resultCell = resultRow.getCell(i);
             assertTrue("Null cell problem found", (sourceCell != null && resultCell != null) || (sourceCell == null && resultCell == null));
             if (sourceCell != null) {
                 checkCells(sourceCell, resultCell);
@@ -172,12 +172,12 @@ public class CellsChecker extends Assert {
         }
     }
 
-    void checkCells(HSSFSheet srcSheet, HSSFSheet destSheet, int srcRowNum, short srcCellNum, int destRowNum, short destCellNum, boolean checkCellWidth) {
-        HSSFRow srcRow = srcSheet.getRow(srcRowNum);
-        HSSFRow destRow = destSheet.getRow(destRowNum);
+    void checkCells(Sheet srcSheet, Sheet destSheet, int srcRowNum, short srcCellNum, int destRowNum, short destCellNum, boolean checkCellWidth) {
+        Row srcRow = srcSheet.getRow(srcRowNum);
+        Row destRow = destSheet.getRow(destRowNum);
         assertEquals("Row height is not the same", srcRow.getHeight(), destRow.getHeight());
-        HSSFCell srcCell = srcRow.getCell(srcCellNum);
-        HSSFCell destCell = destRow.getCell(destCellNum);
+        Cell srcCell = srcRow.getCell(srcCellNum);
+        Cell destCell = destRow.getCell(destCellNum);
         assertTrue("Null cell problem found", (srcCell != null && destCell != null) || (srcCell == null && destCell == null));
         if (srcCell != null && destCell != null) {
             checkCells(srcCell, destCell);
@@ -187,7 +187,7 @@ public class CellsChecker extends Assert {
         }
     }
 
-    static int getWidth(HSSFSheet sheet, int col) {
+    static int getWidth(Sheet sheet, int col) {
         int width = sheet.getColumnWidth(col);
         if (width == sheet.getDefaultColumnWidth()) {
             width = (short) (width * 256);
@@ -196,12 +196,12 @@ public class CellsChecker extends Assert {
     }
 
 
-    private void checkCells(HSSFCell sourceCell, HSSFCell destCell) {
+    private void checkCells(Cell sourceCell, Cell destCell) {
         checkCellValue(sourceCell, destCell);
         checkCellStyle(sourceCell.getCellStyle(), destCell.getCellStyle());
     }
 
-    private void checkCellStyle(HSSFCellStyle sourceStyle, HSSFCellStyle destStyle) {
+    private void checkCellStyle(CellStyle sourceStyle, CellStyle destStyle) {
         if (!ignoreStyle) {
             assertEquals(sourceStyle.getAlignment(), destStyle.getAlignment());
             assertEquals(sourceStyle.getBorderBottom(), destStyle.getBorderBottom());
@@ -224,9 +224,9 @@ public class CellsChecker extends Assert {
         }
     }
 
-    private void checkCellValue(HSSFCell sourceCell, HSSFCell destCell) {
+    private void checkCellValue(Cell sourceCell, Cell destCell) {
         switch (sourceCell.getCellType()) {
-            case HSSFCell.CELL_TYPE_STRING:
+            case Cell.CELL_TYPE_STRING:
                 if (propertyMap.containsKey(sourceCell.getRichStringCellValue().getString())) {
                     assertEquals("Property value was set incorrectly", propertyMap.get(sourceCell.getRichStringCellValue().getString()), getCellValue(destCell, propertyMap.get(sourceCell.getRichStringCellValue().getString())));
                 } else {
@@ -234,23 +234,23 @@ public class CellsChecker extends Assert {
                     assertEquals("Cell values are not the same", sourceCell.getRichStringCellValue().getString(), destCell.getRichStringCellValue().getString());
                 }
                 break;
-            case HSSFCell.CELL_TYPE_NUMERIC:
+            case Cell.CELL_TYPE_NUMERIC:
                 assertEquals("Cell type is not the same", sourceCell.getCellType(), destCell.getCellType());
                 assertTrue("Cell values are not the same", sourceCell.getNumericCellValue() == destCell.getNumericCellValue());
                 break;
-            case HSSFCell.CELL_TYPE_BOOLEAN:
+            case Cell.CELL_TYPE_BOOLEAN:
                 assertEquals("Cell type is not the same", sourceCell.getCellType(), destCell.getCellType());
                 assertEquals("Cell values are not the same", sourceCell.getBooleanCellValue(), destCell.getBooleanCellValue());
                 break;
-            case HSSFCell.CELL_TYPE_ERROR:
+            case Cell.CELL_TYPE_ERROR:
                 assertEquals("Cell type is not the same", sourceCell.getCellType(), destCell.getCellType());
                 assertEquals("Cell values are not the same", sourceCell.getErrorCellValue(), destCell.getErrorCellValue());
                 break;
-            case HSSFCell.CELL_TYPE_FORMULA:
+            case Cell.CELL_TYPE_FORMULA:
                 assertEquals("Cell type is not the same", sourceCell.getCellType(), destCell.getCellType());
                 assertEquals("Cell values are not the same", sourceCell.getCellFormula(), destCell.getCellFormula());
                 break;
-            case HSSFCell.CELL_TYPE_BLANK:
+            case Cell.CELL_TYPE_BLANK:
                 assertEquals("Cell type is not the same", sourceCell.getCellType(), destCell.getCellType());
                 break;
             default:
@@ -259,7 +259,7 @@ public class CellsChecker extends Assert {
         }
     }
 
-    private Object getCellValue(HSSFCell cell, Object obj) {
+    private Object getCellValue(Cell cell, Object obj) {
         Object value = null;
         if (obj instanceof String) {
             value = cell.getRichStringCellValue().getString();
@@ -278,9 +278,9 @@ public class CellsChecker extends Assert {
             c.setTime(cell.getDateCellValue());
             value = c;
         } else if (obj instanceof Boolean) {
-            if (cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN) {
+            if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
                 value = (cell.getBooleanCellValue()) ? Boolean.TRUE : Boolean.FALSE;
-            } else if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+            } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
                 value = Boolean.valueOf(cell.getRichStringCellValue().getString());
             } else {
                 value = Boolean.FALSE;

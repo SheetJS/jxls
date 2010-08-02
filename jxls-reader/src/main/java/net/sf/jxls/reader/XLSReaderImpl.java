@@ -7,9 +7,10 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  * Basic implementation of {@link XLSReader} interface
@@ -23,18 +24,17 @@ public class XLSReaderImpl implements XLSReader {
     XLSReadStatus readStatus = new XLSReadStatus();
 
 
-    public XLSReadStatus read(InputStream inputXLS, Map beans) throws IOException {
+    public XLSReadStatus read(InputStream inputXLS, Map beans) throws IOException, InvalidFormatException {
         readStatus.clear();
-        POIFSFileSystem fsInput = new POIFSFileSystem(inputXLS);
-        HSSFWorkbook workbook = new HSSFWorkbook(fsInput);
+        Workbook workbook = WorkbookFactory.create(inputXLS);
         for (int sheetNo = 0; sheetNo < workbook.getNumberOfSheets(); sheetNo++) {
             readStatus.mergeReadStatus( readSheet(workbook, sheetNo, beans) );
         }
         return readStatus;
     }
 
-    private XLSReadStatus readSheet(HSSFWorkbook workbook, int sheetNo, Map beans) {
-        HSSFSheet sheet = workbook.getSheetAt( sheetNo );
+    private XLSReadStatus readSheet(Workbook workbook, int sheetNo, Map beans) {
+        Sheet sheet = workbook.getSheetAt( sheetNo );
         String sheetName = workbook.getSheetName( sheetNo );
         if( log.isInfoEnabled() ){
             log.info("Processing sheet " + sheetName);

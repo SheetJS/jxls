@@ -27,7 +27,7 @@ public class RowCollection {
     private List cells = new ArrayList();
 
     /**
-     * {@link net.sf.jxls.transformer.Row} object containing this collection
+     * {@link Row} object containing this collection
      */
     private Row parentRow;
 
@@ -85,7 +85,7 @@ public class RowCollection {
     }
 
     public boolean containsCell(Cell cell){
-        return cell.getHssfCell() == null ||
+        return cell.getPoiCell() == null ||
                 (cell.getRowCollection() != null &&
                         collectionProperty.getFullCollectionName().equals(cell.getRowCollection().getCollectionProperty().getFullCollectionName()));
     }

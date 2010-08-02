@@ -5,10 +5,9 @@ import java.util.Map;
 
 import net.sf.jxls.formula.Formula;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * @author Leonid Vysochyn
@@ -21,17 +20,17 @@ public class FormulaUtil {
      * @param sheet            Sheet to update
      * @param ignoreUnresolved Flag indicating should unresolved formulas be removed or just ignored
      */
-    public static void updateFormulas(HSSFSheet sheet, List formulas, Map listRanges, Map namedCells, boolean ignoreUnresolved) {
+    public static void updateFormulas(Sheet sheet, List formulas, Map listRanges, Map namedCells, boolean ignoreUnresolved) {
         for (int i = 0; i < formulas.size(); i++) {
             Formula formula = (Formula) formulas.get(i);
             String formulaString = formula.getAppliedFormula( listRanges, namedCells );
-            HSSFRow hssfRow = sheet.getRow(formula.getRowNum().intValue());
-            HSSFCell hssfCell = hssfRow.getCell(formula.getCellNum().shortValue());
+            Row hssfRow = sheet.getRow(formula.getRowNum().intValue());
+            Cell hssfCell = hssfRow.getCell(formula.getCellNum().shortValue());
             if (formulaString != null) {
                 hssfCell.setCellFormula(formulaString);
             } else {
                 if (!ignoreUnresolved) {
-                    hssfCell.setCellValue(new HSSFRichTextString(""));
+                    hssfCell.setCellValue(hssfCell.getSheet().getWorkbook().getCreationHelper().createRichTextString(""));
                     formulas.remove(i--);
                 }
             }

@@ -11,9 +11,8 @@ import net.sf.jxls.transformer.Sheet;
 import net.sf.jxls.transformer.Workbook;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -30,16 +29,14 @@ public class SheetTransformationControllerTest extends TestCase {
     public static final String removeBordersOutputXLS = "/removeBorders_output.xls";
     public static final String removeBodyRowsXLS = "/removeBodyRows_output.xls";
 
-    public void testDuplicateDown() throws IOException {
+    public void testDuplicateDown() throws IOException, InvalidFormatException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
         InputStream is1 = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
 
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook workbook = new HSSFWorkbook(fs);
-        HSSFSheet srcSheet = workbook.getSheetAt( 0 );
-        POIFSFileSystem fs1 = new POIFSFileSystem(is1);
-        HSSFWorkbook destWorkbook = new HSSFWorkbook(fs1);
-        HSSFSheet destSheet = destWorkbook.getSheetAt( 0 );
+        org.apache.poi.ss.usermodel.Workbook workbook = WorkbookFactory.create(is);
+        org.apache.poi.ss.usermodel.Sheet srcSheet = workbook.getSheetAt( 0 );
+        org.apache.poi.ss.usermodel.Workbook destWorkbook = WorkbookFactory.create(is1);
+        org.apache.poi.ss.usermodel.Sheet destSheet = destWorkbook.getSheetAt( 0 );
         int lastRowNum = srcSheet.getLastRowNum();
         Block block = new Block(null, 1, 3);
         Workbook wb = new Workbook(destWorkbook);
@@ -76,16 +73,14 @@ public class SheetTransformationControllerTest extends TestCase {
         os.close();
     }
 
-    public void testRemoveBorders() throws IOException {
+    public void testRemoveBorders() throws IOException, InvalidFormatException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
         InputStream is1 = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
 
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook workbook = new HSSFWorkbook(fs);
-        HSSFSheet srcSheet = workbook.getSheetAt( 0 );
-        POIFSFileSystem fs1 = new POIFSFileSystem(is1);
-        HSSFWorkbook destWorkbook = new HSSFWorkbook(fs1);
-        HSSFSheet destSheet = destWorkbook.getSheetAt( 0 );
+        org.apache.poi.ss.usermodel.Workbook workbook = WorkbookFactory.create(is);
+        org.apache.poi.ss.usermodel.Sheet srcSheet = workbook.getSheetAt( 0 );
+        org.apache.poi.ss.usermodel.Workbook destWorkbook = WorkbookFactory.create(is1);
+        org.apache.poi.ss.usermodel.Sheet destSheet = destWorkbook.getSheetAt( 0 );
         int lastRowNum = srcSheet.getLastRowNum();
         Block block = new Block(null, 1, 3);
         Workbook wb = new Workbook(destWorkbook);
@@ -126,16 +121,14 @@ public class SheetTransformationControllerTest extends TestCase {
         os.close();
     }
 
-    public void testRemoveBodyRows() throws IOException {
+    public void testRemoveBodyRows() throws IOException, InvalidFormatException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
         InputStream is1 = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));
 
-        POIFSFileSystem fs = new POIFSFileSystem(is);
-        HSSFWorkbook workbook = new HSSFWorkbook(fs);
-        HSSFSheet srcSheet = workbook.getSheetAt( 0 );
-        POIFSFileSystem fs1 = new POIFSFileSystem(is1);
-        HSSFWorkbook destWorkbook = new HSSFWorkbook(fs1);
-        HSSFSheet destSheet = destWorkbook.getSheetAt( 0 );
+        org.apache.poi.ss.usermodel.Workbook workbook = WorkbookFactory.create(is);
+        org.apache.poi.ss.usermodel.Sheet srcSheet = workbook.getSheetAt( 0 );
+        org.apache.poi.ss.usermodel.Workbook destWorkbook = WorkbookFactory.create(is1);
+        org.apache.poi.ss.usermodel.Sheet destSheet = destWorkbook.getSheetAt( 0 );
         int lastRowNum = srcSheet.getLastRowNum();
         Workbook wb = new Workbook(destWorkbook);
         Sheet sheet = new Sheet(destWorkbook, destSheet);

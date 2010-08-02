@@ -1,6 +1,6 @@
 package net.sf.jxls.formula;
 
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 
 
 /**

@@ -12,8 +12,6 @@ import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformation.ResultTransformation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
 
 import java.util.*;
 
@@ -76,8 +74,8 @@ public class SheetTransformer {
         if (!beans.isEmpty()) {
             SheetTransformationController stc = new SheetTransformationControllerImpl(sheet);
             workbookTransformationController.addSheetTransformationController(stc);
-            for (int i = sheet.getHssfSheet().getFirstRowNum(); i <= sheet.getHssfSheet().getLastRowNum(); i++) {
-                HSSFRow hssfRow = sheet.getHssfSheet().getRow(i);
+            for (int i = sheet.getPoiSheet().getFirstRowNum(); i <= sheet.getPoiSheet().getLastRowNum(); i++) {
+                org.apache.poi.ss.usermodel.Row hssfRow = sheet.getPoiSheet().getRow(i);
                 if (hssfRow != null) {
                     List rowTransformers = parseRow(sheet, hssfRow, beans);
                     if (!rowTransformers.isEmpty()) {
@@ -116,7 +114,7 @@ public class SheetTransformer {
     }
 
     private void exposePOIBeans(Sheet sheet, Map beans) {
-        beans.put(configuration.getSheetKeyName(), sheet.getHssfSheet());
+        beans.put(configuration.getSheetKeyName(), sheet.getPoiSheet());
     }
 
 
@@ -124,7 +122,7 @@ public class SheetTransformer {
      * Processes rows in a template sheet using map of beans as parameter
      *
      * @param stc       - {@link SheetTransformationController} corresponding to the sheet containing given rows
-     * @param sheet     {@link net.sf.jxls.transformer.Sheet} object
+     * @param sheet     {@link Sheet} object
      * @param startRow  Row to start processing
      * @param endRow    Last row to be processed
      * @param beans     Beans for substitution
@@ -138,7 +136,7 @@ public class SheetTransformer {
         boolean hasTagProcessing = false;
         int lastProcessedRow = -1;
         for (int i = startRow; i <= endRow; i++) {
-            HSSFRow hssfRow = sheet.getHssfSheet().getRow(i);
+            org.apache.poi.ss.usermodel.Row hssfRow = sheet.getPoiSheet().getRow(i);
             if (hssfRow != null) {
                 ResultTransformation processResult = processRow(stc, sheet, hssfRow, beans, parentRow);
                 if (!processResult.isTagProcessResult()) {
@@ -165,11 +163,11 @@ public class SheetTransformer {
         return r;
     }
 
-    ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, HSSFRow hssfRow, Map beans, Row parentRow) {
+    ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, org.apache.poi.ss.usermodel.Row hssfRow, Map beans, Row parentRow) {
         return processRow(stc, sheet, hssfRow, hssfRow.getFirstCellNum(), hssfRow.getLastCellNum(), beans, parentRow);
     }
 
-    public ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, HSSFRow hssfRow, int startCell, int endCell, Map beans, Row parentRow) {
+    public ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, org.apache.poi.ss.usermodel.Row hssfRow, int startCell, int endCell, Map beans, Row parentRow) {
         List transformers = parseCells(sheet, hssfRow, startCell, endCell, beans);
 
 
@@ -178,7 +176,7 @@ public class SheetTransformer {
 
     }
 
-    private List parseCells(Sheet sheet, HSSFRow hssfRow, int startCell, int endCell, Map beans) {
+    private List parseCells(Sheet sheet, org.apache.poi.ss.usermodel.Row hssfRow, int startCell, int endCell, Map beans) {
         if (configuration.getRowKeyName() != null) {
             beans.put(configuration.getRowKeyName(), hssfRow);
         }
@@ -190,7 +188,7 @@ public class SheetTransformer {
 //        transformations.add( simpleRowTransformer );
         boolean hasCollections = false;
         for (int j = startCell; j <= endCell; j++) {
-            HSSFCell hssfCell = hssfRow.getCell(j);
+            org.apache.poi.ss.usermodel.Cell hssfCell = hssfRow.getCell(j);
             CellParser cellParser = new CellParser(hssfCell, row, configuration);
             Cell cell = cellParser.parseCell(beans);
             if (cell.getTag() == null) {
@@ -209,7 +207,7 @@ public class SheetTransformer {
 
 //                    rowTransformer
 
-                    ListRange listRange = new ListRange(row.getHssfRow().getRowNum(), row.getHssfRow().getRowNum() + rowCollection.getCollectionProperty().getCollection().size() - 1, j);
+                    ListRange listRange = new ListRange(row.getPoiRow().getRowNum(), row.getPoiRow().getRowNum() + rowCollection.getCollectionProperty().getCollection().size() - 1, j);
 
                     addListRange(sheet, cell.getCollectionProperty().getProperty(), listRange);
                 } else {
@@ -249,9 +247,9 @@ public class SheetTransformer {
                 if (cell.isFormula()) {
                     // create list range for inline formula
                     if (cell.getFormula().isInline() && cell.getLabel() != null && cell.getLabel().length() > 0) {
-                        ListRange listRange = new ListRange(row.getHssfRow().getRowNum(),
-                                row.getHssfRow().getRowNum() + cell.getRowCollection().getCollectionProperty().getCollection().size() - 1,
-                                cell.getHssfCell().getColumnIndex());
+                        ListRange listRange = new ListRange(row.getPoiRow().getRowNum(),
+                                row.getPoiRow().getRowNum() + cell.getRowCollection().getCollectionProperty().getCollection().size() - 1,
+                                cell.getPoiCell().getColumnIndex());
                         addListRange(sheet, cell.getLabel(), listRange);
                     }
                 }
@@ -261,7 +259,7 @@ public class SheetTransformer {
     }
 
 
-    List parseRow(Sheet sheet, HSSFRow hssfRow, Map beans) {
+    List parseRow(Sheet sheet, org.apache.poi.ss.usermodel.Row hssfRow, Map beans) {
         List transformers = parseCells(sheet, hssfRow, hssfRow.getFirstCellNum(), hssfRow.getLastCellNum(), beans);
         return transformers;
     }
@@ -289,7 +287,7 @@ public class SheetTransformer {
      * Applies all registered RowProcessors to a row
      *
      * @param sheet - {@link Sheet} containing given {@link Row} object
-     * @param row   - {@link net.sf.jxls.transformer.Row} object with row information
+     * @param row   - {@link Row} object with row information
      */
     private void applyRowProcessors(Sheet sheet, Row row) {
         for (int i = 0; i < rowProcessors.size(); i++) {
@@ -308,7 +306,7 @@ public class SheetTransformer {
             String collectionName = (String) iterator.next();
             if (sheet.getListRanges().containsKey(collectionName)) {
                 ListRange listRange = (ListRange) sheet.getListRanges().get(collectionName);
-                sheet.getHssfSheet().groupRow(listRange.getFirstRowNum(), listRange.getLastRowNum());
+                sheet.getPoiSheet().groupRow(listRange.getFirstRowNum(), listRange.getLastRowNum());
             }
         }
     }
