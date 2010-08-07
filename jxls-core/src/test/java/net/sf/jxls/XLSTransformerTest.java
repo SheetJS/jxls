@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -274,7 +273,7 @@ public class XLSTransformerTest extends TestCase {
         assertEquals("Last Row Numbers differ in source and result sheets", sourceSheet.getLastRowNum(), resultSheet.getLastRowNum());
         CellsChecker checker = new CellsChecker(propertyMap);
         propertyMap.put("${calendar}", calendar);
-        checker.checkRows(sourceSheet, resultSheet, 0, 0, 6);
+        checker.checkRows(sourceSheet, resultSheet, 0, 0, 6, true);
 
         is.close();
         saveWorkbook(resultWorkbook, simpeBeanDestXLS);
@@ -299,7 +298,7 @@ public class XLSTransformerTest extends TestCase {
         Map listPropMap = new HashMap();
         listPropMap.put("${listBean.name}", beanWithList.getName());
         CellsChecker checker = new CellsChecker(listPropMap);
-        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3);
+        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3, true);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 0, names);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 1, doubleValues);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 2, new Object[]{new Integer(123), new Integer(10234), null});
@@ -344,7 +343,7 @@ public class XLSTransformerTest extends TestCase {
         Map props = new HashMap();
         props.put("${listBean.name}", beanWithList.getName());
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3);
+        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3, true);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 0, names);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 1, doubleValues);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 2, new Object[]{new Integer(123), new Integer(10234)});
@@ -444,7 +443,7 @@ public class XLSTransformerTest extends TestCase {
         props.put("//listBean.beans", "");
         props.put("Int Value://listBean.beans", "Int Value:");
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 3, 4);
+        checker.checkRows(sourceSheet, resultSheet, 3, 3, 4, true);
 
         props.clear();
         props.put("${listBean.beans.name}//:3", names[1]);
@@ -455,7 +454,7 @@ public class XLSTransformerTest extends TestCase {
         props.put("Int Value://listBean.beans", "Int Value:");
         checker = new CellsChecker(props);
 
-        checker.checkRows(sourceSheet, resultSheet, 3, 7, 4);
+        checker.checkRows(sourceSheet, resultSheet, 3, 7, 4, true);
 
         props.clear();
         props.put("${listBean.beans.name}//:3", names[2]);
@@ -465,7 +464,7 @@ public class XLSTransformerTest extends TestCase {
         props.put("//listBean.beans", "");
         props.put("Int Value://listBean.beans", "Int Value:");
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 11, 4);
+        checker.checkRows(sourceSheet, resultSheet, 3, 11, 4, true);
 
         is.close();
         saveWorkbook(resultWorkbook, multipleListRowsDestXLS);
@@ -492,21 +491,21 @@ public class XLSTransformerTest extends TestCase {
         props.put("${listBean.beans.doubleValue}", doubleValues[0]);
         props.put("${listBean.beans.dateValue}", dateValues[0]);
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 3, 4);
+        checker.checkRows(sourceSheet, resultSheet, 3, 3, 4, true);
 
         props.clear();
         props.put("${listBean.beans.name}//:3", names[1]);
         props.put("${listBean.beans.doubleValue}", doubleValues[1]);
         props.put("${listBean.beans.dateValue}", dateValues[1]);
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 7, 4);
+        checker.checkRows(sourceSheet, resultSheet, 3, 7, 4, true);
 
         props.clear();
         props.put("${listBean.beans.name}//:3", names[2]);
         props.put("${listBean.beans.doubleValue}", doubleValues[2]);
         props.put("${listBean.beans.dateValue}", dateValues[2]);
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 11, 4);
+        checker.checkRows(sourceSheet, resultSheet, 3, 11, 4, true);
 
         assertEquals("Incorrect number of merged regions", 9, resultSheet.getNumMergedRegions());
         assertTrue("Merged Region not found", isMergedRegion(resultSheet, new CellRangeAddress(3, 3, 0, 2)));
@@ -563,7 +562,7 @@ public class XLSTransformerTest extends TestCase {
         props.put("Name://mainBean.beans", "Name:");
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 1, 3);
+        checker.checkRows(sourceSheet, resultSheet, 1, 1, 3, true);
         props.clear();
         props.put("${mainBean.beans.beans.name}", "bean 22");
         props.put("${mainBean.beans.beans.doubleValue}", new Double(22.22));
@@ -571,8 +570,8 @@ public class XLSTransformerTest extends TestCase {
         props.put("Name://mainBean.beans", "Name:");
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 4, 1);
-        checker.checkRows(sourceSheet, resultSheet, 4, 5, 1);
+        checker.checkRows(sourceSheet, resultSheet, 3, 4, 1, true);
+        checker.checkRows(sourceSheet, resultSheet, 4, 5, 1, true);
         props.clear();
         props.put("${mainBean.beans.name}//:3", "3d bean with list");
         props.put("${mainBean.beans.beans.name}", "bean 31");
@@ -581,7 +580,7 @@ public class XLSTransformerTest extends TestCase {
         props.put("Name://mainBean.beans", "Name:");
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 6, 3);
+        checker.checkRows(sourceSheet, resultSheet, 1, 6, 3, true);
         props.clear();
         props.put("${mainBean.beans.beans.name}", "bean 32");
         props.put("${mainBean.beans.beans.doubleValue}", new Double(32.32));
@@ -589,8 +588,8 @@ public class XLSTransformerTest extends TestCase {
         props.put("Name://mainBean.beans", "Name:");
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 9, 1);
-        checker.checkRows(sourceSheet, resultSheet, 4, 10, 1);
+        checker.checkRows(sourceSheet, resultSheet, 3, 9, 1, true);
+        checker.checkRows(sourceSheet, resultSheet, 4, 10, 1, true);
 
         is.close();
         saveWorkbook(resultWorkbook, grouping1DestXLS);
@@ -614,7 +613,7 @@ public class XLSTransformerTest extends TestCase {
         Map listPropMap = new HashMap();
         listPropMap.put("${listBean.name}", beanWithList.getName());
         CellsChecker checker = new CellsChecker(listPropMap);
-        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3);
+        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3, true);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 0, names);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 1, intValues);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 3, doubleValues);
@@ -674,13 +673,13 @@ public class XLSTransformerTest extends TestCase {
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         props.put("Name://mainBean.beans", "Name:");
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 1, 4);
+        checker.checkRows(sourceSheet, resultSheet, 1, 1, 4, true);
         props.clear();
         props.put("${mainBean.beans.beans.name}//:1", "bean 22");
         props.put("${mainBean.beans.beans.doubleValue}", new Double(22.22));
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 5, 3);
+        checker.checkRows(sourceSheet, resultSheet, 3, 5, 3, true);
         props.clear();
         props.put("${mainBean.beans.name}//:4", "3d bean with list");
         props.put("${mainBean.beans.beans.name}//:1", "bean 31");
@@ -688,14 +687,14 @@ public class XLSTransformerTest extends TestCase {
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         props.put("Name://mainBean.beans", "Name:");
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 8, 4);
+        checker.checkRows(sourceSheet, resultSheet, 1, 8, 4, true);
         props.clear();
         props.put("${mainBean.beans.beans.name}//:1", "bean 32");
         props.put("${mainBean.beans.beans.doubleValue}", new Double(32.32));
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         props.put("Name://mainBean.beans", "Name:");
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 12, 3);
+        checker.checkRows(sourceSheet, resultSheet, 3, 12, 3, true);
 
         is.close();
         saveWorkbook(resultWorkbook, grouping2DestXLS);
@@ -718,7 +717,7 @@ public class XLSTransformerTest extends TestCase {
         props.put("${departments.name}//:4", "IT");
         props.put("Department//departments", "Department");
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3);
+        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3, true);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 0, itEmployeeNames);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 1, itPayments);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 2, itBonuses);
@@ -731,7 +730,7 @@ public class XLSTransformerTest extends TestCase {
         props.put("${departments.name}//:4", "HR");
         props.put("Department//departments", "Department");
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 0, 9, 3);
+        checker.checkRows(sourceSheet, resultSheet, 0, 9, 3, true);
         props.clear();
         checker.checkListCells(sourceSheet, 3, resultSheet, 12, (short) 0, hrEmployeeNames);
         checker.checkListCells(sourceSheet, 3, resultSheet, 12, (short) 1, hrPayments);
@@ -745,7 +744,7 @@ public class XLSTransformerTest extends TestCase {
         props.put("${departments.name}//:4", "BA");
         props.put("Department//departments", "Department");
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 0, 17, 3);
+        checker.checkRows(sourceSheet, resultSheet, 0, 17, 3, true);
         props.clear();
         checker.checkListCells(sourceSheet, 3, resultSheet, 20, (short) 0, baEmployeeNames);
         checker.checkListCells(sourceSheet, 3, resultSheet, 20, (short) 1, baPayments);
@@ -797,14 +796,14 @@ public class XLSTransformerTest extends TestCase {
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         props.put("Name://mainBean.beans", "Name:");
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 1, 3);
+        checker.checkRows(sourceSheet, resultSheet, 1, 1, 3, true);
         props.clear();
         props.put("${mainBean.beans.beans.name}", "bean 22");
         props.put("${mainBean.beans.beans.doubleValue}", new Double(22.22));
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         props.put("Name://mainBean.beans", "Name:");
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 4, 1);
+        checker.checkRows(sourceSheet, resultSheet, 3, 4, 1, true);
 //        Todo: next check requires investigation
 //        Next check currently fails. It seems POI does not get the value of this formula cell correctly.
 //        It returns "SUM(B9:B10)" instead of "SUM(B4:B5)". But in the output XLS file the formula is correct.
@@ -816,14 +815,14 @@ public class XLSTransformerTest extends TestCase {
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         props.put("Name://mainBean.beans", "Name:");
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 6, 3);
+        checker.checkRows(sourceSheet, resultSheet, 1, 6, 3, true);
         props.clear();
         props.put("${mainBean.beans.beans.name}", "bean 32");
         props.put("${mainBean.beans.beans.doubleValue}", new Double(32.32));
         props.put("${mainBean.name}//mainBean.beans.beans", bean.getName());
         props.put("Name://mainBean.beans", "Name:");
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 3, 9, 1);
+        checker.checkRows(sourceSheet, resultSheet, 3, 9, 1, true);
         checker.checkFormulaCell(sourceSheet, 4, resultSheet, 10, (short) 1, "SUM(B9:B10)");
 
         saveWorkbook(resultWorkbook, groupingFormulasDestXLS);
@@ -850,7 +849,7 @@ public class XLSTransformerTest extends TestCase {
                 " - " + simpleBean1.getDoubleValue() + "," + simpleBean1.getOther().getIntValue());
         props.put("${bean.dateValue}", simpleBean1.getDateValue());
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum(), 6);
+        checker.checkRows(sourceSheet, resultSheet, sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum(), 6, true);
 
         Map listPropMap = new HashMap();
         listPropMap.put("[${listBean.beans.name}]", "[" + beanWithList.getName() + "]");
@@ -897,7 +896,7 @@ public class XLSTransformerTest extends TestCase {
         listPropMap.put("${bean.intValue}", simpleBean2.getIntValue());
 
         CellsChecker checker = new CellsChecker(listPropMap);
-        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3);
+        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3, true);
 
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 2, names);
         checker.checkListCells(sourceSheet, 3, resultSheet, 3, (short) 3, doubleValues);
@@ -949,7 +948,7 @@ public class XLSTransformerTest extends TestCase {
         listPropMap.put("${staticBean.doubleValue}", simpleBean1.getDoubleValue());
 
         CellsChecker checker = new CellsChecker(listPropMap);
-        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3);
+        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3, true);
 
         checker.checkSection(sourceSheet, resultSheet, 0, 0, (short) 0, (short) 1, 7, true, true);
         checker.checkSection(sourceSheet, resultSheet, 0, 0, (short) 7, (short) 8, 8, true, true);
@@ -1010,7 +1009,7 @@ public class XLSTransformerTest extends TestCase {
         Map props = new HashMap();
         CellsChecker checker;
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 0, 0, 2);
+        checker.checkRows(sourceSheet, resultSheet, 0, 0, 2, true);
 
         checker.checkFixedListCells(sourceSheet, 2, resultSheet, 2, (short) 0, itEmployeeNames);
         checker.checkFixedListCells(sourceSheet, 2, resultSheet, 2, (short) 1, itPayments);
@@ -1043,7 +1042,7 @@ public class XLSTransformerTest extends TestCase {
                         " - " + simpleBean1.getDoubleValue().doubleValue() * 2 + "," + (simpleBean1.getOther().getIntValue().intValue() + simpleBean1.getDoubleValue().doubleValue()) / 0.5);
         props.put("${10*bean.doubleValue + 2.55}", new Double(simpleBean1.getDoubleValue().doubleValue() * 10 + 2.55));
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum(), 6);
+        checker.checkRows(sourceSheet, resultSheet, sourceSheet.getFirstRowNum(), resultSheet.getFirstRowNum(), 6, true);
 
         Map listPropMap = new HashMap();
         listPropMap.put("[${listBean.beans.name}]", "[" + beanWithList.getName() + "]");
@@ -1096,20 +1095,20 @@ public class XLSTransformerTest extends TestCase {
         props.put("${listBean.name}", listBean.getName());
         props.put("${listBean.doubleValue}", listBean.getDoubleValue());
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 4, 3, 1);
-        checker.checkRows(sourceSheet, resultSheet, 4, 6, 1);
-        checker.checkRows(sourceSheet, resultSheet, 4, 8, 1);
-        checker.checkRows(sourceSheet, resultSheet, 8, 5, 1);
-        checker.checkRows(sourceSheet, resultSheet, 8, 7, 1);
-        checker.checkRows(sourceSheet, resultSheet, 8, 10, 1);
+        checker.checkRows(sourceSheet, resultSheet, 4, 3, 1, true);
+        checker.checkRows(sourceSheet, resultSheet, 4, 6, 1, true);
+        checker.checkRows(sourceSheet, resultSheet, 4, 8, 1, true);
+        checker.checkRows(sourceSheet, resultSheet, 8, 5, 1, true);
+        checker.checkRows(sourceSheet, resultSheet, 8, 7, 1, true);
+        checker.checkRows(sourceSheet, resultSheet, 8, 10, 1, true);
         props.clear();
         props.put("${sb.name}", names[0]);
         props.put("${sb.doubleValue}", doubleValues[0]);
-        checker.checkRows(sourceSheet, resultSheet, 6, 4, 1);
+        checker.checkRows(sourceSheet, resultSheet, 6, 4, 1, true);
         props.clear();
         props.put("${sb.name}", names[2]);
         props.put("${sb.doubleValue}", doubleValues[2]);
-        checker.checkRows(sourceSheet, resultSheet, 6, 9, 1);
+        checker.checkRows(sourceSheet, resultSheet, 6, 9, 1, true);
 
         is.close();
         saveWorkbook(resultWorkbook, iftagDestXLS);
@@ -1138,7 +1137,7 @@ public class XLSTransformerTest extends TestCase {
         Map props = new HashMap();
         props.put("${listBean.name}", listBean.getName());
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3);
+        checker.checkRows(sourceSheet, resultSheet, 0, 0, 3, true);
 
         is.close();
         saveWorkbook(resultWorkbook, emptyBeansDestXLS);
@@ -1536,14 +1535,14 @@ public class XLSTransformerTest extends TestCase {
         Map props = new HashMap();
         props.put("${department.name}", "IT");
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 0, 3);
+        checker.checkRows(sourceSheet, resultSheet, 1, 0, 3, true);
         checker.checkListCells(sourceSheet, 5, resultSheet, 3, (short) 0, itEmployeeNames);
         checker.checkListCells(sourceSheet, 5, resultSheet, 3, (short) 1, itPayments);
         checker.checkListCells(sourceSheet, 5, resultSheet, 3, (short) 2, itBonuses);
         props.clear();
         props.put("${department.name}", "HR");
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 9, 3);
+        checker.checkRows(sourceSheet, resultSheet, 1, 9, 3, true);
         props.clear();
         checker.checkListCells(sourceSheet, 5, resultSheet, 12, (short) 0, hrEmployeeNames);
         checker.checkListCells(sourceSheet, 5, resultSheet, 12, (short) 1, hrPayments);
@@ -1551,7 +1550,7 @@ public class XLSTransformerTest extends TestCase {
         props.clear();
         props.put("${department.name}", "BA");
         checker = new CellsChecker(props);
-        checker.checkRows(sourceSheet, resultSheet, 1, 17, 3);
+        checker.checkRows(sourceSheet, resultSheet, 1, 17, 3, true);
         props.clear();
         checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 0, baEmployeeNames);
         checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 1, baPayments);

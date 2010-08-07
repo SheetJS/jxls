@@ -87,7 +87,6 @@ public class CellsChecker extends Assert {
         }else{
             fail("Row is null");
         }
-
     }
 
     private void checkEmptyCells(Row destRow, short fromCellNum, short toCellNum) {
@@ -144,7 +143,7 @@ public class CellsChecker extends Assert {
         assertEquals("Formula is incorrect", formula, destCell.getCellFormula());
     }
 
-    void checkRows(Sheet sourceSheet, Sheet destSheet, int sourceRowNum, int destRowNum, int numberOfRows) {
+    void checkRows(Sheet sourceSheet, Sheet destSheet, int sourceRowNum, int destRowNum, int numberOfRows, boolean checkRowHeight) {
         for (int i = 0; i < numberOfRows; i++) {
             Row sourceRow = sourceSheet.getRow(sourceRowNum + i);
             Row destRow = destSheet.getRow(destRowNum + i);
@@ -154,8 +153,10 @@ public class CellsChecker extends Assert {
                     assertEquals("First Cell Numbers differ in source and result row", sourceRow.getFirstCellNum(), destRow.getFirstCellNum());
                 }
                 assertEquals("Physical Number Of Cells differ in source and result row", sourceRow.getPhysicalNumberOfCells(), destRow.getPhysicalNumberOfCells());
-                assertEquals("Row height is not the same for srcRow = " + sourceRow.getRowNum() + ", destRow = " + destRow.getRowNum(),
-                        sourceRow.getHeight(), destRow.getHeight());
+                if( checkRowHeight ){
+                    assertEquals("Row height is not the same for srcRow = " + sourceRow.getRowNum() + ", destRow = " + destRow.getRowNum(),
+                            sourceRow.getHeight(), destRow.getHeight());
+                }
                 checkCells(sourceRow, destRow, sourceRow.getFirstCellNum(), sourceRow.getLastCellNum());
             }
         }

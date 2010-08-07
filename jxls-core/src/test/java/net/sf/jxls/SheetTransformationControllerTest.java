@@ -49,9 +49,9 @@ public class SheetTransformationControllerTest extends TestCase {
 //        assertEquals("Last Row Number is incorrect", lastRowNum + 3 * 2, destSheet.getLastRowNum());
 
         CellsChecker checker = new CellsChecker(new HashMap());
-        checker.checkRows(srcSheet, destSheet, 0, 0, 4);
-        checker.checkRows(srcSheet, destSheet, 1, 4, 3);
-        checker.checkRows(srcSheet, destSheet, 1, 7, 3);
+        checker.checkRows(srcSheet, destSheet, 0, 0, 4, true);
+        checker.checkRows(srcSheet, destSheet, 1, 4, 3, true);
+        checker.checkRows(srcSheet, destSheet, 1, 7, 3, true);
 //        checker.checkRows(srcSheet, srcSheet, 4, 10, 1);
         // checking transformations
         List transformations = stc.getTransformations();
@@ -94,9 +94,9 @@ public class SheetTransformationControllerTest extends TestCase {
         assertEquals("Last Row Number is incorrect", lastRowNum - 2, destSheet.getLastRowNum());
 
         CellsChecker checker = new CellsChecker(new HashMap());
-        checker.checkRows(srcSheet, destSheet, 0, 0, 1);
-        checker.checkRows(srcSheet, destSheet, 2, 1, 1);
-        checker.checkRows(srcSheet, destSheet, 4, 2, 1);
+        checker.checkRows(srcSheet, destSheet, 0, 0, 1, true);
+        checker.checkRows(srcSheet, destSheet, 2, 1, 1, true);
+        checker.checkRows(srcSheet, destSheet, 4, 2, 1, true);
         // checking transformations
         List transformations = stc.getTransformations();
         assertEquals( "Number of transformations is incorrect", 4, transformations.size() );
@@ -141,9 +141,9 @@ public class SheetTransformationControllerTest extends TestCase {
         assertEquals("Last Row Number is incorrect", lastRowNum - 3, destSheet.getLastRowNum());
 
         CellsChecker checker = new CellsChecker(new HashMap());
-        checker.checkRows(srcSheet, destSheet, 0, 0, 1);
+        checker.checkRows(srcSheet, destSheet, 0, 0, 1, true);
 //        checker.checkRows(srcSheet, destSheet, 2, 1, 1);
-        checker.checkRows(srcSheet, destSheet, 4, 1, 1);
+        checker.checkRows(srcSheet, destSheet, 4, 1, 1, true);
 //        checker.checkRows(srcSheet, srcSheet, 4, 10, 1);
         // checking transformations
         List transformations = stc.getTransformations();

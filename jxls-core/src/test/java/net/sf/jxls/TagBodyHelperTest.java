@@ -8,7 +8,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.*;
@@ -39,9 +38,9 @@ public class TagBodyHelperTest extends TestCase {
 //        assertEquals("Last Row Number is incorrect", lastRowNum + 3 * 2, sheet.getLastRowNum());
 
         CellsChecker checker = new CellsChecker(new HashMap());
-        checker.checkRows(sheet, sheet, 0, 0, 4);
-        checker.checkRows(sheet, sheet, 1, 4, 3);
-        checker.checkRows(sheet, sheet, 1, 7, 3);
+        checker.checkRows(sheet, sheet, 0, 0, 4, true);
+        checker.checkRows(sheet, sheet, 1, 4, 3, true);
+        checker.checkRows(sheet, sheet, 1, 7, 3, true);
 //        checker.checkRows(sheet, sheet, 4, 10, 1);
 
         is.close();
@@ -61,7 +60,7 @@ public class TagBodyHelperTest extends TestCase {
         Map props = new HashMap();
         props.put( "mainBean.beans", "item");
         CellsChecker checker = new CellsChecker(props);
-        checker.checkRows(sheet, sheet, 0, 0, 5);
+        checker.checkRows(sheet, sheet, 0, 0, 5, true);
         is.close();
         saveWorkbook( workbook, grouping1DestXLS);
     }
