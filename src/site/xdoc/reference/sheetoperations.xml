@@ -7,7 +7,7 @@
         <section name="Spreadsheet Operations" id="sheetOperations">
             <subsection id="overviewOperations" name="Overview">
                 <p>jXLS currently does not provide many excel sheet manipulations but you may want to look at <a href="reference/poiaccess.html">POI Objects Access</a> section
-                    to see how you can use core POI objects like <code>HSSFSheet</code> and <code>HSSFWorkbook</code> to perform some actions on sheet and workbook.</p>
+                    to see how you can use core POI objects like <code>Sheet</code> and <code>Workbook</code> to perform some actions on sheet and workbook.</p>
             </subsection>
             <subsection id="removing" name="Spreadsheet removing">
                 <p>You can remove some sheet dynamically in your Excel export with the method <code>void setSpreadsheetsToRemove(String[] names)</code>

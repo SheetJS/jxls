@@ -50,7 +50,7 @@ HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(is, depart
                     maps.add( map );
                 }
                 XLSTransformer transformer = new XLSTransformer();
-                HSSFWorkbook resultWorkbook = transformer.transformMultipleSheetsList(inputStream, maps, sheetNames, "map", new HashMap(), 0);                
+                org.apache.poi.ss.usermodel.Workbook resultWorkbook = transformer.transformMultipleSheetsList(inputStream, maps, sheetNames, "map", new HashMap(), 0);                
             </source>
 
         </section>

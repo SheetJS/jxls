@@ -8,7 +8,6 @@
             <p>jXLS allows you to use predefined XML tags in your template to control XLS transformation behaviour.</p>
         </section>
         <section name="jx:forEach Tag" id="forEachTag">
-            <title></title>
             <p>Typical usage of <code>&lt;jx:forEach></code> tag is as follows</p>
             <source>
                 &lt;jx:forEach items="${departments}" var="department">

@@ -6,16 +6,14 @@
     <body>
         <section name="News">
             <p>
-                <strong>jXLS 0.9.9 released</strong>
+                <strong>jXLS 1.0-RC1 is available</strong>
             </p>
             <p>Main changes</p>
             <ul>
-                <li>Migrated to POI 3.6</li>
-                <li>Fixed issues with forEach tag processing in a single row</li>
-                <li>Documentation improvements</li>
+                <li>Support for Excel 2007 OOXML (.xlsx) file format</li>
+                <li>Minor bug-fixes</li>
             </ul>
             <hr/>
-            <p>A work on enterprise edition of jXLS continues. If you want to request any strategic feature to be implemented contact jXLS team</p>
         </section>
         <section name="Overview">
             <p>jXLS is a small and easy-to-use Java library for writing Excel files using XLS templates and reading
@@ -81,6 +79,10 @@
                 when reading and writing XLS files. Particularly it means you can use Charts and Macros in your XLS
                 template and many other features
             </note>
+        </section>
+        <section name="Support">
+            <p>If you are interested in commercial jXLS support please contact jxls-devel mailing list</p>
+            <p>Also please be aware that enterprise edition of jXLS will be available in some time. If you want to request any strategic feature to be implemented please contact jXLS team</p>
         </section>
     </body>
 </document>

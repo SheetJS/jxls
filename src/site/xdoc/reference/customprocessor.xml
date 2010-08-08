@@ -56,7 +56,7 @@ public class StyleRowProcessor implements RowProcessor {
                         Cell customCell = (Cell) namedCells.get( styleCellLabel );
                         for (int i = 0; i &lt; row.getCells().size(); i++) {
                             Cell cell = (Cell) row.getCells().get(i);
-                            HSSFCell hssfCell = cell.getHssfCell();
+                            org.apache.poi.ss.usermodel.Cell hssfCell = cell.getHssfCell();
                             if( hssfCell!=null ){
                                 copyStyle( row.getHssfWorkbook(), customCell.getHssfCell(), hssfCell );
                             }
@@ -99,7 +99,7 @@ if( namedCells.containsKey( styleCellLabel ) ){
             <source>
 for (int i = 0; i &lt; row.getCells().size(); i++) {
     Cell cell = (Cell) row.getCells().get(i);
-    HSSFCell hssfCell = cell.getHssfCell();
+    org.apache.poi.ss.usermodel.Cell hssfCell = cell.getHssfCell();
     if( hssfCell!=null ){
         copyStyle( row.getHssfWorkbook(), customCell.getHssfCell(), hssfCell );
     }
