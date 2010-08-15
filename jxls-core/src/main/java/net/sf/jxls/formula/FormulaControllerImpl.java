@@ -4,6 +4,7 @@ import net.sf.jxls.tag.Point;
 import net.sf.jxls.transformation.BlockTransformation;
 import net.sf.jxls.transformation.DuplicateTransformation;
 import net.sf.jxls.transformer.Workbook;
+import net.sf.jxls.util.Util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.Cell;
@@ -123,12 +124,8 @@ public class FormulaControllerImpl implements FormulaController {
             for (int i = 0; i < formulas.size(); i++) {
                 Formula formula = (Formula) formulas.get(i);
                 String formulaString = formulaResolver.resolve( formula, null);
-                Row hssfRow = formula.getSheet().getPoiSheet().getRow(formula.getRowNum().intValue());
-                Cell hssfCell = hssfRow.getCell(formula.getCellNum().intValue());
                 if (formulaString != null) {
-                    if( hssfCell == null ){
-                        hssfCell = hssfRow.createCell( formula.getCellNum().intValue() );
-                    }
+                    Cell hssfCell = Util.getOrCreateCell(formula.getSheet().getPoiSheet(), formula.getRowNum(), formula.getCellNum());
                     try {
                         hssfCell.setCellFormula(formulaString);
                     } catch (RuntimeException e) {

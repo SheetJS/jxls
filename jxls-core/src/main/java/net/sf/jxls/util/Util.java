@@ -1,15 +1,13 @@
 package net.sf.jxls.util;
 
 import net.sf.jxls.transformer.*;
+import net.sf.jxls.transformer.Row;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Footer;
-import org.apache.poi.ss.usermodel.Header;
-import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 
@@ -1072,4 +1070,14 @@ public final class Util {
 			// }
 		}
 	}
+
+
+    public static Cell getOrCreateCell(Sheet poiSheet, Integer rowNum, Integer cellNum) {
+        org.apache.poi.ss.usermodel.Row row = poiSheet.getRow(rowNum.intValue());
+        if( row == null ){
+            row = poiSheet.createRow(rowNum.intValue());
+        }
+        Cell cell = row.getCell(cellNum.intValue(), org.apache.poi.ss.usermodel.Row.CREATE_NULL_AS_BLANK);
+        return cell;
+    }
 }
