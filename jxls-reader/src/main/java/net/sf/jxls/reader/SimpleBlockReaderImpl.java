@@ -90,7 +90,18 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
                     break;
                 case Cell.CELL_TYPE_FORMULA:
                     // attempt to read formula cell as numeric cell
+                    try{
                     dataString = readNumericCell(cell);
+                    }catch(Exception e1){
+                        log.info("Failed to read formula cell as numeric. Next to try as string. Cell=" + cell.toString());
+                        try{
+                            dataString = cell.getRichStringCellValue().getString();
+                            log.info("Successfully read formula cell as string. Value=" + dataString);
+                        }catch(Exception e2){
+                            log.warn("Failed to read formula cell as numeric or string. Cell=" + cell.toString());
+                        }
+                    }
+
                     break;
                 default:
                     break;
@@ -101,7 +112,7 @@ public class SimpleBlockReaderImpl extends BaseBlockReader implements SimpleBloc
 
     private String readNumericCell(Cell cell) {
         double value;
-        String dataString;
+        String dataString = null;
         value = cell.getNumericCellValue();
         if (((int) value) == value) {
             dataString = Integer.toString((int) value);

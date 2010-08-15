@@ -5,10 +5,7 @@ import junit.framework.TestCase;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.xml.sax.SAXException;
@@ -37,13 +34,7 @@ public class ReadFormulasTest extends TestCase {
         assertEquals(4, employees.size());
         assertEquals( "Value or formula is incorrect ", new Integer(5), bean.getIntValue1() );
         assertEquals( "Value or formula is incorrect ", new Double(9805), bean.getDoubleValue() );
-
-//        checkEmployeeId((Employee) employees.get(0), "Oleg", "a123b");
-//        checkEmployeeId((Employee) employees.get(1), "Yuriy", "a567");
-//        checkEmployeeId((Employee) employees.get(2), "Alex", "89x");
-//        checkEmployeeId((Employee) employees.get(3), "Vlad", "xyz");
-//        checkEmployeeId((Employee) employees.get(4), "Sergey", "123");
-//        checkEmployeeId((Employee) employees.get(5), "Slava", "5");
+        assertEquals( "Value or formula is incorrect ", "Age&Payment", bean.getStr() );
         inputXLS.close();
 
     }

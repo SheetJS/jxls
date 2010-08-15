@@ -17,6 +17,7 @@
         <section startRow="2" endRow="3">
             <mapping cell="C3">bean.intValue1</mapping>
             <mapping cell="C4">bean.doubleValue</mapping>
+            <mapping cell="C5">bean.str</mapping>
         </section>
     </worksheet>
 </workbook>
