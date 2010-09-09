@@ -16,7 +16,7 @@
             </source>
             <p>jx tags can be nested into each other without any problems. </p>
             <p>If you place opening and closing jx:forEach tags onto the same row jXLS will duplicate corresponding excel
-                columns in the same way as it does with rows.
+                cells in this row by columns.
             </p>
             <note>Currently if you need to duplicate excel rows with jx:forEach tag you have to place jx:forEach opening
             and closing tag into separate excel rows. All other cells in these rows are ignored.</note>
@@ -63,6 +63,15 @@
                 <source>
                     &lt;jx:forEach items="${employees}" var="employee" select="${employee.payment > 2000}">
                     ${employee.name} | ${employee.payment} | ${employee.bonus}
+                    &lt;/jx:forEach>
+                </source>
+            </section>
+            <section id="forEachTagVarStatus" name="varStatus attribute">
+                <p>jx:forEach tag support varStatus attribute which defines a name of loop status object which will be passed into bean context for each iteration.
+                The loop status object is an instance of LoopStatus class which has single 'index' property identifying the index of the current item in the collection being iterated</p>
+                <source>
+                    &lt;jx:forEach items="${employees}" var="employee" varStatus="status">
+                    | ${status.index} | ${employee.name} | ${employee.payment} | ${employee.bonus}
                     &lt;/jx:forEach>
                 </source>
             </section>

@@ -11,7 +11,7 @@
             <p>Main changes</p>
             <ul>
                 <li>Support for Excel 2007 OOXML (.xlsx) file format</li>
-                <li>Minor bug-fixes</li>
+                <li>Minor bug-fixes and improvements in both jxls-core and jxls-reader modules</li>
             </ul>
             <hr/>
         </section>
