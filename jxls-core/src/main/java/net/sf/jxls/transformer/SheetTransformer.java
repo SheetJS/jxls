@@ -101,7 +101,12 @@ public class SheetTransformer {
                         for (int j = 1; j < rowTransformers.size(); j++) {
                             rowTransformer = (RowTransformer) rowTransformers.get(j);
                             if (rowTransformer != null) {
+                                Block transformationBlock = rowTransformer.getTransformationBlock();
+                                transformationBlock = processResult.transformBlock( transformationBlock );
+                                rowTransformer.setTransformationBlock( transformationBlock );
+
                                 ResultTransformation newTransformation = rowTransformer.transform(stc, this, beans, processResult);
+
                                 processResult.add(newTransformation);
                                 ownTransformers.add(rowTransformer);
                             }

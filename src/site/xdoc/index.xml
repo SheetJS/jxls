@@ -6,12 +6,12 @@
     <body>
         <section name="News">
             <p>
-                <strong>jXLS 1.0 release candidate 1 is available</strong>
+                <strong>jXLS 1.0 release candidate 2 is available</strong>
             </p>
             <p>Main changes</p>
             <ul>
-                <li>Support for Excel 2007 OOXML (.xlsx) file format</li>
-                <li>Minor bug-fixes and improvements in both jxls-core and jxls-reader modules</li>
+                <li>Bug-fixes for processing multiple tags in a single row (jxls-core) </li>
+                <li>Support for the missing primitives and java.lang.BigInteger (jxls-core) </li>
             </ul>
             <hr/>
         </section>

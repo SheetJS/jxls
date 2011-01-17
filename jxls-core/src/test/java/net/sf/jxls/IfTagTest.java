@@ -1,5 +1,6 @@
 package net.sf.jxls;
 
+import junit.framework.TestCase;
 import net.sf.jxls.bean.SimpleBean;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.XLSTransformer;
@@ -20,11 +21,14 @@ import java.util.Map;
  * @author Leonid Vysochyn
  *         Date: 09.04.2010
  */
-public class IfTagTest {
+public class IfTagTest extends TestCase {
     protected final Log log = LogFactory.getLog(getClass());
 
     public static final String ifTagEmptyXLS = "/templates/iftagempty.xls";
     public static final String ifTagEmptyDestXLS = "target/iftagempty_output.xls";
+
+    public static final String twoIfTagsIn1RowXLS = "/templates/twoIfTagsIn1Row.xls";
+    public static final String twoIfTagsIn1RowDestXLS = "target/twoIfTagsIn1Row_output.xls";
 
 
     public void testEmptyCollection() throws IOException, ParsePropertyException, InvalidFormatException {
@@ -64,6 +68,15 @@ public class IfTagTest {
         }
     }
 
-
+    public void test2IfTagsIn1Row() throws IOException, InvalidFormatException {
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(twoIfTagsIn1RowXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        Workbook resultWorkbook = transformer.transformXLS(is, new HashMap());
+        is.close();
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
+        CellsChecker checker = new CellsChecker();
+        checker.checkRow(resultSheet, 0, 0, 25, new Object[]{1, 2, 3, 5, 6,	7,	9,	10,	11,	12,	13,	14,	16,	17, 18,	19,	21,	22, 23,	24,	25,	26,	27,	28,	29,	30,	31});
+        saveWorkbook(resultWorkbook, twoIfTagsIn1RowDestXLS);
+    }
 
 }
