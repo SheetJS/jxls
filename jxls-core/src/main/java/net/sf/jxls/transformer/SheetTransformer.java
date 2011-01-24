@@ -192,7 +192,8 @@ public class SheetTransformer {
         SimpleRowTransformer simpleRowTransformer = new SimpleRowTransformer(row, cellProcessors, configuration);
 //        transformations.add( simpleRowTransformer );
         boolean hasCollections = false;
-        for (int j = startCell; j <= endCell; j++) {
+		
+        for (int j = startCell; j <= endCell && j>-1; j++) {
             org.apache.poi.ss.usermodel.Cell hssfCell = hssfRow.getCell(j);
             CellParser cellParser = new CellParser(hssfCell, row, configuration);
             Cell cell = cellParser.parseCell(beans);
