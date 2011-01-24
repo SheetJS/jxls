@@ -228,9 +228,13 @@ public class XLSTransformer {
         workbookTransformationController = new WorkbookTransformationControllerImpl( workbook );
         preprocess(hssfWorkbook);
         SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
+		List excludedSheets = new ArrayList();
         for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
             final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
-            if( spreadsheetName != null && !spreadsheetName.startsWith( configuration.getExcludeSheetProcessingMark() )){
+			if(spreadsheetName == null) continue;
+			if(configuration.getExcludeSheets().contains(spreadsheetName)) continue;
+			
+            if( !spreadsheetName.startsWith( configuration.getExcludeSheetProcessingMark() )){
                 if (!isSpreadsheetToRemove(spreadsheetName)) {
                     if (isSpreadsheetToRename(spreadsheetName)) {
                         hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
@@ -242,8 +246,16 @@ public class XLSTransformer {
                     workbook.removeSheetAt( sheetNo );
                     sheetNo--;
                 }
-            }
+            } else {
+				excludedSheets.add(spreadsheetName);				
+			}
         }
+		if(configuration.isRemoveExcludeSheetProcessingMark()) {
+			for(int sheetNo = 0; sheetNo < excludedSheets.size(); sheetNo++) {
+				String spreadsheetName = (String) excludedSheets.get(0);
+				hssfWorkbook.setSheetName(hssfWorkbook.getSheetIndex(spreadsheetName), spreadsheetName.substring(configuration.getExcludeSheetProcessingMark().length()));
+			}
+		}
         updateFormulas();
     }
 

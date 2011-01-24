@@ -3,6 +3,8 @@ package net.sf.jxls.transformer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.sf.jxls.tag.JxTaglib;
 import net.sf.jxls.tag.TagLib;
@@ -35,8 +37,10 @@ public class Configuration {
     String sheetKeyName = "sheet";
     String workbookKeyName = "workbook";
     String rowKeyName = "hssfRow";
-
+	
     private String excludeSheetProcessingMark = "#Exclude";
+	boolean removeExcludeSheetProcessingMark = false;
+	Set excludeSheets = new HashSet();
 
     public Configuration() {
         registerTagLib(new JxTaglib(), "jx");
@@ -193,6 +197,14 @@ public class Configuration {
     public void setExcludeSheetProcessingMark(String excludeSheetProcessingMark) {
         this.excludeSheetProcessingMark = excludeSheetProcessingMark;
     }
+	
+	public boolean isRemoveExcludeSheetProcessingMark() {
+		return removeExcludeSheetProcessingMark;
+	}
+	
+	public void setRemoveExcludeSheetProcessingMark(boolean removeExcludeSheetProcessingMark) {
+		this.removeExcludeSheetProcessingMark = removeExcludeSheetProcessingMark;
+	}	
     
     public void registerTagLib(TagLib tagLib, String namespace) {
         
@@ -267,6 +279,14 @@ public class Configuration {
         
         return jxlsRoot;
     }
+	
+	public Set getExcludeSheets() {
+		return this.excludeSheets;
+	}
+	
+	public void addExcludeSheet(String name) {
+		this.excludeSheets.add(name);
+	}
     
     public String getJXLSRootEnd() {
         return "</jxls>";
