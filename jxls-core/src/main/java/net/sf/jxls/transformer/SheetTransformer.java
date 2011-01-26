@@ -195,6 +195,10 @@ public class SheetTransformer {
 		
         for (int j = startCell; j <= endCell && j>-1; j++) {
             org.apache.poi.ss.usermodel.Cell hssfCell = hssfRow.getCell(j);
+            if (configuration.getCellKeyName() != null) {
+            	beans.put(configuration.getCellKeyName(), hssfCell);
+            }
+
             CellParser cellParser = new CellParser(hssfCell, row, configuration);
             Cell cell = cellParser.parseCell(beans);
             if (cell.getTag() == null) {

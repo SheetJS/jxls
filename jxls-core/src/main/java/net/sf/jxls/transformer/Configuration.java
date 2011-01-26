@@ -37,7 +37,8 @@ public class Configuration {
     String sheetKeyName = "sheet";
     String workbookKeyName = "workbook";
     String rowKeyName = "hssfRow";
-	
+    String cellKeyName = "hssfCell";
+
     private String excludeSheetProcessingMark = "#Exclude";
 	boolean removeExcludeSheetProcessingMark = false;
 	Set excludeSheets = new HashSet();
@@ -114,6 +115,14 @@ public class Configuration {
         this.rowKeyName = rowKeyName;
     }
 
+    public String getCellKeyName() {
+        return cellKeyName;
+    }
+
+    public void setCellKeyName(String cellKeyName) {
+        this.cellKeyName = cellKeyName;
+    }
+    
     public String getTagPrefix() {
         if( tagPrefix.length()>0 ){
             return tagPrefix + ":";

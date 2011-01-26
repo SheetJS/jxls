@@ -47,12 +47,19 @@ public class SimpleRowTransformer extends BaseRowTransformer {
 //            throw new RuntimeException("Don't expect to execute this code");
             for (int j = 0; j < row.getCells().size(); j++) {
                 Cell cell = (Cell) row.getCells().get(j);
+                if (configuration.getCellKeyName() != null) {
+                    beans.put(configuration.getCellKeyName(), cell.getPoiCell() );
+                }                
                 applyCellProcessors(row.getSheet(), cell );
                 cellTransformer.transform( cell );
             }
         }else{
             for (int i = 0; i < cells.size(); i++) {
                 Cell cell = (Cell) cells.get(i);
+                if (configuration.getCellKeyName() != null) {
+                    beans.put(configuration.getCellKeyName(), cell.getPoiCell() );
+                }                
+
                 if( previousTransformation != null && cell.getPoiCell().getColumnIndex()>= previousTransformation.getStartCellShift()
                         && previousTransformation.getStartCellShift() != 0){
                     cell.replaceCellWithNewShiftedBy(previousTransformation.getLastCellShift());

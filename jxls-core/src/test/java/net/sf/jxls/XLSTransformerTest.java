@@ -1,19 +1,43 @@
 package net.sf.jxls;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import junit.framework.TestCase;
-import net.sf.jxls.bean.*;
+import net.sf.jxls.bean.Bean;
+import net.sf.jxls.bean.BeanWithList;
+import net.sf.jxls.bean.Column;
+import net.sf.jxls.bean.Department;
+import net.sf.jxls.bean.Employee;
+import net.sf.jxls.bean.Item;
+import net.sf.jxls.bean.MyBean;
+import net.sf.jxls.bean.SimpleBean;
+import net.sf.jxls.bean.TestNumber;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.XLSTransformer;
 import net.sf.jxls.util.Util;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
-
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * @author Leonid Vysochyn
@@ -112,7 +136,6 @@ public class XLSTransformerTest extends TestCase {
 
     public static final String outlineXLS = "/templates/outline.xls";
     public static final String outlineDestXLS = "target/outline_output.xls";
-
 
     SimpleBean simpleBean1;
     SimpleBean simpleBean2;
@@ -325,6 +348,7 @@ public class XLSTransformerTest extends TestCase {
         beans.put("listBean", beanWithList);
         beans.put("departments", departments);
         beans.put("t1", amountBeans);
+
         //todo comment this line to work on #VALUE! formula cell problem
 //        simpleBean3.setOther( simpleBean1 );
 
@@ -1555,6 +1579,12 @@ public class XLSTransformerTest extends TestCase {
         checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 0, baEmployeeNames);
         checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 1, baPayments);
         checker.checkListCells(sourceSheet, 5, resultSheet, 20, (short) 2, baBonuses);
+        
+        resultSheet = resultWorkbook.getSheet("IT");
+        assertEquals( "Cell:1", resultSheet.getRow( 8 ).getCell( 1 ).getStringCellValue() );
+        assertEquals( "Cell:4", resultSheet.getRow( 8 ).getCell( 4 ).getStringCellValue() );
+        assertEquals( "Cell:7", resultSheet.getRow( 8 ).getCell( 7 ).getStringCellValue() );
+        
         is.close();
         saveWorkbook(resultWorkbook, poiobjectsDestXLS);
     }
