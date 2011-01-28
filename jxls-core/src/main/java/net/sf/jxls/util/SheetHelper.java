@@ -62,7 +62,7 @@ public class SheetHelper {
             CellParser cellParser;
             Formula formula;
             Cell hssfCell;
-            for(int i = hssfRow.getFirstCellNum(); i <= hssfRow.getLastCellNum(); i++){
+            for(int i = hssfRow.getFirstCellNum(); i <= hssfRow.getLastCellNum() && i > -1; i++){
                 hssfCell = hssfRow.getCell( i );
                 if( hssfCell!=null ){
                     cellParser = new CellParser(hssfCell, row, sheet.getConfiguration());
