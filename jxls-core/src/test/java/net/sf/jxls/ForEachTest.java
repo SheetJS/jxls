@@ -3,6 +3,8 @@ package net.sf.jxls;
 import junit.framework.TestCase;
 import net.sf.jxls.bean.Department;
 import net.sf.jxls.bean.Employee;
+import net.sf.jxls.bean.Feedback;
+import net.sf.jxls.bean.FeedbackCount;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.Configuration;
 import net.sf.jxls.transformer.XLSTransformer;
@@ -12,6 +14,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -50,6 +53,9 @@ public class ForEachTest extends TestCase {
 
     public static final String forGroupByXLS = "/templates/forgroup.xls";
     public static final String forGroupByDestXLS = "target/forgroup_output.xls";
+
+    public static final String grouping4XLS = "/templates/grouping4.xls";
+    public static final String grouping4DestXLS = "target/grouping4_output.xls";
 
     public static final String selectXLS = "/templates/select.xls";
     public static final String selectDestXLS = "/templates/select_output.xls";
@@ -612,6 +618,116 @@ public class ForEachTest extends TestCase {
                 "Maria", null, new Double(1700), "John", null, new Double(2800), "IT", null, null};
         checker.checkRow(resultSheet, 0, 0, values.length - 1, values);
         saveWorkbook(resultWorkbook, forOneRowMerge2DestXLS);
+    }
+
+    //TODO: finish test
+    public void testForGroup() throws InvalidFormatException, IOException {
+        Map<String, Object> beans = new HashMap<String, Object>();
+        prepareData(beans);
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(grouping4XLS));
+        XLSTransformer transformer = new XLSTransformer();
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
+        CellsChecker checker = new CellsChecker();
+        checker.checkRow(resultSheet, 26, 0, 0, new Object[]{"Date: 01 May 2011"});
+        checker.checkRow(resultSheet, 37, 0, 6, new Object[]{"01 May 2011", new Integer(0),new Integer(0),new Integer(1),new Integer(0),new Integer(0),new Integer(2) });
+        saveWorkbook(resultWorkbook, grouping4DestXLS);
+    }
+
+    private void prepareData(Map<String, Object> beans){
+        List<Feedback> feedbackForDay = new ArrayList<Feedback>();
+        List<FeedbackCount> feedbackCountForDay = new ArrayList<FeedbackCount>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+        beans.put("user", "Test user");
+        Calendar cal = Calendar.getInstance();
+        cal.set(2011, 3, 29);
+        beans.put("dateFormat", dateFormat);
+        beans.put("start", cal.getTime());
+        cal.set(2011, 4, 3);
+        beans.put("end", cal.getTime());
+
+        cal.set(2011, 3, 29);
+        Feedback feed = new Feedback(5, cal.getTime(), "Well Done", "Graham Rhodes", "Test user");
+        feedbackForDay.add(feed);
+        cal.set(2011, 3, 31);
+        feed = new Feedback(5, cal.getTime(), "Well Done", "Graham Rhodes", "Test user");
+        feedbackForDay.add(feed);
+        cal.set(2011, 4, 1);
+        feed = new Feedback(2, cal.getTime(), "Well Done", "Graham Rhodes", "Test user");
+        feedbackForDay.add(feed);
+        feed = new Feedback(5, cal.getTime(), "Well Done", "Graham Rhodes", "Test user");
+        feedbackForDay.add(feed);
+        feed = new Feedback(5, cal.getTime(), "Well Done", "Graham Rhodes", "Test user");
+        feedbackForDay.add(feed);
+        cal.set(2011, 4, 3);
+        feed = new Feedback(0, cal.getTime(), "Well Done", "Graham Rhodes", "Test user");
+        feedbackForDay.add(feed);
+
+        Collections.sort(feedbackForDay);
+        beans.put("feedback", feedbackForDay);
+
+        FeedbackCount count = new FeedbackCount();
+        cal.set(2011, 3, 29);
+        count.setDate(cal.getTime());
+        count.setStar0(0);
+        count.setStar1(0);
+        count.setStar2(0);
+        count.setStar3(0);
+        count.setStar4(0);
+        count.setStar5(1);
+        feedbackCountForDay.add(count);
+        count = new FeedbackCount();
+        cal.set(2011, 3, 30);
+        count.setDate(cal.getTime());
+        count.setStar0(0);
+        count.setStar1(0);
+        count.setStar2(0);
+        count.setStar3(0);
+        count.setStar4(0);
+        count.setStar5(0);
+        feedbackCountForDay.add(count);
+        count = new FeedbackCount();
+        cal.set(2011, 3, 31);
+        count.setDate(cal.getTime());
+        count.setStar0(0);
+        count.setStar1(0);
+        count.setStar2(0);
+        count.setStar3(0);
+        count.setStar4(0);
+        count.setStar5(1);
+        feedbackCountForDay.add(count);
+        count = new FeedbackCount();
+        cal.set(2011, 4, 1);
+        count.setDate(cal.getTime());
+        count.setStar0(0);
+        count.setStar1(0);
+        count.setStar2(1);
+        count.setStar3(0);
+        count.setStar4(0);
+        count.setStar5(2);
+        feedbackCountForDay.add(count);
+        count = new FeedbackCount();
+        cal.set(2011, 4, 2);
+        count.setDate(cal.getTime());
+        count.setStar0(0);
+        count.setStar1(0);
+        count.setStar2(0);
+        count.setStar3(0);
+        count.setStar4(0);
+        count.setStar5(566);
+        feedbackCountForDay.add(count);
+        count = new FeedbackCount();
+        cal.set(2011, 4, 3);
+        count.setDate(cal.getTime());
+        count.setStar0(1);
+        count.setStar1(0);
+        count.setStar2(0);
+        count.setStar3(0);
+        count.setStar4(0);
+        count.setStar5(123);
+        feedbackCountForDay.add(count);
+        beans.put("feedbackCounts", feedbackCountForDay);
     }
 
 }

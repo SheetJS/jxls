@@ -21,7 +21,7 @@ public class TagBodyHelper {
     public static int duplicateDown(Sheet sheet, Block block, int n) {
         if (n > 0) {
             int startRow = block.getEndRowNum() + 1;
-            int endRow = sheet.getPhysicalNumberOfRows();
+            int endRow = Math.max( sheet.getLastRowNum(), sheet.getPhysicalNumberOfRows());
             int numberOfRows = block.getNumberOfRows() * n;
             Util.shiftRows(sheet, startRow, endRow, numberOfRows);
             for (int i = 0; i < n; i++) {
