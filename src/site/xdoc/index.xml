@@ -11,6 +11,7 @@
             <p>Main changes</p>
             <ul>
                 <li>Bug-fixes for processing multiple tags in a single row (jxls-core) </li>
+                <li>Fixed a bug with grouping in forEach tag</li>
                 <li>Support for the missing primitives and java.lang.BigInteger (jxls-core) </li>
             </ul>
             <hr/>
