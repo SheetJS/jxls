@@ -1,12 +1,11 @@
 package net.sf.jxls.transformer;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.sf.jxls.formula.ListRange;
 import net.sf.jxls.parser.Cell;
-
 import org.apache.poi.ss.usermodel.Row;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents excel worksheet 
@@ -120,10 +119,8 @@ public class Sheet {
         int maxColNum = 0;
         for(int i = hssfSheet.getFirstRowNum(); i <= hssfSheet.getLastRowNum(); i++){
             Row hssfRow = hssfSheet.getRow( i );
-            if( hssfRow != null ){
-                if( hssfRow.getLastCellNum() > maxColNum ){
+            if( hssfRow != null && (hssfRow.getLastCellNum() > maxColNum)){
                     maxColNum = hssfRow.getLastCellNum();
-                }
             }
         }
         return maxColNum;

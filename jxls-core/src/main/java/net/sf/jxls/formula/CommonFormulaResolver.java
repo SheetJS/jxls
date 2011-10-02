@@ -1,10 +1,10 @@
 package net.sf.jxls.formula;
 
+import net.sf.jxls.controller.WorkbookCellFinder;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import net.sf.jxls.controller.WorkbookCellFinder;
 
 /**
  * Implementation of {@link FormulaResolver} interface resolving formulas containing list range and label cell references
@@ -111,25 +111,9 @@ public class CommonFormulaResolver extends BaseFormulaResolver {
     }
 
 
-    protected  static String leftReplacementMarker = "{";
-    protected  static String rightReplacementMarker = "}";
+    static String leftReplacementMarker = "{";
+    static String rightReplacementMarker = "}";
 
-    protected  static String regexReplacementMarker = "\\" + leftReplacementMarker + "[(),a-zA-Z0-9_ :*+/.-]+" + "\\" + rightReplacementMarker;
-
-    public String getLeftReplacementMarker() {
-        return leftReplacementMarker;
-    }
-
-    public void setLeftReplacementMarker(String leftReplacementMarker) {
-        CommonFormulaResolver.leftReplacementMarker = leftReplacementMarker;
-    }
-
-    public String getRightReplacementMarker() {
-        return rightReplacementMarker;
-    }
-
-    public void setRightReplacementMarker(String rightReplacementMarker) {
-        CommonFormulaResolver.rightReplacementMarker = rightReplacementMarker;
-    }
+    static String regexReplacementMarker = "\\" + leftReplacementMarker + "[(),a-zA-Z0-9_ :*+/.-]+" + "\\" + rightReplacementMarker;
 
 }

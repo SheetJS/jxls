@@ -78,8 +78,8 @@ public class CellParser {
         int i = cell.getPoiCellValue().lastIndexOf(configuration.getEndFormulaToken());
         String expr = cell.getPoiCellValue().substring(2, i);
         cell.setFormula(new Formula(expr));
-        cell.getFormula().setRowNum(new Integer(cell.getRow().getPoiRow().getRowNum()));
-        cell.getFormula().setCellNum(new Integer(cell.getPoiCell().getColumnIndex()));
+        cell.getFormula().setRowNum(cell.getRow().getPoiRow().getRowNum());
+        cell.getFormula().setCellNum(cell.getPoiCell().getColumnIndex());
         if (i + 1 < cell.getPoiCellValue().length()) {
             String tail = cell.getPoiCellValue().substring(i+1);
             int j = tail.indexOf(configuration.getMetaInfoToken());
@@ -113,6 +113,7 @@ public class CellParser {
                         depRowNum = Integer.parseInt( tail.substring(k+1) );
                     } catch (NumberFormatException e) {
                         // ignore it if not an integer
+                        log.debug("Got NumberFormatException when parsing " + tail.substring(k+1) + " - ignore not integer");
                     }
                     cell.setCollectionName(tail.substring(0, k));
                 }else{

@@ -45,7 +45,7 @@ public class Block {
     }
 
     public void addAffectedColumn(int col){
-        affectedColumns.add( new Integer(col) );
+        affectedColumns.add(col);
     }
 
     public Block horizontalShift(int cellShift){
@@ -103,14 +103,14 @@ public class Block {
     public boolean contains(int rowNum, int cellNum){
         boolean flag = (startRowNum <= rowNum && rowNum <= endRowNum && ((startCellNum < 0 || endCellNum < 0) || (startCellNum <= cellNum && cellNum <= endCellNum)));
         if(flag && !affectedColumns.isEmpty()){
-            return affectedColumns.contains( new Integer( cellNum) );
+            return affectedColumns.contains( Integer.valueOf( cellNum) );
         }
         return flag;
     }
 
     public boolean contains(Formula formula){
         if( formula.getSheet().getSheetName().equals( sheet.getSheetName() ) ){
-            return contains( formula.getRowNum().intValue(), formula.getCellNum().intValue() );
+            return contains(formula.getRowNum(), formula.getCellNum());
         }
         return false;
     }
@@ -119,7 +119,7 @@ public class Block {
         boolean flag =  (startRowNum <= p.getRow() && p.getRow() <= endRowNum &&
                 ((startCellNum<0 || endCellNum<0) || (startCellNum <= p.getCol() && p.getCol() <= endCellNum)));
         if(flag && !affectedColumns.isEmpty()){
-            return affectedColumns.contains( new Integer( p.getCol() ) );
+            return affectedColumns.contains( Integer.valueOf( p.getCol() ) );
         }
         return flag;
     }
@@ -129,7 +129,7 @@ public class Block {
         boolean flag =  ((refSheetName == null || sheet.getSheetName().equals(refSheetName)) && startRowNum <= cellRef.getRowNum() && cellRef.getRowNum() <= endRowNum &&
                 ((startCellNum<0 || endCellNum<0) || (startCellNum <= cellRef.getColNum() && cellRef.getColNum() <= endCellNum)));
         if(flag && !affectedColumns.isEmpty()){
-            return affectedColumns.contains( new Integer( cellRef.getColNum() ) );
+            return affectedColumns.contains( Integer.valueOf( cellRef.getColNum() ) );
         }
         return flag;
     }

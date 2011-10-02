@@ -1,19 +1,15 @@
 package net.sf.jxls.parser;
 
+import org.apache.commons.jexl2.Expression;
+import org.apache.commons.jexl2.JexlContext;
+import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.parser.*;
+
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.jexl2.Expression;
-import org.apache.commons.jexl2.JexlContext;
-import org.apache.commons.jexl2.JexlEngine;
-import org.apache.commons.jexl2.parser.ASTIdentifier;
-import org.apache.commons.jexl2.parser.ASTReference;
-import org.apache.commons.jexl2.parser.Node;
-import org.apache.commons.jexl2.parser.Parser;
-import org.apache.commons.jexl2.parser.SimpleNode;
 
 public class ExpressionCollectionParser {
 
@@ -95,10 +91,8 @@ public class ExpressionCollectionParser {
                 } else {
                     subExpr = subExpr + "." + ident.image;
                 }
-                if (jexlInnerCollectionsAccess) {
-                    if (subExpr.endsWith(COLLECTION_REFERENCE_SUFFIX)) {
+                if (jexlInnerCollectionsAccess && subExpr.endsWith(COLLECTION_REFERENCE_SUFFIX)) {
                         return subExpr;
-                    }
                 }
                 try {
                     Expression e = jexlEngine.createExpression(subExpr);

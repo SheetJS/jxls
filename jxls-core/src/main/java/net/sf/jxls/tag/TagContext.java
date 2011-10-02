@@ -1,10 +1,10 @@
 package net.sf.jxls.tag;
 
-import java.util.Map;
-
 import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.transformer.Sheet;
 import net.sf.jxls.transformer.SheetTransformer;
+
+import java.util.Map;
 
 /**
  * Contains tag related information
@@ -15,19 +15,16 @@ public class TagContext {
     Block tagBody;
 
     Sheet sheet;
-    SheetTransformer sheetTransformer;
     SheetTransformationController stc;
 
     public TagContext(SheetTransformationController stc, SheetTransformer sheetTransformer, Sheet sheet, Block tagBody, Map beans) {
         this.stc = stc;
-        this.sheetTransformer = sheetTransformer;
         this.sheet = sheet;
         this.tagBody = tagBody;
         this.beans = beans;
     }
 
     public TagContext(SheetTransformer sheetTransformer, Sheet sheet, Block tagBody, Map beans) {
-        this.sheetTransformer = sheetTransformer;
         this.sheet = sheet;
         this.tagBody = tagBody;
         this.beans = beans;

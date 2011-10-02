@@ -1,12 +1,12 @@
 package net.sf.jxls.transformer;
 
-import java.util.Map;
-
 import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.parser.Cell;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.tag.Tag;
 import net.sf.jxls.transformation.ResultTransformation;
+
+import java.util.Map;
 
 /**
  * Implementation of {@link RowTransformer} for transforming jx tags
@@ -14,13 +14,11 @@ import net.sf.jxls.transformation.ResultTransformation;
  */
 public class TagRowTransformer extends BaseRowTransformer {
 
-    Cell cell;
     Tag tag;
 
     private ResultTransformation resultTransformation;
 
     public TagRowTransformer(Row row, Cell cell) {
-        this.cell = cell;
         this.row = row;
         this.tag = cell.getTag();
     }

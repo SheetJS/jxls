@@ -1,5 +1,9 @@
 package net.sf.jxls.report;
 
+import org.apache.commons.beanutils.RowSetDynaClass;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,21 +11,15 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.beanutils.RowSetDynaClass;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * @author Leonid Vysochyn
  */
 public class ReportManagerImpl implements ReportManager {
     protected final Log log = LogFactory.getLog(getClass());
     Connection connection;
-    Map beans;
 
     public ReportManagerImpl(Connection connection, Map beans) {
         this.connection = connection;
-        this.beans = beans;
     }
 
     public ReportManagerImpl(Connection connection) {

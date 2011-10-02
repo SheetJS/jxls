@@ -1,16 +1,13 @@
 package net.sf.jxls.parser;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import net.sf.jxls.transformer.Configuration;
-
 import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.MapContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Represents a property in excel template
@@ -18,9 +15,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Property {
     protected final Log log = LogFactory.getLog(getClass());
-    List propertyTokens = new ArrayList();
 
-    private String beanName;
     private Object bean;
     private String collectionName;
     private Collection collection;
@@ -52,7 +47,6 @@ public class Property {
         } else {
             collectionName = parser.getCollectionExpression();
             collection = parser.getCollection();
-            beanName = null;
             bean = null;
         }
 
@@ -68,7 +62,7 @@ public class Property {
     }
 
     public String getBeanName() {
-        return beanName;
+        return null;
     }
 
     public String getCollectionName() {
@@ -92,10 +86,7 @@ public class Property {
     }
 
     public String getFullCollectionName() {
-        if (beanName == null) {
-            return collectionName;
-        }
-        return beanName + "." + collectionName;
+        return collectionName;
     }
 
     public String getPropertyNameAfterLastDot() {

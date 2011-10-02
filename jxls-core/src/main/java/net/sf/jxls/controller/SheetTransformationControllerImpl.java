@@ -27,12 +27,10 @@ public class SheetTransformationControllerImpl implements SheetTransformationCon
     List transformations = new ArrayList();
 
     Sheet sheet;
-    TagBodyHelper helper;
     FormulaController formulaController;
 
     public SheetTransformationControllerImpl(Sheet sheet) {
         this.sheet = sheet;
-        helper = new TagBodyHelper();
         formulaController = sheet.getWorkbook().getFormulaController();
     }
 

@@ -8,7 +8,6 @@ import net.sf.jxls.util.Util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 
 import java.util.*;
 
@@ -20,11 +19,7 @@ public class FormulaControllerImpl implements FormulaController {
 
     protected Map sheetFormulasMap;
 
-
-    Workbook workbook;
-
     public FormulaControllerImpl(Workbook workbook) {
-        this.workbook = workbook;
         sheetFormulasMap = workbook.createFormulaSheetMap();
     }
 
@@ -81,15 +76,15 @@ public class FormulaControllerImpl implements FormulaController {
                     if(formulaPoints != null && !formulaPoints.isEmpty()){
                         if(formulaPoints.size() == 1){
                             newPoint = (Point) formulaPoints.get(0);
-                            formula.setRowNum( new Integer( newPoint.getRow() ));
-                            formula.setCellNum( new Integer( newPoint.getCol() ));
+                            formula.setRowNum( newPoint.getRow() );
+                            formula.setCellNum( (int)newPoint.getCol() );
                         }else{
                             List sheetFormulas = (List) sheetFormulasMap.get( formula.getSheet().getSheetName() );
                             for (int j = 1, num = formulaPoints.size(); j < num; j++) {
                                 point = (Point) formulaPoints.get(j);
                                 newFormula = new Formula( formula );
-                                newFormula.setRowNum( new Integer(point.getRow()) );
-                                newFormula.setCellNum( new Integer(point.getCol() ) );
+                                newFormula.setRowNum( point.getRow() );
+                                newFormula.setCellNum((int) point.getCol());
                                 newCellRefs = newFormula.getCellRefs();
                                 for (Iterator iterator1 = newCellRefs.iterator(); iterator1.hasNext();) {
                                     newCellRef =  (CellRef) iterator1.next();

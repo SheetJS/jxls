@@ -1,7 +1,6 @@
 package net.sf.jxls.util;
 
 import net.sf.jxls.transformer.*;
-import net.sf.jxls.transformer.Row;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +25,7 @@ import java.util.regex.Pattern;
  * @author Vincent Dutat
  */
 public final class Util {
-	protected static Log log = LogFactory.getLog(Util.class);
+	protected static final Log log = LogFactory.getLog(Util.class);
 
 	private static final String[][] ENTITY_ARRAY = { { "quot", "34" }, // " -
 																		// double
@@ -113,7 +112,7 @@ public final class Util {
 				|| (region1 != null && region2 == null)) {
 			return false;
 		}
-		if (region1 == null && region2 == null) {
+		if (region1 == null) {
 			return true;
 		}
 		return (region1.getFirstColumn() == region2.getFirstColumn()
@@ -166,7 +165,7 @@ public final class Util {
 		for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
 			CellRangeAddress merged = getMergedRegion(sheet, i);
 			if (isRangeContainsCell(merged, rowNum, cellNum)) {
-				mergedRegionNumbersToRemove.add(new Integer(i));
+				mergedRegionNumbersToRemove.add(i);
 			}
 		}
 		for (Iterator iterator = mergedRegionNumbersToRemove.iterator(); iterator
@@ -948,7 +947,7 @@ public final class Util {
 			.compile(regexCellRef);
 	protected static final String regexCellCharPart = "[0-9]+";
 	protected static final String regexCellDigitPart = "[a-zA-Z]+";
-	protected static String cellRangeSeparator = ":";
+	protected static final String cellRangeSeparator = ":";
 
 	public static boolean isColumnRange(List cells) {
 		String firstCell = (String) cells.get(0);
@@ -994,14 +993,14 @@ public final class Util {
 
 	public static String buildCommaSeparatedListOfCells(String refSheetName,
 			List cells) {
-		String listOfCells = "";
+		StringBuilder listOfCellsBuilder = new StringBuilder();
 		for (int i = 0; i < cells.size() - 1; i++) {
 			String cell = (String) cells.get(i);
-			listOfCells += getRefCellName(refSheetName, cell) + ",";
+			listOfCellsBuilder.append( getRefCellName(refSheetName, cell));
+            listOfCellsBuilder.append(",");
 		}
-		listOfCells += getRefCellName(refSheetName, (String) cells.get(cells
-				.size() - 1));
-		return listOfCells;
+		listOfCellsBuilder.append(getRefCellName(refSheetName, (String) cells.get(cells.size() - 1)));
+		return listOfCellsBuilder.toString();
 	}
 
 	public static String detectCellRange(String refSheetName, List cells) {

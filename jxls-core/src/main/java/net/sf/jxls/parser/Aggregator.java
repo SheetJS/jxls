@@ -56,8 +56,8 @@ public abstract class Aggregator {
         public void add(Object o) {
             if (o != null) {
                 if (min == null) min = o;
-                else if (o instanceof Comparable) {
-                    if (((Comparable) o).compareTo(min) < 0) min = o;
+                else if (o instanceof Comparable && (((Comparable) o).compareTo(min) < 0)) {
+                    min = o;
                 }
             }
         }
@@ -73,8 +73,8 @@ public abstract class Aggregator {
         public void add(Object o) {
             if (o != null) {
                 if (max == null) max = o;
-                else if (o instanceof Comparable) {
-                    if (((Comparable) o).compareTo(max) > 0) max = o;
+                else if (o instanceof Comparable && (((Comparable) o).compareTo(max) > 0) ) {
+                    max = o;
                 }
             }
         }
@@ -92,7 +92,7 @@ public abstract class Aggregator {
         }
 
         public Object getResult() {
-            return new Integer(count);
+            return count;
         }
     }
 }

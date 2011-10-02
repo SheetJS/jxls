@@ -1,13 +1,12 @@
 package net.sf.jxls.transformation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.sf.jxls.formula.CellRef;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.tag.Point;
-
 import org.apache.poi.ss.util.CellReference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines duplicate transformation for {@link Block}
@@ -16,7 +15,7 @@ import org.apache.poi.ss.util.CellReference;
  */
 public class DuplicateTransformation extends BlockTransformation {
 
-    int rowNum, colNum;
+    int rowNum;
     int duplicateNumber;
     List cells = new ArrayList();
 

@@ -1,16 +1,15 @@
 package net.sf.jxls.transformer;
 
+import net.sf.jxls.formula.Formula;
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.parser.Expression;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
-
-import net.sf.jxls.formula.Formula;
-import net.sf.jxls.parser.Cell;
-import net.sf.jxls.parser.Expression;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Cell transformation class
@@ -78,15 +77,15 @@ public class CellTransformer {
                                 }
                             } else {
                                 if (cell.getExpressions().size() > 1) {
-                                    String value = "";
+                                    StringBuilder valueBuilder = new StringBuilder();
                                     for (int i = 0; i < cell.getExpressions().size(); i++) {
                                         Expression expr = (Expression) cell.getExpressions().get(i);
                                         Object propValue = expr.evaluate();
                                         if (propValue != null) {
-                                            value += propValue.toString();
+                                            valueBuilder.append( propValue.toString() );
                                         }
                                     }
-                                    setCellValue(cell, value);
+                                    setCellValue(cell, valueBuilder.toString());
                                 }
                             }
                     }
@@ -94,16 +93,18 @@ public class CellTransformer {
                         processFormulaCell( cell );
                     }
                 } else {
-                    String value = "";
+                    StringBuilder valueBuilder = new StringBuilder();
                     for (int i = 0; i < cell.getExpressions().size(); i++) {
                         Expression expr = (Expression) cell.getExpressions().get(i);
                         if (expr.getCollectionProperty() == null) {
-                            value += expr.evaluate();
+                            valueBuilder.append( expr.evaluate() );
                         } else {
-                            value += configuration.getStartExpressionToken() + expr.getExpression() + configuration.getEndExpressionToken();
+                            valueBuilder.append(configuration.getStartExpressionToken());
+                            valueBuilder.append(expr.getExpression());
+                            valueBuilder.append(configuration.getEndExpressionToken());
                         }
                     }
-                    setCellValue(cell, value);
+                    setCellValue(cell, valueBuilder.toString());
                 }
             }
         } catch (Exception e) {

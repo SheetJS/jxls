@@ -1,20 +1,19 @@
 package net.sf.jxls.transformation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.sf.jxls.formula.CellRef;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.tag.Point;
-
 import org.apache.poi.ss.util.CellReference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Leonid Vysochyn
  */
 public class DuplicateTransformationByColumns extends BlockTransformation {
 
-    int rowNum, colNum;
+    int colNum;
     int duplicateNumber;
     List cells = new ArrayList();
 
@@ -88,8 +87,8 @@ public class DuplicateTransformationByColumns extends BlockTransformation {
     }
 
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof DuplicateTransformation) {
-            DuplicateTransformation dt = (DuplicateTransformation) obj;
+        if (obj != null && obj instanceof DuplicateTransformationByColumns) {
+            DuplicateTransformationByColumns dt = (DuplicateTransformationByColumns) obj;
             return (super.equals(obj) && dt.duplicateNumber == duplicateNumber);
         }
         return false;

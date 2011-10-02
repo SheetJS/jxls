@@ -1,22 +1,21 @@
 package net.sf.jxls.formula;
 
+import org.apache.poi.ss.util.CellReference;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.poi.ss.util.CellReference;
 
 /**
  * @author Leonid Vysochyn
  */
 public class CellRef {
-    protected static String leftReplacementMarker = "{";
-    protected static String rightReplacementMarker = "}";
-    protected static String regexReplacementMarker = "\\" + leftReplacementMarker + "[(),a-zA-Z0-9_ :*+/.-]+" + "\\" + rightReplacementMarker;
+    private static String leftReplacementMarker = "{";
+    private static String rightReplacementMarker = "}";
+    private static String regexReplacementMarker = "\\" + leftReplacementMarker + "[(),a-zA-Z0-9_ :*+/.-]+" + "\\" + rightReplacementMarker;
     protected static final String regexCellCharPart = "[0-9]+";
     protected static final String regexCellDigitPart = "[a-zA-Z]+";
 
     String cellRef;
-    String baseCellRef;
     FormulaPart parentFormula;
     int rowNum;
     short colNum;
@@ -29,7 +28,6 @@ public class CellRef {
 
     private CellRef(String cellRef) {
         this.cellRef = cellRef;
-        baseCellRef = cellRef;
         CellReference cellReference = new CellReference(cellRef);
         rowNum = cellReference.getRow();
         colNum = cellReference.getCol();
@@ -40,6 +38,8 @@ public class CellRef {
         this(cellRef);
         this.parentFormula = parentFormula;
     }
+
+
 
     public String getSheetName() {
         String name = sheetName;
@@ -120,18 +120,19 @@ public class CellRef {
     }
 
     String buildCommaSeparatedListOfCells(String refSheetName, List cells) {
-        String listOfCells = "";
+        StringBuilder listOfCellsBuilder = new StringBuilder();
         for (int i = 0; i < cells.size() - 1; i++) {
             String cell = (String) cells.get(i);
             String refCellName = getRefCellName(refSheetName, cell);
-            listOfCells += refCellName + ",";
+            listOfCellsBuilder.append(refCellName);
+            listOfCellsBuilder.append(",");
             rangeFormulaParts.add(new CellRef(refCellName, parentFormula));
             rangeFormulaParts.add(",");
         }
         String refCellName = getRefCellName(refSheetName, (String) cells.get(cells.size() - 1));
-        listOfCells += refCellName;
+        listOfCellsBuilder.append(refCellName);
         rangeFormulaParts.add(new CellRef(refCellName, parentFormula));
-        return listOfCells;
+        return listOfCellsBuilder.toString();
     }
 
 

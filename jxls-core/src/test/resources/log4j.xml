@@ -10,9 +10,21 @@
         </layout>
     </appender>
 
+    <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
+      <param name="Threshold" value="INFO" />
+      <param name="File" value="jxlstests.log"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="%d %-5p  [%c{1}] %m %n" />
+      </layout>
+   </appender>
+
 
     <logger name="org.apache">
         <level value="WARN"/>
+    </logger>
+
+    <logger name="org.apache.commons.jexl2">
+        <level value="ERROR"/>
     </logger>
     
     <!--logger name="org.hibernate.SQL">
@@ -27,6 +39,7 @@
     <root>
         <level value="WARN"/>
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="fileAppender"/>
     </root>
 
 </log4j:configuration>

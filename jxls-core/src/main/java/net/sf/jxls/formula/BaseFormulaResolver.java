@@ -1,17 +1,16 @@
 package net.sf.jxls.formula;
 
+import net.sf.jxls.parser.Cell;
+import net.sf.jxls.transformer.Sheet;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.ss.util.CellReference;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.sf.jxls.parser.Cell;
-import net.sf.jxls.transformer.Sheet;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.poi.ss.util.CellReference;
 
 /**
  * Base class for {@link FormulaResolver} interface implementations
@@ -23,7 +22,7 @@ public abstract class BaseFormulaResolver implements FormulaResolver{
     protected static final String regexCellCharPart = "[0-9]+";
     protected static final String regexCellDigitPart = "[a-zA-Z]+";
     protected String cellRangeSeparator = ":";
-    protected static String formulaListRangeToken = "@";
+    static String formulaListRangeToken = "@";
     protected final Log log = LogFactory.getLog(getClass());
 
     Set findRefCells(String formulaString) {
@@ -36,13 +35,14 @@ public abstract class BaseFormulaResolver implements FormulaResolver{
     }
 
     String buildCommaSeparatedListOfCells(String refSheetName, List cells) {
-        String listOfCells = "";
+        StringBuilder buf = new StringBuilder();
         for (int i = 0; i < cells.size() - 1; i++) {
             String cell = (String) cells.get(i);
-            listOfCells += getRefCellName(refSheetName, cell) + ",";
+            buf.append( getRefCellName(refSheetName, cell) );
+            buf.append(",");
         }
-        listOfCells += getRefCellName( refSheetName, (String) cells.get( cells.size() - 1 ));
-        return listOfCells;
+        buf.append(getRefCellName( refSheetName, (String) cells.get( cells.size() - 1 )));
+        return buf.toString();
     }
 
     String detectCellRange(String refSheetName, List cells) {
@@ -114,7 +114,7 @@ public abstract class BaseFormulaResolver implements FormulaResolver{
     String replaceListRanges(Formula formula) {
         String codedFormula = formula.getFormula();
         Sheet sheet = formula.getSheet();
-        String appliedFormula = "";
+        StringBuilder appliedFormulaBuilder = new StringBuilder();
         String delimiter = formulaListRangeToken;
         int index = codedFormula.indexOf(delimiter);
         boolean isExpression = false;
@@ -124,23 +124,23 @@ public abstract class BaseFormulaResolver implements FormulaResolver{
                 // this is formula coded expression variable
                 // look into the listRanges to see do we have cell range for it
                 if (sheet.getListRanges().containsKey(token)) {
-                    appliedFormula += ((ListRange) sheet.getListRanges().get(token)).toExcelCellRange();
+                    appliedFormulaBuilder.append(((ListRange) sheet.getListRanges().get(token)).toExcelCellRange());
                 } else if (sheet.getNamedCells().containsKey(token)) {
-                    appliedFormula += ((Cell) sheet.getNamedCells().get(token)).toCellName();
+                    appliedFormulaBuilder.append(((Cell) sheet.getNamedCells().get(token)).toCellName());
                 } else {
                     log.warn("can't find list range or named cell for " + token);
                     // returning null if we don't have given list range or named cell so we don't need to set formula to avoid error
                     return null;
                 }
             } else {
-                appliedFormula += token;
+                appliedFormulaBuilder.append(token);
             }
             codedFormula = codedFormula.substring(index + 1);
             index = codedFormula.indexOf(delimiter);
             isExpression = !isExpression;
         }
-        appliedFormula += codedFormula;
-        return appliedFormula;
+        appliedFormulaBuilder.append(codedFormula);
+        return appliedFormulaBuilder.toString();
     }
 
     public static String getFormulaListRangeToken() {

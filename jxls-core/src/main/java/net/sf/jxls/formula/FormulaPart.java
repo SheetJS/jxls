@@ -1,16 +1,11 @@
 package net.sf.jxls.formula;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Represents formula part 
@@ -19,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 public class FormulaPart {
     protected final Log log = LogFactory.getLog(getClass());
 
-    public static char defaultValueToken = '@';
+    public static final char defaultValueToken = '@';
 
     Formula parentFormula;
     String formulaPartString;
@@ -151,15 +146,12 @@ public class FormulaPart {
             return defaultValue.toString();
         }
         Object formulaPart;
-        String actualFormula = "";
+        StringBuilder actualFormulaBuilder = new StringBuilder();
         for (Iterator iterator = parts.iterator(); iterator.hasNext();) {
             formulaPart =  iterator.next();
-            actualFormula += formulaPart.toString();
+            actualFormulaBuilder.append(formulaPart.toString());
         }
-
-        return actualFormula;
-
-        
+        return actualFormulaBuilder.toString();
     }
 
     public void removeCellRefs( Set cellRefsToBeRemoved ){
@@ -169,7 +161,7 @@ public class FormulaPart {
         for (int i = 0; i < parts.size(); i++) {
             Object formulaPart = parts.get(i);
             if( cellRefsToBeRemoved.contains( formulaPart ) ){
-                formulaPartIndexesToRemove.add( new Integer( i ) );
+                formulaPartIndexesToRemove.add(i);
                 if( i > 0 ){
                     prevFormulaPart = parts.get( i - 1 );
                 }
@@ -180,9 +172,9 @@ public class FormulaPart {
                 }
                 if( prevFormulaPart != null ){
                     if( prevFormulaPart.toString().equals(",") ){
-                        formulaPartIndexesToRemove.add( new Integer(i - 1) );
+                        formulaPartIndexesToRemove.add(i - 1);
                     }else if( nextFormulaPart != null && nextFormulaPart.toString().equals( "," )){
-                        formulaPartIndexesToRemove.add( new Integer(i + 1) );
+                        formulaPartIndexesToRemove.add(i + 1);
                     }
                 }
             }
@@ -190,7 +182,7 @@ public class FormulaPart {
         Collections.sort( formulaPartIndexesToRemove );
         int shift = 0;
         for (int i = 0; i < formulaPartIndexesToRemove.size(); i++) {
-            int index =  ((Integer) formulaPartIndexesToRemove.get(i)).intValue() ;
+            int index = (Integer) formulaPartIndexesToRemove.get(i);
             parts.remove( index - shift );
             shift++;
         }
