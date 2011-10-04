@@ -95,7 +95,7 @@
     <repository>
       <id>sourceforge</id>
       <name>jXLS Releases Repository at Sourceforge</name>
-      <url>scp://shell.sourceforge.net/home/groups/j/jx/jxls/htdocs/repository/releases</url>
+      <url>scp://shell.sourceforge.net/home/project-web/jxls/htdocs/repository/releases</url>
     </repository>
       
     <!--<snapshotRepository>-->

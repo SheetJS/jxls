@@ -16,7 +16,7 @@ import java.util.Date;
  * @author Leonid Vysochyn
  */
 public class CellTransformer {
-    protected final Log log = LogFactory.getLog(getClass());
+    static protected final Log log = LogFactory.getLog(CellTransformer.class);
 
 
     private Configuration configuration;

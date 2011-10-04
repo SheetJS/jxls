@@ -1,18 +1,17 @@
 package net.sf.jxls.transformer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.sf.jxls.formula.ListRange;
 import net.sf.jxls.parser.Cell;
 import net.sf.jxls.processor.CellProcessor;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.util.FormulaUtil;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Base class for {@link RowTransformer} impelementations
@@ -20,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class BaseRowTransformer implements RowTransformer{
 
-    protected final Log log = LogFactory.getLog(getClass());
+    static protected final Log log = LogFactory.getLog(BaseRowTransformer.class);
 
     /**
      * This list is used to store formula cells information while processing template file

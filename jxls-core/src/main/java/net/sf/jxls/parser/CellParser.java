@@ -22,7 +22,7 @@ import java.util.Map;
  * @author Leonid Vysochyn
  */
 public class CellParser {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(CellParser.class);
 
     private final Cell cell;
 

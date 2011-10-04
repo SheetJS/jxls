@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * @author Leonid Vysochyn
  */
 public class FormulaPart {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(FormulaPart.class);
 
     public static final char defaultValueToken = '@';
 

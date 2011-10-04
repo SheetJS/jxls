@@ -1,11 +1,5 @@
 package net.sf.jxls.tag;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.parser.Expression;
 import net.sf.jxls.transformation.ResultTransformation;
@@ -14,10 +8,15 @@ import net.sf.jxls.transformer.SheetTransformer;
 import net.sf.jxls.util.GroupData;
 import net.sf.jxls.util.ReportUtil;
 import net.sf.jxls.util.Util;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.Row;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * jx:forEach tag implementation
@@ -25,7 +24,7 @@ import org.apache.poi.ss.usermodel.Row;
  * @author Leonid Vysochyn
  */
 public class ForEachTag extends BaseTag {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(ForEachTag.class);
 
     public static final String TAG_NAME = "forEach";
     Configuration configuration = new Configuration();

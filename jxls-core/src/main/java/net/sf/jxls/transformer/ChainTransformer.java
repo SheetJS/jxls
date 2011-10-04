@@ -1,22 +1,21 @@
 package net.sf.jxls.transformer;
 
-import java.util.List;
-import java.util.Map;
-
 import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.processor.RowProcessor;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformation.ResultTransformation;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Controls a list of transformers
  * @author Leonid Vysochyn
  */
 public class ChainTransformer{
-    protected final Log log = LogFactory.getLog(getClass());
+    static protected final Log log = LogFactory.getLog(ChainTransformer.class);
 
     List transformers;
     Sheet sheet;

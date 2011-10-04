@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * @author Leonid Vysochyn
  */
 public class Formula {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(Formula.class);
 
     private String formula;
     private Integer rowNum;

@@ -14,6 +14,7 @@ import java.util.List;
 public class ExpressionCollectionParser {
 
     public final static String COLLECTION_REFERENCE_SUFFIX = "_JxLsC_";
+    static JexlEngine jexlEngine = new JexlEngine();
 
     // This is set up as a ThreadLocal parser to avoid threading issues.
     private static ThreadLocal parser = new ThreadLocal() {
@@ -81,7 +82,6 @@ public class ExpressionCollectionParser {
         Node child;
         String subExpr = null;
 
-        JexlEngine jexlEngine = new JexlEngine();
         for (int i = 0; i < childCount; i++) {
             child = node.jjtGetChild(i);
             if (child instanceof ASTIdentifier) {
