@@ -17,7 +17,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 public class OutTag extends BaseTag {
     
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(OutTag.class);
     
     public static final String TAG_NAME = "out";
     

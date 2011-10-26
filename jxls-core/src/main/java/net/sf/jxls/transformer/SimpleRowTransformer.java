@@ -45,7 +45,7 @@ public class SimpleRowTransformer extends BaseRowTransformer {
         CellTransformer cellTransformer = new CellTransformer( configuration );
         if( cells.isEmpty() ){
 //            throw new RuntimeException("Don't expect to execute this code");
-            for (int j = 0; j < row.getCells().size(); j++) {
+            for (int j = 0, c = row.getCells().size(); j < c; j++) {
                 Cell cell = (Cell) row.getCells().get(j);
                 if (configuration.getCellKeyName() != null) {
                     beans.put(configuration.getCellKeyName(), cell.getPoiCell() );
@@ -54,7 +54,7 @@ public class SimpleRowTransformer extends BaseRowTransformer {
                 cellTransformer.transform( cell );
             }
         }else{
-            for (int i = 0; i < cells.size(); i++) {
+            for (int i = 0, c = cells.size(); i < c; i++) {
                 Cell cell = (Cell) cells.get(i);
                 if (configuration.getCellKeyName() != null) {
                     beans.put(configuration.getCellKeyName(), cell.getPoiCell() );
@@ -78,7 +78,7 @@ public class SimpleRowTransformer extends BaseRowTransformer {
      * @param cell - {@link net.sf.jxls.parser.Cell} object with cell information
      */
     private void applyCellProcessors(Sheet sheet, Cell cell) {
-        for (int i = 0; i < cellProcessors.size(); i++) {
+        for (int i = 0, c = cellProcessors.size(); i < c; i++) {
             CellProcessor cellProcessor = (CellProcessor) cellProcessors.get(i);
             cellProcessor.processCell(cell, sheet.getNamedCells());
         }

@@ -10,11 +10,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class ExpressionCollectionParser {
 
+    public final static Map<String, Expression> expressionCache = new HashMap<String, Expression>();
+
     public final static String COLLECTION_REFERENCE_SUFFIX = "_JxLsC_";
-    static JexlEngine jexlEngine = new JexlEngine();
+    private static final JexlEngine jexlEngine = new JexlEngine();
+    static {
+        jexlEngine.setDebug(false);
+    }
 
     // This is set up as a ThreadLocal parser to avoid threading issues.
     private static ThreadLocal parser = new ThreadLocal() {
@@ -27,6 +34,10 @@ public class ExpressionCollectionParser {
 
     private String collectionExpression;
     private Collection collection;
+
+    public static void clearCache() {
+        expressionCache.clear();
+    }
 
     public ExpressionCollectionParser(JexlContext jexlContext, String expr, boolean jexlInnerCollectionsAccess) {
         try {
@@ -82,6 +93,7 @@ public class ExpressionCollectionParser {
         Node child;
         String subExpr = null;
 
+//        JexlEngine jexlEngine = new JexlEngine();
         for (int i = 0; i < childCount; i++) {
             child = node.jjtGetChild(i);
             if (child instanceof ASTIdentifier) {
@@ -95,7 +107,11 @@ public class ExpressionCollectionParser {
                         return subExpr;
                 }
                 try {
-                    Expression e = jexlEngine.createExpression(subExpr);
+                    Expression e = expressionCache.get(subExpr);
+                    if (e == null) {
+                        e = jexlEngine.createExpression(subExpr);
+                        expressionCache.put(subExpr, e);
+                    }
                     Object obj = e.evaluate(jexlContext);
                     if (obj instanceof Collection) {
                         this.collection = (Collection) obj;

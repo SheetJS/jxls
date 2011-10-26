@@ -16,7 +16,7 @@ import java.util.Date;
  * @author Leonid Vysochyn
  */
 public class CellTransformer {
-    static protected final Log log = LogFactory.getLog(CellTransformer.class);
+    protected static final Log log = LogFactory.getLog(CellTransformer.class);
 
 
     private Configuration configuration;
@@ -78,7 +78,7 @@ public class CellTransformer {
                             } else {
                                 if (cell.getExpressions().size() > 1) {
                                     StringBuilder valueBuilder = new StringBuilder();
-                                    for (int i = 0; i < cell.getExpressions().size(); i++) {
+                                    for (int i = 0, c = cell.getExpressions().size(); i < c; i++) {
                                         Expression expr = (Expression) cell.getExpressions().get(i);
                                         Object propValue = expr.evaluate();
                                         if (propValue != null) {
@@ -94,7 +94,7 @@ public class CellTransformer {
                     }
                 } else {
                     StringBuilder valueBuilder = new StringBuilder();
-                    for (int i = 0; i < cell.getExpressions().size(); i++) {
+                    for (int i = 0, c = cell.getExpressions().size(); i < c; i++) {
                         Expression expr = (Expression) cell.getExpressions().get(i);
                         if (expr.getCollectionProperty() == null) {
                             valueBuilder.append( expr.evaluate() );

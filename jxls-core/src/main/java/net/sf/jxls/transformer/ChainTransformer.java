@@ -1,21 +1,22 @@
 package net.sf.jxls.transformer;
 
+import java.util.List;
+import java.util.Map;
+
 import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.processor.RowProcessor;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformation.ResultTransformation;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Controls a list of transformers
  * @author Leonid Vysochyn
  */
 public class ChainTransformer{
-    static protected final Log log = LogFactory.getLog(ChainTransformer.class);
+    protected static final Log log = LogFactory.getLog(ChainTransformer.class);
 
     List transformers;
     Sheet sheet;
@@ -48,7 +49,7 @@ public class ChainTransformer{
 
     ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans){
         ResultTransformation resultTransformation = new ResultTransformation();
-        for (int i = 0; i < transformers.size(); i++) {
+        for (int i = 0, c=transformers.size(); i < c; i++) {
             RowTransformer rowTransformer = (RowTransformer) transformers.get(i);
             Block transformationBlock = rowTransformer.getTransformationBlock();
             transformationBlock = resultTransformation.transformBlock( transformationBlock );
@@ -71,7 +72,7 @@ public class ChainTransformer{
      * @param row - {@link Row} object with row information
      */
     private void applyRowProcessors(Row row) {
-        for (int i = 0; i < rowProcessors.size(); i++) {
+        for (int i = 0, c=rowProcessors.size(); i < c; i++) {
             RowProcessor rowProcessor = (RowProcessor) rowProcessors.get(i);
             rowProcessor.processRow(row, sheet.getNamedCells());
         }

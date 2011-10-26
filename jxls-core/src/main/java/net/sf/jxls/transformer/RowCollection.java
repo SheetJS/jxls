@@ -146,7 +146,7 @@ public class RowCollection {
 
     public List getRowCollectionCells(){
         List columnNumbers = new ArrayList();
-        for (int i = 0; i < parentRow.getCells().size(); i++) {
+        for (int i = 0, c = parentRow.getCells().size(); i < c; i++) {
             Cell cell = (Cell) parentRow.getCells().get(i);
             if( containsCell( cell ) ){
                 columnNumbers.add( cell );

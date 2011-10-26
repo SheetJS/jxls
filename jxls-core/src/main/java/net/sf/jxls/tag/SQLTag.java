@@ -21,7 +21,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Leonid Vysochyn
  */
 public class SQLTag extends BaseTag {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(SQLTag.class);
 
     Configuration configuration = new Configuration();
 

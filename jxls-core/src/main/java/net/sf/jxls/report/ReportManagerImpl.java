@@ -15,7 +15,7 @@ import java.util.Map;
  * @author Leonid Vysochyn
  */
 public class ReportManagerImpl implements ReportManager {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(ReportManagerImpl.class);
     Connection connection;
 
     public ReportManagerImpl(Connection connection, Map beans) {

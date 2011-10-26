@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Leonid Vysochyn
  */
 public class IfTag extends BaseTag {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(IfTag.class);
 
     public static final String TAG_NAME = "if";
 

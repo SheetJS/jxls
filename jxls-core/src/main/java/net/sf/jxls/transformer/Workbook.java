@@ -58,7 +58,7 @@ public class Workbook {
     }
 
     public void initSheetNames(){
-        for (int i = 0; i < sheets.size(); i++) {
+        for (int i = 0, c = sheets.size(); i < c; i++) {
             Sheet sheet = (Sheet) sheets.get(i);
             sheet.initSheetName();
         }
@@ -66,7 +66,7 @@ public class Workbook {
 
     public Map getListRanges(){
         Map listRanges = new HashMap();
-        for (int i = 0; i < sheets.size(); i++) {
+        for (int i = 0, c = sheets.size(); i < c; i++) {
             Sheet sheet = (Sheet) sheets.get(i);
             listRanges.putAll( sheet.getListRanges() );
         }
@@ -75,7 +75,7 @@ public class Workbook {
 
     public List findFormulas(){
         List formulas = new ArrayList();
-        for (int i = 0; i < sheets.size(); i++) {
+        for (int i = 0, c = sheets.size(); i < c; i++) {
             Sheet sheet = (Sheet) sheets.get(i);
             formulas.addAll( SheetHelper.findFormulas( sheet ) );
         }
@@ -84,7 +84,7 @@ public class Workbook {
 
     public Map createFormulaSheetMap(){
         Map formulas = new HashMap();
-        for (int i = 0; i < sheets.size(); i++) {
+        for (int i = 0, c = sheets.size(); i < c; i++) {
             Sheet sheet = (Sheet) sheets.get(i);
             formulas.put( sheet.getSheetName(), SheetHelper.findFormulas( sheet ) );
         }

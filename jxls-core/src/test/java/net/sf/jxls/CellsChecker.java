@@ -163,14 +163,16 @@ public class CellsChecker extends Assert {
     }
 
     private void checkCells(Row sourceRow, Row resultRow, short startCell, short endCell) {
-        for (short i = startCell; i <= endCell; i++) {
-            Cell sourceCell = sourceRow.getCell(i);
-            Cell resultCell = resultRow.getCell(i);
-            assertTrue("Null cell problem found", (sourceCell != null && resultCell != null) || (sourceCell == null && resultCell == null));
-            if (sourceCell != null) {
-                checkCells(sourceCell, resultCell);
-            }
-        }
+		 if (startCell >= 0 && endCell >= 0) {
+			  for (short i = startCell; i <= endCell; i++) {
+					Cell sourceCell = sourceRow.getCell(i);
+					Cell resultCell = resultRow.getCell(i);
+					assertTrue("Null cell problem found", (sourceCell != null && resultCell != null) || (sourceCell == null && resultCell == null));
+					if (sourceCell != null) {
+						 checkCells(sourceCell, resultCell);
+					}
+			  }
+		 }
     }
 
     void checkCells(Sheet srcSheet, Sheet destSheet, int srcRowNum, short srcCellNum, int destRowNum, short destCellNum, boolean checkCellWidth) {

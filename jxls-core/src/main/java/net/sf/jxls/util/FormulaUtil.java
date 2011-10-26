@@ -21,7 +21,7 @@ public class FormulaUtil {
      * @param ignoreUnresolved Flag indicating should unresolved formulas be removed or just ignored
      */
     public static void updateFormulas(Sheet sheet, List formulas, Map listRanges, Map namedCells, boolean ignoreUnresolved) {
-        for (int i = 0; i < formulas.size(); i++) {
+        for (int i = 0, c = formulas.size(); i < c; i++) {
             Formula formula = (Formula) formulas.get(i);
             String formulaString = formula.getAppliedFormula( listRanges, namedCells );
             Row hssfRow = sheet.getRow(formula.getRowNum().intValue());
@@ -43,7 +43,7 @@ public class FormulaUtil {
      * @return true if given {@link Formula} already exists in formulas list
      */
     static boolean formulaExists(List formulas, Formula formula) {
-        for (int i = 0; i < formulas.size(); i++) {
+        for (int i = 0, c = formulas.size(); i < c; i++) {
             Formula cur = (Formula) formulas.get(i);
             if (cur.getFormula().equals(formula.getFormula())) {
                 return true;

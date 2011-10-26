@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Leonid Vysochyn
  */
 public class ExpressionParser {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(ExpressionParser.class);
     String expression;
     Map beans;
     Configuration configuration;

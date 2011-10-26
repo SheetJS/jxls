@@ -25,9 +25,9 @@ import java.util.List;
 public class SheetTransformationControllerTest extends TestCase {
     protected final Log log = LogFactory.getLog(getClass());
     public static final String simpleBeanXLS = "/templates/simplebean.xls";
-    public static final String duplicateOutputXLS = "/duplicate_output.xls";
-    public static final String removeBordersOutputXLS = "/removeBorders_output.xls";
-    public static final String removeBodyRowsXLS = "/removeBodyRows_output.xls";
+    public static final String duplicateOutputXLS = "target/duplicate_output.xls";
+    public static final String removeBordersOutputXLS = "target/removeBorders_output.xls";
+    public static final String removeBodyRowsXLS = "target/removeBodyRows_output.xls";
 
     public void testDuplicateDown() throws IOException, InvalidFormatException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(simpleBeanXLS));

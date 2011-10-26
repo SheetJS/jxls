@@ -70,7 +70,7 @@ public class Row {
             return null;
         }
         RowCollection maxNumberOfRowsCollection = (RowCollection) rowCollections.get(0);
-        for (int i = 1; i < rowCollections.size(); i++) {
+        for (int i = 1, c = rowCollections.size(); i < c; i++) {
             RowCollection rowCollection = (RowCollection) rowCollections.get(i);
             if( rowCollection.getNumberOfRows() > maxNumberOfRowsCollection.getNumberOfRows() ){
                 maxNumberOfRowsCollection = rowCollection;
@@ -87,7 +87,7 @@ public class Row {
             return null;
         }
         RowCollection maxSizeRowCollection = (RowCollection) rowCollections.get(0);
-        for (int i = 1; i < rowCollections.size(); i++) {
+        for (int i = 1, c = rowCollections.size(); i < c; i++) {
             RowCollection rowCollection = (RowCollection) rowCollections.get(i);
             if( rowCollection.getCollectionProperty().getCollection().size() >
                     maxSizeRowCollection.getCollectionProperty().getCollection().size() ){
@@ -103,7 +103,7 @@ public class Row {
      * @return {@link RowCollection} in this row having collection with required name
      */
     public RowCollection getRowCollectionByCollectionName(String collectionName){
-        for (int i = 0; i < rowCollections.size(); i++) {
+        for (int i = 0, c = rowCollections.size(); i < c; i++) {
             RowCollection rowCollection = (RowCollection) rowCollections.get(i);
             if( rowCollection.getCollectionProperty().getFullCollectionName().equals( collectionName )){
                 return rowCollection;
@@ -128,7 +128,7 @@ public class Row {
      * @return {@link RowCollection} corresponding to the collectionProperty
      */
     private RowCollection getRowCollection(Property collectionProperty, int dependentRowNumber){
-        for (int i = 0; i < rowCollections.size(); i++) {
+        for (int i = 0, c = rowCollections.size(); i < c; i++) {
             RowCollection rowCollection = (RowCollection) rowCollections.get(i);
             if( rowCollection.getCollectionProperty().getFullCollectionName().equals(collectionProperty.getFullCollectionName()) ){
                 return rowCollection;
@@ -180,7 +180,7 @@ public class Row {
     }
 
     private RowCollection getRowCollection(CellRangeAddress mergedRegion) {
-        for (int i = 0; i < mergedRegions.size(); i++) {
+        for (int i = 0, c = mergedRegions.size(); i < c; i++) {
             MergedRegion region = (MergedRegion) mergedRegions.get(i);
             if( region.getRegion().equals( mergedRegion ) ){
                 return region.getRowCollection();
@@ -219,7 +219,7 @@ public class Row {
             return 0;
         }
         int minDependentRowNumber = ((RowCollection)rowCollections.get(0)).getDependentRowNumber();
-        for (int i = 1; i < rowCollections.size(); i++) {
+        for (int i = 1, c = rowCollections.size(); i < c; i++) {
             RowCollection rowCollection = (RowCollection) rowCollections.get(i);
             if( rowCollection.getDependentRowNumber() < minDependentRowNumber ){
                 minDependentRowNumber = rowCollection.getDependentRowNumber();

@@ -14,7 +14,7 @@ import java.util.Map;
  * @author Leonid Vysochyn
  */
 public class Property {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(Property.class);
 
     private Object bean;
     private String collectionName;

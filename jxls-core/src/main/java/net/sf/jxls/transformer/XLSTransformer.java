@@ -4,8 +4,11 @@ import net.sf.jxls.controller.WorkbookTransformationController;
 import net.sf.jxls.controller.WorkbookTransformationControllerImpl;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.formula.CommonFormulaResolver;
+import net.sf.jxls.formula.Formula;
+import net.sf.jxls.formula.FormulaPart;
 import net.sf.jxls.formula.FormulaController;
 import net.sf.jxls.formula.FormulaResolver;
+import net.sf.jxls.parser.ExpressionCollectionParser;
 import net.sf.jxls.processor.CellProcessor;
 import net.sf.jxls.processor.PropertyPreprocessor;
 import net.sf.jxls.processor.RowProcessor;
@@ -27,7 +30,7 @@ import java.util.*;
  * @author Vincent Dutat
  */
 public class XLSTransformer {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(XLSTransformer.class);
     /**
      * property preprocessors will be applied before main transformation starts
      */
@@ -223,40 +226,48 @@ public class XLSTransformer {
     }
 
     public void transformWorkbook(org.apache.poi.ss.usermodel.Workbook hssfWorkbook, Map beanParams) {
-        Workbook workbook = createWorkbook( hssfWorkbook );
-        exposePOIObjects(workbook, beanParams);
-        workbookTransformationController = new WorkbookTransformationControllerImpl( workbook );
-        preprocess(hssfWorkbook);
-        SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
-		List excludedSheets = new ArrayList();
-        for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
-            final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
-			if(spreadsheetName == null) continue;
-			if(configuration.getExcludeSheets().contains(spreadsheetName)) continue;
-			
-            if( !spreadsheetName.startsWith( configuration.getExcludeSheetProcessingMark() )){
-                if (!isSpreadsheetToRemove(spreadsheetName)) {
-                    if (isSpreadsheetToRename(spreadsheetName)) {
-                        hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
+        try {
+            Workbook workbook = createWorkbook( hssfWorkbook );
+            exposePOIObjects(workbook, beanParams);
+            workbookTransformationController = new WorkbookTransformationControllerImpl( workbook );
+            preprocess(hssfWorkbook);
+            SheetTransformer sheetTransformer = new SheetTransformer( fixedSizeCollections, groupedCollections, rowProcessors, cellProcessors, configuration) ;
+            List excludedSheets = new ArrayList();
+            for (int sheetNo = 0; sheetNo < hssfWorkbook.getNumberOfSheets(); sheetNo++) {
+
+                final String spreadsheetName = hssfWorkbook.getSheetName(sheetNo);
+                if(spreadsheetName == null) continue;
+                if(configuration.getExcludeSheets().contains(spreadsheetName)) continue;
+
+                if( !spreadsheetName.startsWith( configuration.getExcludeSheetProcessingMark() )){
+                    if (!isSpreadsheetToRemove(spreadsheetName)) {
+                        if (isSpreadsheetToRename(spreadsheetName)) {
+                            hssfWorkbook.setSheetName(sheetNo, getSpreadsheetToReName(spreadsheetName));
+                        }
+                        Sheet sheet = workbook.getSheetAt( sheetNo );
+                        sheetTransformer.transformSheet( workbookTransformationController, sheet, beanParams );
+                    } else {
+                        // let's remove spreadsheet
+                        workbook.removeSheetAt( sheetNo );
+                        sheetNo--;
                     }
-                    Sheet sheet = workbook.getSheetAt( sheetNo );
-                    sheetTransformer.transformSheet( workbookTransformationController, sheet, beanParams );
                 } else {
-                    // let's remove spreadsheet
-                    workbook.removeSheetAt( sheetNo );
-                    sheetNo--;
+                    excludedSheets.add(spreadsheetName);
                 }
-            } else {
-				excludedSheets.add(spreadsheetName);				
-			}
+            }
+            if(configuration.isRemoveExcludeSheetProcessingMark()) {
+                for(int sheetNo = 0; sheetNo < excludedSheets.size(); sheetNo++) {
+                    String spreadsheetName = (String) excludedSheets.get(0);
+                    hssfWorkbook.setSheetName(hssfWorkbook.getSheetIndex(spreadsheetName), spreadsheetName.substring(configuration.getExcludeSheetProcessingMark().length()));
+                }
+            }
+            updateFormulas();
         }
-		if(configuration.isRemoveExcludeSheetProcessingMark()) {
-			for(int sheetNo = 0; sheetNo < excludedSheets.size(); sheetNo++) {
-				String spreadsheetName = (String) excludedSheets.get(0);
-				hssfWorkbook.setSheetName(hssfWorkbook.getSheetIndex(spreadsheetName), spreadsheetName.substring(configuration.getExcludeSheetProcessingMark().length()));
-			}
-		}
-        updateFormulas();
+        finally {
+            Formula.clearCache();
+            FormulaPart.clearCache();
+            ExpressionCollectionParser.clearCache();
+        }
     }
 
     private void exposePOIObjects(Workbook workbook, Map beanParams) {
@@ -314,7 +325,7 @@ public class XLSTransformer {
 //                        Util.copySheets( templateSheet, hssfSheet );
 //                        Sheet sheet = workbook.getSheetAt( sheetNo );
 //                        sheetTransformer.transformSheet(workbookTransformationController, sheet, beanParams );
-                        for (int i = 0; i < objects.size() ; i++) {
+                        for (int i = 0, c2 = objects.size(); i < c2 ; i++) {
                             Object bean = objects.get(i);
                             String beanKey = beanName;
                             org.apache.poi.ss.usermodel.Sheet newSheet;
@@ -382,7 +393,7 @@ public class XLSTransformer {
         try {
             hssfWorkbook = WorkbookFactory.create(is);
             int numberOfSheets = hssfWorkbook.getNumberOfSheets();
-            for (int templateSheetIndex = 0; templateSheetIndex < templateSheetNameList.size(); templateSheetIndex++) {
+            for (int templateSheetIndex = 0, c = templateSheetNameList.size(); templateSheetIndex < c; templateSheetIndex++) {
                 String templateSheetName = (String)templateSheetNameList.get(templateSheetIndex);
                 String sheetName = (String)sheetNameList.get(templateSheetIndex);
                 for(int workbookSheetIndex = 0; workbookSheetIndex < numberOfSheets; workbookSheetIndex++) {
@@ -422,6 +433,11 @@ public class XLSTransformer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        finally {
+              Formula.clearCache();
+              FormulaPart.clearCache();
+            ExpressionCollectionParser.clearCache();
+        }
         return hssfWorkbook;
     }
 
@@ -460,14 +476,14 @@ public class XLSTransformer {
         hideColumnsByPropertyName(workbook);
         for (int sheet_no = 0; sheet_no < workbook.getNumberOfSheets(); sheet_no++) {
             org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(sheet_no);
-            for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
+            for (int i = sheet.getFirstRowNum(), c2 = sheet.getLastRowNum(); i <= c2; i++) {
                 Row hssfRow = sheet.getRow(i);
-                if (hssfRow != null) {
-                    for (int j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
+                if (hssfRow != null && hssfRow.getFirstCellNum() >= 0 && hssfRow.getLastCellNum() >= 0) {
+                    for (int j = hssfRow.getFirstCellNum(), c3 = hssfRow.getLastCellNum(); j <= c3; j++) {
                         Cell cell = hssfRow.getCell(j);
                         if (cell != null && cell.getCellType() == Cell.CELL_TYPE_STRING) {
                             String value = cell.getRichStringCellValue().getString();
-                            for (int k = 0; k < propertyPreprocessors.size(); k++) {
+                            for (int k = 0, c4 = propertyPreprocessors.size(); k < c4; k++) {
                                 PropertyPreprocessor propertyPreprocessor = (PropertyPreprocessor) propertyPreprocessors.get(k);
                                 String newValue = propertyPreprocessor.processProperty(value);
                                 if (newValue != null) {
@@ -504,11 +520,11 @@ public class XLSTransformer {
         for (int sheet_no = 0; sheet_no < workbook.getNumberOfSheets(); sheet_no++) {
             org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(sheet_no);
             //for all rows
-            for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
+            for (int i = sheet.getFirstRowNum(), c2 = sheet.getLastRowNum(); i <= c2; i++) {
                 Row hssfRow = sheet.getRow(i);
-                if (hssfRow != null) {
+                if (hssfRow != null && hssfRow.getFirstCellNum() >= 0 && hssfRow.getLastCellNum() >= 0) {
                     //for all cells
-                    for (int j = hssfRow.getFirstCellNum(); j <= hssfRow.getLastCellNum(); j++) {
+                    for (int j = hssfRow.getFirstCellNum(), c3 = hssfRow.getLastCellNum(); j <= c3; j++) {
                         Cell cell = hssfRow.getCell(j);
                         if (cell != null && cell.getCellType() == Cell.CELL_TYPE_STRING) {
                             String value = cell.getRichStringCellValue().getString();

@@ -1,13 +1,18 @@
 package net.sf.jxls.parser;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import net.sf.jxls.transformer.Configuration;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.jexl2.MapContext;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
 
 
 /**
@@ -16,8 +21,13 @@ import java.util.*;
  */
 public class Expression {
 
-    public static final String aggregateSeparator = "[a-zA-Z()]+[0-9]*:";
 
+    public static final String aggregateSeparator = "[a-zA-Z()]+[0-9]*:";
+     private static final JexlEngine jexlEngine = new JexlEngine();
+
+    static {
+        jexlEngine.setDebug(false);
+    }
     String expression;
     String rawExpression;
     String aggregateFunction;
@@ -25,7 +35,6 @@ public class Expression {
     Map beans;
     List properties = new ArrayList();
     org.apache.commons.jexl2.Expression jexlExpresssion;
-    static JexlEngine jexlEngine = new JexlEngine();
 
     Configuration config;
 
@@ -41,7 +50,7 @@ public class Expression {
 
     public String getExpression() {
         return expression;
-        
+
     }
 
     public Expression(String expression, Configuration config) {
@@ -54,7 +63,12 @@ public class Expression {
         this.expression = expression;
         this.rawExpression = parseAggregate(expression);
         this.beans = beans;
-        jexlExpresssion = jexlEngine.createExpression(rawExpression);
+//        jexlExpresssion = new JexlEngine().createExpression(rawExpression);
+        jexlExpresssion = ExpressionCollectionParser.expressionCache.get(rawExpression);
+        if (jexlExpresssion == null) {
+            jexlExpresssion = jexlEngine.createExpression(rawExpression);
+            ExpressionCollectionParser.expressionCache.put(rawExpression, jexlExpresssion);
+        }
         parse();
     }
 

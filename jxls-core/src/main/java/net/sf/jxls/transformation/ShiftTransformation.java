@@ -34,7 +34,7 @@ public class ShiftTransformation extends BlockTransformation {
 
     public List transformCell(Point p) {
         points.clear();
-        if (block.contains(p) || (block.isAbove(p) && rowShift != 0) || (block.isToLeft(p) && colShift != 0)) {
+        if (block.contains(p) || (rowShift != 0 && block.isAbove(p)) || (colShift != 0 && block.isToLeft(p))) {
             Point newPoint = p.shift(rowShift, colShift);
             points.add(newPoint);
         } else {
@@ -46,9 +46,9 @@ public class ShiftTransformation extends BlockTransformation {
     public List transformCell(String sheetName, CellRef cellRef) {
         cells.clear();
         String refSheetName = cellRef.getSheetName();
-        if (block.getSheet().getSheetName().equalsIgnoreCase(refSheetName) || (cellRef.getSheetName() == null && block.getSheet().getSheetName().equalsIgnoreCase(sheetName))) {
-            if (block.contains(cellRef.getRowNum(), cellRef.getColNum()) || (block.getEndRowNum() < cellRef.getRowNum() && rowShift != 0)
-                    || (block.getEndCellNum() < cellRef.getColNum() && colShift != 0)) {
+        if (block.contains(cellRef.getRowNum(), cellRef.getColNum()) || (rowShift != 0 && block.getEndRowNum() < cellRef.getRowNum())
+             || (colShift != 0 && block.getEndCellNum() < cellRef.getColNum())) {
+            if (block.getSheet().getSheetName().equalsIgnoreCase(refSheetName) || (cellRef.getSheetName() == null && block.getSheet().getSheetName().equalsIgnoreCase(sheetName))) {
                 rowNum = cellRef.getRowNum() + rowShift;
                 colNum = cellRef.getColNum() + colShift;
                 // todo: remove this check

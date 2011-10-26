@@ -85,7 +85,7 @@ public class CollectionRowTransformer extends BaseRowTransformer {
 
         int rowNum = row.getPoiRow().getRowNum();
         Set keys = new HashSet( beans.keySet() );
-        for (int i = 0; i < row.getRowCollections().size(); i++) {
+        for (int i = 0, c = row.getRowCollections().size(); i < c; i++) {
             RowCollection rowCollection = (RowCollection) row.getRowCollections().get(i);
             if( !rowCollection.getCollectionProperty().getCollection().isEmpty() ){
                 Property collectionProperty = rowCollection.getCollectionProperty();
@@ -126,13 +126,13 @@ public class CollectionRowTransformer extends BaseRowTransformer {
             int minDependentRowNumber = row.getMinDependentRowNumber();
             int mainShiftNumber = 0;
             // create iterator for every row collection
-            for (int i = 0; i < row.getRowCollections().size(); i++) {
+            for (int i = 0, c = row.getRowCollections().size(); i < c; i++) {
                 RowCollection rowCollection = (RowCollection) row.getRowCollections().get(i);
                 rowCollection.createIterator( minDependentRowNumber );
             }
             // walk through all collection items, put them into bean context and invoke recursive processing of rows
             for(int k = 0; k < maxSizeCollection.getCollectionProperty().getCollection().size(); k++){
-                for (int i = 0; i < row.getRowCollections().size(); i++) {
+                for (int i = 0, c = row.getRowCollections().size(); i < c; i++) {
                     RowCollection rowCollection = (RowCollection) row.getRowCollections().get(i);
                     if( rowCollection.hasNextObject() ){
                         Object o = rowCollection.getNextObject();
@@ -149,7 +149,7 @@ public class CollectionRowTransformer extends BaseRowTransformer {
                 rowNum += shiftNumber;
             }
             // remove all processed collectionItems from bean map
-            for (int i = 0; i < row.getRowCollections().size(); i++) {
+            for (int i = 0, c = row.getRowCollections().size(); i < c; i++) {
                 RowCollection rowCollection = (RowCollection) row.getRowCollections().get(i);
                 beans.remove( rowCollection.getCollectionItemName() );
             }

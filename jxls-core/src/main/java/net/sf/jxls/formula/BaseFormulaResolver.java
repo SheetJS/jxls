@@ -23,7 +23,7 @@ public abstract class BaseFormulaResolver implements FormulaResolver{
     protected static final String regexCellDigitPart = "[a-zA-Z]+";
     protected String cellRangeSeparator = ":";
     static String formulaListRangeToken = "@";
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(BaseFormulaResolver.class);
 
     Set findRefCells(String formulaString) {
         Set refCells = new HashSet();
@@ -36,7 +36,7 @@ public abstract class BaseFormulaResolver implements FormulaResolver{
 
     String buildCommaSeparatedListOfCells(String refSheetName, List cells) {
         StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < cells.size() - 1; i++) {
+        for (int i = 0, c = cells.size() - 1; i < c; i++) {
             String cell = (String) cells.get(i);
             buf.append( getRefCellName(refSheetName, cell) );
             buf.append(",");
@@ -74,7 +74,7 @@ public abstract class BaseFormulaResolver implements FormulaResolver{
             String firstCellDigitPart = firstCell.split(regexCellDigitPart)[1];
             int cellNumber = Integer.parseInt( firstCellDigitPart );
             String nextCell, cellCharPart, cellDigitPart;
-            for (int i = 1; i < cells.size() && isColumnRange; i++) {
+            for (int i = 1, c = cells.size(); i < c && isColumnRange; i++) {
                 nextCell = (String) cells.get(i);
                 cellCharPart = nextCell.split( regexCellCharPart )[0];
                 cellDigitPart = nextCell.split( regexCellDigitPart )[1];
@@ -94,7 +94,7 @@ public abstract class BaseFormulaResolver implements FormulaResolver{
             String nextCell, cellDigitPart;
             CellReference cellRef = new CellReference( firstCell );
             int cellNumber = cellRef.getCol();
-            for (int i = 1; i < cells.size() && isRowRange; i++) {
+            for (int i = 1, c = cells.size(); i < c && isRowRange; i++) {
                 nextCell = (String) cells.get(i);
                 cellDigitPart = nextCell.split( regexCellDigitPart )[1];
                 cellRef = new CellReference( nextCell );

@@ -25,7 +25,6 @@ public class CellRef {
 
     List rangeFormulaParts = new ArrayList();
 
-
     private CellRef(String cellRef) {
         this.cellRef = cellRef;
         CellReference cellReference = new CellReference(cellRef);
@@ -39,7 +38,14 @@ public class CellRef {
         this.parentFormula = parentFormula;
     }
 
-
+    public CellRef(CellRef ref, FormulaPart parentFormula) {
+        this.cellRef = ref.cellRef;
+        this.parentFormula = parentFormula;
+        this.rowNum = ref.rowNum;
+        this.colNum = ref.colNum;
+        this.sheetName = ref.sheetName;
+        this.cellIndex = ref.cellIndex;
+    }
 
     public String getSheetName() {
         String name = sheetName;
@@ -88,7 +94,7 @@ public class CellRef {
         return (cellRef != null && cellRef.indexOf("!") >= 0);
     }
 
-    protected String cellRangeSeparator = ":";
+    protected static String cellRangeSeparator = ":";
 
     String detectCellRange(String refSheetName, List cells) {
         rangeFormulaParts.clear();
@@ -113,7 +119,7 @@ public class CellRef {
     }
 
     private void cutSheetRefFromCells(List cells) {
-        for (int i = 0; i < cells.size(); i++) {
+        for (int i = 0, c = cells.size(); i < c; i++) {
             String cell = (String) cells.get(i);
             cells.set(i, extractCellName(cell));
         }
@@ -121,7 +127,7 @@ public class CellRef {
 
     String buildCommaSeparatedListOfCells(String refSheetName, List cells) {
         StringBuilder listOfCellsBuilder = new StringBuilder();
-        for (int i = 0; i < cells.size() - 1; i++) {
+        for (int i = 0, c = cells.size() - 1; i < c; i++) {
             String cell = (String) cells.get(i);
             String refCellName = getRefCellName(refSheetName, cell);
             listOfCellsBuilder.append(refCellName);
@@ -151,7 +157,7 @@ public class CellRef {
             String firstCellDigitPart = firstCell.split(CellRef.regexCellDigitPart)[1];
             int cellNumber = Integer.parseInt(firstCellDigitPart);
             String nextCell, cellCharPart, cellDigitPart;
-            for (int i = 1; i < cells.size() && isColumnRange; i++) {
+            for (int i = 1, c = cells.size(); i < c && isColumnRange; i++) {
                 nextCell = (String) cells.get(i);
                 cellCharPart = nextCell.split(CellRef.regexCellCharPart)[0];
                 cellDigitPart = nextCell.split(CellRef.regexCellDigitPart)[1];
@@ -171,7 +177,7 @@ public class CellRef {
             String nextCell, cellDigitPart;
             CellReference cellReference = new CellReference(firstCell);
             int cellNumber = cellReference.getCol();
-            for (int i = 1; i < cells.size() && isRowRange; i++) {
+            for (int i = 1, c = cells.size(); i < c && isRowRange; i++) {
                 nextCell = (String) cells.get(i);
                 cellDigitPart = nextCell.split(CellRef.regexCellDigitPart)[1];
                 cellReference = new CellReference(nextCell);
@@ -232,5 +238,17 @@ public class CellRef {
 
     public String toString() {
         return cellRef;
+    }
+
+    private static class CellRefInfo {
+        private CellRefInfo(final short colNum, final int rowNum, final String sheetName) {
+            this.colNum = colNum;
+            this.rowNum = rowNum;
+            this.sheetName = sheetName;
+        }
+
+        private int rowNum;
+        private short colNum;
+        private String sheetName;
     }
 }

@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Leonid Vysochyn
  */
 public class TagBodyHelper {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(TagBodyHelper.class);
 
     public static int duplicateDown(Sheet sheet, Block block, int n) {
         if (n > 0) {
@@ -25,7 +25,7 @@ public class TagBodyHelper {
             int numberOfRows = block.getNumberOfRows() * n;
             Util.shiftRows(sheet, startRow, endRow, numberOfRows);
             for (int i = 0; i < n; i++) {
-                for (int j = 0; j < block.getNumberOfRows(); j++) {
+                for (int j = 0, c = block.getNumberOfRows(); j < c; j++) {
                     Row row = sheet.getRow(block.getStartRowNum() + j);
                     Row newRow = sheet.getRow(block.getEndRowNum() + block.getNumberOfRows() * i + 1 + j);
                     if (row != null) {
@@ -45,7 +45,7 @@ public class TagBodyHelper {
         if (n > 0) {
             Util.shiftRows(sheet, block.getEndRowNum() + 1, sheet.getLastRowNum(), block.getNumberOfRows() * n);
             for (int i = 0; i < n; i++) {
-                for (int j = 0; j < block.getNumberOfRows(); j++) {
+                for (int j = 0, c = block.getNumberOfRows(); j < c; j++) {
                     Row row = sheet.getRow(block.getStartRowNum() + j);
                     Row newRow = sheet.getRow(block.getEndRowNum() + block.getNumberOfRows() * i + 1 + j);
                     if (row != null) {
@@ -65,11 +65,11 @@ public class TagBodyHelper {
         if (n > 0) {
             Set mergedRegions = new HashSet();
             Util.shiftCellsRight(sheet, block.getStartRowNum(), block.getEndRowNum(),  (block.getEndCellNum() + 1),  (block.getNumberOfColumns() * n), true);
-            for (int rowNum = block.getStartRowNum(); rowNum <= block.getEndRowNum(); rowNum++) {
+            for (int rowNum = block.getStartRowNum(), c = block.getEndRowNum(); rowNum <= c; rowNum++) {
                 Row row = sheet.getRow(rowNum);
                 if (row != null) {
                     for (int k = 0; k < n; k++) {
-                        for (int cellNum = block.getStartCellNum(); cellNum <= block.getEndCellNum(); cellNum++) {
+                        for (int cellNum = block.getStartCellNum(), c2 = block.getEndCellNum(); cellNum <= c2; cellNum++) {
                             int destCellNum =  (block.getEndCellNum() + k * block.getNumberOfColumns() + cellNum - block.getStartCellNum() + 1);
                             Cell destCell = row.getCell(destCellNum);
                             Cell cell = row.getCell(cellNum);
@@ -102,17 +102,19 @@ public class TagBodyHelper {
 //    }
 
     public static void replaceProperty(Sheet sheet, Block block, String oldProperty, String newProperty) {
-        for (int i = block.getStartRowNum(); i <= block.getEndRowNum(); i++) {
+        for (int i = block.getStartRowNum(), c = block.getEndRowNum(); i <= c; i++) {
             Row row = sheet.getRow(i);
             replacePropertyInRow(row, oldProperty, newProperty);
         }
     }
 
     private static void replacePropertyInRow(Row row, String oldProperty, String newProperty) {
-        for (int j = row.getFirstCellNum(); j <= row.getLastCellNum(); j++) {
-            Cell cell = row.getCell(j);
-            replacePropertyInCell(cell, oldProperty, newProperty);
-        }
+         if (row.getFirstCellNum() >= 0 && row.getLastCellNum() >= 0) {
+              for (int j = row.getFirstCellNum(), c = row.getLastCellNum(); j <= c; j++) {
+                    Cell cell = row.getCell(j);
+                    replacePropertyInCell(cell, oldProperty, newProperty);
+              }
+         }
     }
 
     private static void replacePropertyInCell(Cell cell, String oldProperty, String newProperty) {
@@ -177,7 +179,7 @@ public class TagBodyHelper {
     }
 
     public static void removeBodyRows(Sheet sheet, Block block) {
-        for (int i = 0; i < block.getNumberOfRows(); i++) {
+        for (int i = 0, c = block.getNumberOfRows(); i < c; i++) {
             Row row = sheet.getRow(block.getStartRowNum() + i);
             removeMergedRegions(sheet, row);
             deleteRow(sheet, row);
@@ -186,17 +188,17 @@ public class TagBodyHelper {
     }
 
     private static void removeMergedRegions(Sheet sheet, Row row) {
-        if (row != null) {
+        if (row != null && row.getFirstCellNum() >= 0 && row.getLastCellNum() >= 0) {
             int i = row.getRowNum();
-            for (int j = row.getFirstCellNum(); j <= row.getLastCellNum(); j++) {
+            for (int j = row.getFirstCellNum(), c = row.getLastCellNum(); j <= c; j++) {
                 Util.removeMergedRegion(sheet, i, j);
             }
         }
     }
 
     static void clearRow(Row row) {
-        if (row != null) {
-            for (int i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++) {
+        if (row != null && row.getFirstCellNum() >= 0 && row.getLastCellNum() >= 0) {
+            for (int i = row.getFirstCellNum(), c = row.getLastCellNum(); i <= c; i++) {
                 Cell cell = row.getCell(i);
                 clearCell(cell);
             }
@@ -204,7 +206,7 @@ public class TagBodyHelper {
     }
 
     static void clearRowCells(Row row, int startCell, int endCell) {
-        if (row != null) {
+        if (row != null && startCell >= 0 && endCell >= 0) {
             for (int i = startCell; i <= endCell; i++) {
                 Cell cell = row.getCell(i);
                 if (cell != null) {
@@ -223,15 +225,15 @@ public class TagBodyHelper {
     }
 
     public static void adjustFormulas(Workbook hssfWorkbook, Sheet hssfSheet, Block body) {
-        for (int i = body.getStartRowNum(); i <= body.getEndRowNum(); i++) {
+        for (int i = body.getStartRowNum(), c = body.getEndRowNum(); i <= c; i++) {
             Row row = hssfSheet.getRow(i);
             adjustFormulas(row);
         }
     }
 
     private static void adjustFormulas(Row row) {
-        if (row != null) {
-            for (int i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++) {
+        if (row != null && row.getFirstCellNum() >= 0 && row.getLastCellNum() >= 0) {
+            for (int i = row.getFirstCellNum(), c = row.getLastCellNum(); i <= c; i++) {
                 Cell cell = row.getCell(i);
                 if (cell != null && cell.getCellType() == Cell.CELL_TYPE_STRING && cell.getRichStringCellValue().getString().matches("\\$\\[.*?\\]")) {
                     String cellValue = cell.getRichStringCellValue().getString();

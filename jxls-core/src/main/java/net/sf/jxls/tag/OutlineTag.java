@@ -12,7 +12,7 @@ import org.apache.poi.ss.usermodel.Sheet;
  * @author Leonid Vysochyn
  */
 public class OutlineTag extends BaseTag{
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(OutlineTag.class);
 
     public static final String TAG_NAME = "outline";
 

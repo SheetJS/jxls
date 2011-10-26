@@ -128,7 +128,7 @@ public class SheetTransformationControllerImpl implements SheetTransformationCon
         DuplicateTransformation duplicateTransformation = new DuplicateTransformation(duplicateBlock, rowCollection.getCollectionProperty().getCollection().size()-1);
         transformations.add( duplicateTransformation );
         List cells = rowCollection.getRowCollectionCells();
-        for (int i = 0; i < cells.size(); i++) {
+        for (int i = 0, c=cells.size(); i < c; i++) {
             Cell cell = (Cell) cells.get(i);
             if( cell!= null && cell.getPoiCell() != null){
                 shiftBlock.addAffectedColumn( cell.getPoiCell().getColumnIndex() );

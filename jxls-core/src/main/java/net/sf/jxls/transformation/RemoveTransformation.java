@@ -18,14 +18,14 @@ public class RemoveTransformation extends BlockTransformation {
     }
 
     public Block getBlockAfterTransformation() {
-        return null;  
+        return null;
     }
 
 
     public List transformCell(Point p) {
         List cells = null;
         if( !block.contains( p ) ){
-            cells = new ArrayList();
+            cells = new ArrayList(1);
             cells.add(p);
         }
         return cells;
@@ -40,7 +40,7 @@ public class RemoveTransformation extends BlockTransformation {
                 cells.add( cellRef.toString() );
             }
         }else{
-            cells = new ArrayList();
+            cells = new ArrayList(1);
             cells.add( cellRef.toString() );
         }
         return cells;

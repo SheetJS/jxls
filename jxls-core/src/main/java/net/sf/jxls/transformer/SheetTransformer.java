@@ -19,7 +19,7 @@ import java.util.*;
  * @author Leonid Vysochyn
  */
 public class SheetTransformer {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(SheetTransformer.class);
 
     /**
      * {@link java.util.Set} of all collections to outline
@@ -98,7 +98,7 @@ public class SheetTransformer {
                             }
                         }
                         // process other transformers
-                        for (int j = 1; j < rowTransformers.size(); j++) {
+                        for (int j = 1, c2=rowTransformers.size(); j < c2; j++) {
                             rowTransformer = (RowTransformer) rowTransformers.get(j);
                             if (rowTransformer != null) {
                                 Block transformationBlock = rowTransformer.getTransformationBlock();
@@ -192,46 +192,48 @@ public class SheetTransformer {
         SimpleRowTransformer simpleRowTransformer = new SimpleRowTransformer(row, cellProcessors, configuration);
 //        transformations.add( simpleRowTransformer );
         boolean hasCollections = false;
-		
-        for (int j = startCell; j <= endCell && j>-1; j++) {
-            org.apache.poi.ss.usermodel.Cell hssfCell = hssfRow.getCell(j);
-            if (configuration.getCellKeyName() != null) {
-            	beans.put(configuration.getCellKeyName(), hssfCell);
-            }
 
-            CellParser cellParser = new CellParser(hssfCell, row, configuration);
-            Cell cell = cellParser.parseCell(beans);
-            if (cell.getTag() == null) {
-                if (cell.getLabel() != null && cell.getLabel().length() > 0) {
-                    sheet.addNamedCell(cell.getLabel(), cell);
-                }
-                RowCollection rowCollection = row.addCell(cell);
-                if (cell.getCollectionProperty() != null) {
-                    hasCollections = true;
-                    if (rowTransformer == null) {
-                        rowTransformer = new CollectionRowTransformer(row, fixedSizeCollections, cellProcessors, rowProcessors, configuration);
-                        transformers.add(rowTransformer);
-
+          if (startCell >= 0 && endCell >= 0) {
+              for (int j = startCell; j <= endCell && j>-1; j++) {
+                    org.apache.poi.ss.usermodel.Cell hssfCell = hssfRow.getCell(j);
+                    if (configuration.getCellKeyName() != null) {
+                        beans.put(configuration.getCellKeyName(), hssfCell);
                     }
-                    ((CollectionRowTransformer) rowTransformer).addRowCollection(rowCollection);
 
-//                    rowTransformer
+                    CellParser cellParser = new CellParser(hssfCell, row, configuration);
+                    Cell cell = cellParser.parseCell(beans);
+                    if (cell.getTag() == null) {
+                         if (cell.getLabel() != null && cell.getLabel().length() > 0) {
+                              sheet.addNamedCell(cell.getLabel(), cell);
+                         }
+                         RowCollection rowCollection = row.addCell(cell);
+                         if (cell.getCollectionProperty() != null) {
+                              hasCollections = true;
+                              if (rowTransformer == null) {
+                                    rowTransformer = new CollectionRowTransformer(row, fixedSizeCollections, cellProcessors, rowProcessors, configuration);
+                                    transformers.add(rowTransformer);
 
-                    ListRange listRange = new ListRange(row.getPoiRow().getRowNum(), row.getPoiRow().getRowNum() + rowCollection.getCollectionProperty().getCollection().size() - 1, j);
+                              }
+                              ((CollectionRowTransformer) rowTransformer).addRowCollection(rowCollection);
 
-                    addListRange(sheet, cell.getCollectionProperty().getProperty(), listRange);
-                } else {
-                    if (!cell.isEmpty()) {
-                        simpleRowTransformer.addCell(cell);
+    //                    rowTransformer
+
+                              ListRange listRange = new ListRange(row.getPoiRow().getRowNum(), row.getPoiRow().getRowNum() + rowCollection.getCollectionProperty().getCollection().size() - 1, j);
+
+                              addListRange(sheet, cell.getCollectionProperty().getProperty(), listRange);
+                         } else {
+                              if (!cell.isEmpty()) {
+                                    simpleRowTransformer.addCell(cell);
+                              }
+                         }
+                    } else {
+                         rowTransformer = new TagRowTransformer(row, cell);
+                         Block tagBody = cell.getTag().getTagContext().getTagBody();
+                         j += tagBody.getNumberOfColumns() - 1;
+                         transformers.add(rowTransformer);
                     }
-                }
-            } else {
-                rowTransformer = new TagRowTransformer(row, cell);
-                Block tagBody = cell.getTag().getTagContext().getTagBody();
-                j += tagBody.getNumberOfColumns() - 1;
-                transformers.add(rowTransformer);
-            }
-        }
+              }
+          }
         if (!hasCollections && simpleRowTransformer.getCells().size() > 0) {
             transformers.add(simpleRowTransformer);
         }
@@ -270,8 +272,8 @@ public class SheetTransformer {
 
 
     List parseRow(Sheet sheet, org.apache.poi.ss.usermodel.Row hssfRow, Map beans) {
-        List transformers = parseCells(sheet, hssfRow, hssfRow.getFirstCellNum(), hssfRow.getLastCellNum(), beans);
-        return transformers;
+          List transformers = parseCells(sheet, hssfRow, hssfRow.getFirstCellNum(), hssfRow.getLastCellNum(), beans);
+          return transformers;
     }
 
 
@@ -300,7 +302,7 @@ public class SheetTransformer {
      * @param row   - {@link Row} object with row information
      */
     private void applyRowProcessors(Sheet sheet, Row row) {
-        for (int i = 0; i < rowProcessors.size(); i++) {
+        for (int i = 0, c=rowProcessors.size(); i < c; i++) {
             RowProcessor rowProcessor = (RowProcessor) rowProcessors.get(i);
             rowProcessor.processRow(row, sheet.getNamedCells());
         }

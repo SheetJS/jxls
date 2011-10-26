@@ -41,7 +41,7 @@ public class SheetHelper {
             Row row = new Row(sheet, hssfRow);
             int endNum = (int)Math.min( hssfRow.getLastCellNum(), endCellNum);
             for(int i = (int)Math.max(hssfRow.getFirstCellNum(), startCellNum); i <= endNum; i++){
-                Cell hssfCell = hssfRow.getCell( i );
+                Cell hssfCell = i<0?null:hssfRow.getCell( i );
                 if( hssfCell!=null ){
                     CellParser cellParser = new CellParser(hssfCell, row, sheet.getConfiguration());
                     if( cellParser.parseCellFormula() != null && !cellParser.getCell().getFormula().isInline() ){
@@ -63,7 +63,7 @@ public class SheetHelper {
             Formula formula;
             Cell hssfCell;
             for(int i = hssfRow.getFirstCellNum(); i <= hssfRow.getLastCellNum() && i > -1; i++){
-                hssfCell = hssfRow.getCell( i );
+                hssfCell = i<0?null:hssfRow.getCell( i );
                 if( hssfCell!=null ){
                     cellParser = new CellParser(hssfCell, row, sheet.getConfiguration());
                     if( cellParser.parseCellFormula() != null && !cellParser.getCell().getFormula().isInline() ){

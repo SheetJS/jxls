@@ -28,6 +28,7 @@ public class Cell {
     private String collectionName;
 
     private String hssfCellValue;
+    private boolean empty;
     private String stringCellValue;
     private String metaInfo;
 
@@ -113,11 +114,13 @@ public class Cell {
 
     public void setPoiCell(org.apache.poi.ss.usermodel.Cell hssfCell) {
         this.hssfCell = hssfCell;
+        figureEmpty();
     }
 
     public void replaceCellWithNewShiftedBy(int shift){
         org.apache.poi.ss.usermodel.Cell newCell = row.getPoiRow().getCell(hssfCell.getColumnIndex() + shift);
         this.hssfCell = newCell;
+        figureEmpty();
     }
 
     public String toCellName() {
@@ -150,8 +153,12 @@ public class Cell {
         return metaInfo;
     }
 
+    private void figureEmpty() {
+        empty = getPoiCellValue() == null || getPoiCellValue().length() == 0 || getPoiCell().getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK;
+    }
+
     public boolean isEmpty() {
-        return getPoiCellValue() == null || getPoiCellValue().length() == 0 || getPoiCell().getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK;
+        return empty;
     }
 
     public boolean isNull() {
@@ -172,6 +179,7 @@ public class Cell {
 
     public void setPoiCellValue(String hssfCellValue) {
         this.hssfCellValue = hssfCellValue;
+        figureEmpty();
     }
 
     public void setStringCellValue(String stringCellValue) {

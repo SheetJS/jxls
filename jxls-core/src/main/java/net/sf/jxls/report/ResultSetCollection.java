@@ -16,7 +16,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Leonid Vysochyn
  */
 public class ResultSetCollection extends AbstractCollection {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(ResultSetCollection.class);
 
     ResultSet resultSet;
     ResultSetDynaClass rsDynaClass;

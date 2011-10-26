@@ -1,5 +1,17 @@
 package net.sf.jxls.formula;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.sf.jxls.parser.Cell;
 import net.sf.jxls.transformer.Sheet;
 import org.apache.commons.logging.Log;
@@ -16,6 +28,7 @@ import java.util.regex.Pattern;
  */
 public class Formula {
     protected static final Log log = LogFactory.getLog(Formula.class);
+    private static final Map<String, FormulaInfo> cache = new HashMap<String, FormulaInfo>();
 
     private String formula;
     private Integer rowNum;
@@ -27,7 +40,11 @@ public class Formula {
 
     private Set cellRefs = new HashSet();
 
-    private List formulaParts = new ArrayList();
+    private List formulaParts = new LinkedList();
+
+    public static void clearCache() {
+        cache.clear();
+    }
 
     public Sheet getSheet() {
         return sheet;
@@ -39,7 +56,19 @@ public class Formula {
 
     public Formula(String formula) {
         this.formula = formula;
-        parseFormula();
+        FormulaInfo fi = cache.get(formula);
+        if (fi == null) {
+            parseFormula();
+            updateCellRefs();
+            cache.put(formula, new FormulaInfo(this));
+        }
+        else {
+            for (int i = 0, c = fi.formulaParts.size(); i < c; i++) {
+              FormulaPart formulaPart = (FormulaPart) fi.formulaParts.get(i);
+              formulaParts.add( new FormulaPart( formulaPart, this ) );
+                cellRefs = fi.cellRefs;
+          }
+        }
     }
 
     public Formula() {
@@ -48,7 +77,7 @@ public class Formula {
     public Formula(Formula f){
         this.formula = f.formula;
         this.sheet = f.getSheet();
-        for (int i = 0; i < f.formulaParts.size(); i++) {
+        for (int i = 0, c = f.formulaParts.size(); i < c; i++) {
             FormulaPart formulaPart = (FormulaPart) f.formulaParts.get(i);
             formulaParts.add( new FormulaPart( formulaPart ) );
         }
@@ -151,13 +180,13 @@ public class Formula {
         Set refCells = new HashSet();
         for (Iterator iterator = formulaParts.iterator(); iterator.hasNext();) {
             FormulaPart formulaPart = (FormulaPart) iterator.next();
-            refCells.addAll( formulaPart.getRefCells() );
+            refCells.addAll(formulaPart.getRefCells());
         }
         return refCells;
     }
 
-    public void parseFormula(){
-        formulaParts.clear();
+    private void parseFormula(){
+//        formulaParts.clear();
         Matcher formulaPartMatcher = regexFormulaPartPattern.matcher( formula );
         int end = 0;
         while( formulaPartMatcher.find() ){
@@ -193,19 +222,34 @@ public class Formula {
     }
 
     public void removeCellRefs( Set cellRefsToRemove ){
-        for (int i = 0; i < formulaParts.size(); i++) {
+        for (int i = 0, c = formulaParts.size(); i < c; i++) {
             FormulaPart formulaPart = (FormulaPart) formulaParts.get(i);
             formulaPart.removeCellRefs( cellRefsToRemove );
         }
         updateCellRefs();
     }
 
-    public void updateReplacedRefCellsCollection(){
+    public boolean updateReplacedRefCellsCollection(){
+        boolean ret = false;
         for (Iterator iterator = formulaParts.iterator(); iterator.hasNext();) {
             FormulaPart formulaPart = (FormulaPart) iterator.next();
-            formulaPart.updateReplacedRefCellsCollection( );
+            if (formulaPart.updateReplacedRefCellsCollection( )) ret = true;
         }
-
+        return ret;
     }
 
+    private static class FormulaInfo {
+        private FormulaInfo(final Formula formula) {
+            this.formulaParts = new LinkedList();
+            this.cellRefs = new HashSet();
+            for (int i=0,c=formula.formulaParts.size(); i<c; i++) {
+                FormulaPart newpart = new FormulaPart((FormulaPart)formula.formulaParts.get(i));
+                this.formulaParts.add(newpart);
+                this.cellRefs.addAll(newpart.cellRefs);
+            }
+        }
+
+        private List formulaParts;
+        private Set cellRefs;
+    }
 }

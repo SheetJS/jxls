@@ -25,10 +25,12 @@ public class Configuration {
     private String startFormulaPartToken = "{";
     private String endFormulaPartToken = "}";
 
-    String tagPrefix = "jx";
-    String forTagName = "forEach";
-    String forTagItems = "items";
-    String forTagVar = "var";
+    private static final String tagPrefix = "jx:";
+    private static final String tagPrefixWithBrace = "<jx:";
+    private static final String forTagName = "forEach";
+    private static final String forTagItems = "items";
+    private static final String forTagVar = "var";
+
     boolean isUTF16 = false;
     private HashMap tagLibs = new HashMap();
     private Digester digester;
@@ -40,8 +42,8 @@ public class Configuration {
     String cellKeyName = "hssfCell";
 
     private String excludeSheetProcessingMark = "#Exclude";
-	boolean removeExcludeSheetProcessingMark = false;
-	Set excludeSheets = new HashSet();
+    boolean removeExcludeSheetProcessingMark = false;
+    Set excludeSheets = new HashSet();
 
     public Configuration() {
         registerTagLib(new JxTaglib(), "jx");
@@ -81,7 +83,7 @@ public class Configuration {
     public void setJexlInnerCollectionsAccess(boolean jexlInnerCollectionsAccess) {
         this.jexlInnerCollectionsAccess = jexlInnerCollectionsAccess;
     }
-    
+
     public boolean isUTF16() {
         return isUTF16;
     }
@@ -122,12 +124,13 @@ public class Configuration {
     public void setCellKeyName(String cellKeyName) {
         this.cellKeyName = cellKeyName;
     }
-    
+
     public String getTagPrefix() {
-        if( tagPrefix.length()>0 ){
-            return tagPrefix + ":";
-        }
         return tagPrefix;
+    }
+
+    public String getTagPrefixWithBrace() {
+        return tagPrefixWithBrace;
     }
 
     public String getForTagName() {
@@ -206,50 +209,50 @@ public class Configuration {
     public void setExcludeSheetProcessingMark(String excludeSheetProcessingMark) {
         this.excludeSheetProcessingMark = excludeSheetProcessingMark;
     }
-	
-	public boolean isRemoveExcludeSheetProcessingMark() {
-		return removeExcludeSheetProcessingMark;
-	}
-	
-	public void setRemoveExcludeSheetProcessingMark(boolean removeExcludeSheetProcessingMark) {
-		this.removeExcludeSheetProcessingMark = removeExcludeSheetProcessingMark;
-	}	
-    
+
+    public boolean isRemoveExcludeSheetProcessingMark() {
+        return removeExcludeSheetProcessingMark;
+    }
+
+    public void setRemoveExcludeSheetProcessingMark(boolean removeExcludeSheetProcessingMark) {
+        this.removeExcludeSheetProcessingMark = removeExcludeSheetProcessingMark;
+    }
+
     public void registerTagLib(TagLib tagLib, String namespace) {
-        
+
         if (this.tagLibs.containsKey(namespace)) {
             throw new RuntimeException("Duplicate tag-lib namespace: " + namespace);
         }
-        
+
         this.tagLibs.put(namespace, tagLib);
     }
-    
+
     public Digester getDigester() {
-        
+
         synchronized (this) {
             if (digester == null) {
                 initDigester();
             }
         }
-        
+
         return digester;
     }
-    
+
     private void initDigester() {
         digester = new Digester();
         digester.setNamespaceAware(true);
         digester.setValidating(false);
-        
+
         StringBuffer sb = new StringBuffer();
         sb.append("<jxls ");
         boolean firstTime = true;
-        
+
         Map.Entry entry = null;
-        
+
         for (Iterator itr = tagLibs.entrySet().iterator(); itr.hasNext();) {
-            
+
             entry = (Map.Entry) itr.next();
-            
+
             String namespace = (String) entry.getKey();
             String namespaceURI = Configuration.NAMESPACE_URI + "/" + namespace;
             digester.setRuleNamespaceURI(namespaceURI);
@@ -264,39 +267,39 @@ public class Configuration {
             sb.append("=\"");
             sb.append(namespaceURI);
             sb.append("\"");
-            
+
             TagLib tagLib = (TagLib) entry.getValue();
             Map.Entry tagEntry = null;
             for (Iterator itr2 = tagLib.getTags().entrySet().iterator(); itr2.hasNext();) {
                 tagEntry = (Map.Entry) itr2.next();
                 digester.addObjectCreate(Configuration.JXLS_ROOT_TAG + "/" + tagEntry.getKey(), (String) tagEntry.getValue());
-                digester.addSetProperties(Configuration.JXLS_ROOT_TAG + "/" + tagEntry.getKey());                    
+                digester.addSetProperties(Configuration.JXLS_ROOT_TAG + "/" + tagEntry.getKey());
             }
         }
-        
+
         sb.append(">");
         this.jxlsRoot = sb.toString();
     }
-    
+
     public String getJXLSRoot() {
-        
+
         synchronized(this) {
             if (jxlsRoot == null) {
                 initDigester();
             }
         }
-        
+
         return jxlsRoot;
     }
-	
-	public Set getExcludeSheets() {
-		return this.excludeSheets;
-	}
-	
-	public void addExcludeSheet(String name) {
-		this.excludeSheets.add(name);
-	}
-    
+
+    public Set getExcludeSheets() {
+        return this.excludeSheets;
+    }
+
+    public void addExcludeSheet(String name) {
+       this.excludeSheets.add(name);
+    }
+
     public String getJXLSRootEnd() {
         return "</jxls>";
     }
