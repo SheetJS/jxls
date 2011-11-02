@@ -1,20 +1,11 @@
 package net.sf.jxls.formula;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.HashMap;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Represents formula part
@@ -30,8 +21,8 @@ public class FormulaPart {
     String formulaPartString;
     List parts = new LinkedList();
     List cellRefs = new LinkedList();
-    List cellRefsToRemove = new LinkedList();
-    List cellRefsToAdd = new LinkedList();
+    List cellRefsToRemove = new ArrayList();
+    List cellRefsToAdd = new ArrayList();
 
 
     Integer defaultValue = null;

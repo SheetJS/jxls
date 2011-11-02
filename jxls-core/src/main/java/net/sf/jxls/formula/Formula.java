@@ -1,17 +1,5 @@
 package net.sf.jxls.formula;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.sf.jxls.parser.Cell;
 import net.sf.jxls.transformer.Sheet;
 import org.apache.commons.logging.Log;
@@ -40,7 +28,7 @@ public class Formula {
 
     private Set cellRefs = new HashSet();
 
-    private List formulaParts = new LinkedList();
+    private List formulaParts = new ArrayList();
 
     public static void clearCache() {
         cache.clear();
