@@ -1,11 +1,5 @@
 package net.sf.jxls.tag;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.parser.Expression;
 import net.sf.jxls.transformation.ResultTransformation;
@@ -14,10 +8,13 @@ import net.sf.jxls.transformer.SheetTransformer;
 import net.sf.jxls.util.GroupData;
 import net.sf.jxls.util.ReportUtil;
 import net.sf.jxls.util.Util;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.Row;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * jx:forEach tag implementation
@@ -135,8 +132,10 @@ public class ForEachTag extends BaseTag {
                     Object obj = expr.evaluate();
                     if (obj instanceof Collection) {
                         itemsCollection = (Collection) obj;
+                    } else if (obj.getClass().isArray()){
+                    	itemsCollection = Arrays.asList( this.toObjectArray( obj ) );
                     } else {
-                        throw new RuntimeException("items property in forEach tag must be a collection. " + items + " is not ");
+                        throw new RuntimeException("items property in forEach tag must be either a collection or an array. " + items + " is not ");
                     }
                 } catch (Exception e) {
                     throw new RuntimeException("Can't parse an expression " + items, e);
@@ -149,7 +148,29 @@ public class ForEachTag extends BaseTag {
             log.error("Collection key is null");
         }
     }
+    
+    private Object[] toObjectArray( Object array ) {
+    	if ( this.isPrimitiveArray( array ) ) {
+	        int arrayLength = Array.getLength( array );
+	        Object[] result = (Object[]) Array.newInstance(Object.class, arrayLength);
+	        for (int i = 0; i < arrayLength; i++) {
+	            Array.set(result, i, Array.get(array, i));
+	        }
+	        return result;
+    	}
+    	return (Object[])array;
+    }
 
+    private boolean isPrimitiveArray( Object obj ) {
+    	return obj instanceof boolean[]
+    			|| obj instanceof byte[]
+    			|| obj instanceof char[]
+    			|| obj instanceof short[]
+    			|| obj instanceof int[]
+    			|| obj instanceof long[]
+    			|| obj instanceof float[]
+    			|| obj instanceof double[];
+    }
 
     public ResultTransformation process(SheetTransformer sheetTransformer) {
         if (log.isDebugEnabled()) {

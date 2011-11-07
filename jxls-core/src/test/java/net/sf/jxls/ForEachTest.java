@@ -63,6 +63,9 @@ public class ForEachTest extends TestCase {
     public static final String outTagOneRowXLS = "/templates/outtaginonerow.xls";
     public static final String outTagOneRowDestXLS = "/templates/outtaginonerow_output.xls";
 
+    public static final String arrayXLS = "/templates/array.xls";
+    public static final String arrayDestXLS = "target/array_output.xls";
+
     List itEmployees = new ArrayList();
 
     String[] itEmployeeNames = new String[] {"Elsa", "Oleg", "Neil", "Maria", "John"};
@@ -728,6 +731,22 @@ public class ForEachTest extends TestCase {
         count.setStar5(123);
         feedbackCountForDay.add(count);
         beans.put("feedbackCounts", feedbackCountForDay);
+    }
+
+    public void testArrayProcessing() throws IOException, ParsePropertyException, InvalidFormatException {
+        Map beans = new HashMap();
+        int[] arr = {1,2,3};
+        beans.put( "arr", arr  );
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(arrayXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
+        CellsChecker checker = new CellsChecker();
+        checker.checkCell( resultSheet, 0, 0, 1);
+        checker.checkCell( resultSheet, 1, 0, 2);
+        checker.checkCell( resultSheet, 2, 0, 3);
+        saveWorkbook(resultWorkbook, arrayDestXLS);
     }
 
 }

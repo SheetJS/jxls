@@ -89,6 +89,21 @@ public class CellsChecker extends Assert {
         }
     }
 
+    void checkCell(Sheet sheet, int rowNum, int cellNum, Object value){
+        Row row  = sheet.getRow(rowNum);
+        if( row != null){
+            Cell cell = row.getCell(cellNum);
+            if( cell != null ){
+                Object cellValue = getCellValue(cell, value);
+                assertEquals("Result cell values incorrect in row=" + row + ", cell=" + cellNum, value, cellValue);
+            }else{
+                fail("Cell is null");
+            }
+        }else{
+            fail("Row is null");
+        }
+    }
+
     private void checkEmptyCells(Row destRow, short fromCellNum, short toCellNum) {
         if (destRow != null) {
             for (short i = fromCellNum; i <= toCellNum; i++) {
