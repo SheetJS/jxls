@@ -42,13 +42,15 @@ public class Formula {
         this.sheet = sheet;
     }
 
-    public Formula(String formula) {
+    public Formula(String formula, Sheet sheet) {
         this.formula = formula;
-        FormulaInfo fi = cache.get(formula);
+        this.sheet = sheet;
+        String cacheKey = (sheet!=null ? sheet.getSheetName() : "") + "!" + formula;
+        FormulaInfo fi = cache.get(cacheKey);
         if (fi == null) {
             parseFormula();
             updateCellRefs();
-            cache.put(formula, new FormulaInfo(this));
+            cache.put(cacheKey, new FormulaInfo(this));
         }
         else {
             for (int i = 0, c = fi.formulaParts.size(); i < c; i++) {

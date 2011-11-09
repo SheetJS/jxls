@@ -136,6 +136,13 @@ public class CellsChecker extends Assert {
         }
     }
 
+    void checkFormulaCell(Sheet sheet, int rowNum, int cellNum, String formula){
+        Row row = sheet.getRow(rowNum);
+        Cell cell = row.getCell(cellNum);
+        assertEquals("Result Cell is not a formula", cell.getCellType(), Cell.CELL_TYPE_FORMULA);
+        assertEquals("Formula is incorrect", formula, cell.getCellFormula());
+    }
+
     void checkFormulaCell(Sheet srcSheet, int srcRowNum, Sheet destSheet, int destRowNum, short cellNum, String formula) {
         Row srcRow = srcSheet.getRow(srcRowNum);
         Cell srcCell = srcRow.getCell(cellNum);

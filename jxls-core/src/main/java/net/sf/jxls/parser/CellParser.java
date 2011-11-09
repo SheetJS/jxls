@@ -79,7 +79,7 @@ public class CellParser {
         final String poiCellValue = cell.getPoiCellValue();
         int i = poiCellValue.lastIndexOf(configuration.getEndFormulaToken());
         String expr = poiCellValue.substring(2, i);
-        cell.setFormula(new Formula(expr));
+        cell.setFormula(new Formula(expr, cell.getRow().getSheet()));
         cell.getFormula().setRowNum(cell.getRow().getPoiRow().getRowNum());
         cell.getFormula().setCellNum(cell.getPoiCell().getColumnIndex());
         if (i + 1 < poiCellValue.length()) {
