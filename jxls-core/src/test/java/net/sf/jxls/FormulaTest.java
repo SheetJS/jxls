@@ -22,6 +22,22 @@ public class FormulaTest extends BaseTest {
     public static final String formula4XLS = "/templates/formula4.xls";
     public static final String formula4DestXLS = "target/formula4_output.xls";
 
+    public static final String formulaOneRowXLS = "/templates/formulaOneRow.xlsx";
+    public static final String formulaOneRowDestXLS = "target/formulaOneRow_output.xlsx";
+
+    public void testFormulaOneRowForEach() throws IOException, InvalidFormatException {
+        Map values = new HashMap();
+        values.put("list", new Double[]{10.5d, 20d, 30d, 40.5d});
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(formulaOneRowXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        Workbook resultWorkbook = transformer.transformXLS(is, values);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
+        CellsChecker checker = new CellsChecker();
+        checker.checkFormulaCell(resultSheet, 0, 4, "SUM(A1:D1)");
+        is.close();
+        saveWorkbook(resultWorkbook, formulaOneRowDestXLS);
+    }
+
 
     public void testFindRefCells(){
         String formulaValue = "SUM(a1:a10) - D12 + C5 * D10 - 4 + MULT ( B2 : B90 )";
