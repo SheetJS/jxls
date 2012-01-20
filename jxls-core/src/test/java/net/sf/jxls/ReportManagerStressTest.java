@@ -23,7 +23,7 @@ public class ReportManagerStressTest extends TestCase {
     protected final Log log = LogFactory.getLog(getClass());
 
     public static final String stressXLS = "/templates/stress.xls";
-    public static final String stressDestXLS = "stress_output.xls";
+    public static final String stressDestXLS = "target/stress_output.xls";
 
     public static final String CREATE_EMPLOYEE_TABLE = "CREATE TABLE employee (\n" +
             "  name varchar(20) default NULL,\n" +
