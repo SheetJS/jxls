@@ -45,8 +45,8 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
 
     public boolean isCheckSuccessful(Cell cell) {
         Object obj = getCellValue(cell, value);
-        if (value == null) {
-            return obj == null;
+        if (value == null || value.toString().trim().length()==0) {
+            return obj == null || obj.toString().trim().length()==0;
         } else {
             return value.equals(obj);
         }
@@ -62,6 +62,9 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
     }
 
     private Object getCellValue(Cell cell, Object obj) {
+        if(cell == null ){
+            return null;
+        }
         Object value = null;
         if (obj instanceof String) {
             value = readStringValue(cell);
@@ -93,7 +96,6 @@ public class OffsetCellCheckImpl implements OffsetCellCheck {
 
     private String readStringValue(Cell cell) {
         String value = null;
-        if (cell == null) return null; // ZJ
         switch (cell.getCellType()) {
             case Cell.CELL_TYPE_STRING:
                 value = cell.getRichStringCellValue().getString().trim();

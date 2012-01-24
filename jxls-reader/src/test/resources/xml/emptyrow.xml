@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<workbook>
+    <worksheet name="Sheet1" >
+        <section startRow="0" endRow="1"/>
+        <loop startRow="2" endRow="2" items="rules" var="rule" varType="net.sf.jxls.reader.sample.ExportedRule">
+            <section startRow="2" endRow="2">
+                <mapping row="2" col="1">rule.code</mapping>
+                <mapping row="2" col="3">rule.active</mapping>
+                <mapping row="2" col="4">rule.valid</mapping>
+                <mapping row="2" col="5">rule.creationDate</mapping>
+                <mapping row="2" col="6">rule.lastModificationDate</mapping>
+                <mapping row="2" col="7">rule.principal</mapping>
+                <mapping row="2" col="8">rule.name</mapping>
+                <mapping row="2" col="9">rule.description</mapping>
+                <mapping row="2" col="10">rule.strategyCode</mapping>
+                <mapping row="2" col="11">rule.strategyName</mapping>
+                <mapping row="2" col="13">rule.portfolio</mapping>
+                <mapping row="2" col="14">rule.operators</mapping>
+                <mapping row="2" col="15">rule.regions</mapping>
+                <mapping row="2" col="16">rule.corridors</mapping>
+                <mapping row="2" col="17">rule.services</mapping>
+                <mapping row="2" col="18">rule.routes</mapping>
+                <mapping row="2" col="19">rule.markets</mapping>
+                <mapping row="2" col="20">rule.numbers</mapping>
+                <mapping row="2" col="21">rule.stationFrom</mapping>
+                <mapping row="2" col="22">rule.stationTo</mapping>
+                <mapping row="2" col="24">rule.daysOfWeek</mapping>
+                <mapping row="2" col="25">rule.effectiveDateFrom</mapping>
+                <mapping row="2" col="26">rule.effectiveDateTo</mapping>
+                <mapping row="2" col="27">rule.departureDateFrom</mapping>
+                <mapping row="2" col="28">rule.departureDateTo</mapping>
+                <mapping row="2" col="29">rule.departureTimeFrom</mapping>
+                <mapping row="2" col="30">rule.departureTimeTo</mapping>
+                <mapping row="2" col="31">rule.dbdFrom</mapping>
+                <mapping row="2" col="32">rule.dbdTo</mapping>
+            </section>
+            <loopbreakcondition>
+                <rowcheck offset="0">
+                    <cellcheck offset="10"/>
+                </rowcheck>
+            </loopbreakcondition>
+        </loop>
+    </worksheet>
+</workbook>

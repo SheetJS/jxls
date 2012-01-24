@@ -27,6 +27,7 @@ public class ErrorHandlingTest extends TestCase {
         InputStream inputXLS = new BufferedInputStream(getClass().getResourceAsStream(data1XLS));
         InputStream inputXML = new BufferedInputStream(getClass().getResourceAsStream(xmlConfig1));
         XLSReader reader = ReaderBuilder.buildFromXML( inputXML );
+        ReaderConfig.getInstance().setSkipErrors( false );
         Map beans = new HashMap();
         SimpleBean bean = new SimpleBean();
         beans.put( "bean", bean);
