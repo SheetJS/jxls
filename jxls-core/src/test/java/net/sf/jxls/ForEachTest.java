@@ -66,6 +66,10 @@ public class ForEachTest extends TestCase {
     public static final String arrayXLS = "/templates/array.xls";
     public static final String arrayDestXLS = "target/array_output.xls";
 
+
+    public static final String varStatusXLS = "/templates/varstatus.xls";
+    public static final String varStatusDestXLS = "target/varstatus_output.xls";
+
     List itEmployees = new ArrayList();
 
     String[] itEmployeeNames = new String[] {"Elsa", "Oleg", "Neil", "Maria", "John"};
@@ -125,6 +129,26 @@ public class ForEachTest extends TestCase {
             notes.add("Note " + i + " for " + name);
         }
         return notes;
+    }
+
+
+    public void testVarStatusAttrInForEach() throws IOException, ParsePropertyException, InvalidFormatException {
+        Map beans = new HashMap();
+        beans.put("employees", itEmployees);
+        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(varStatusXLS));
+        XLSTransformer transformer = new XLSTransformer();
+        Workbook resultWorkbook = transformer.transformXLS(is, beans);
+        is.close();
+        is = new BufferedInputStream(getClass().getResourceAsStream(varStatusXLS));
+        Workbook sourceWorkbook = WorkbookFactory.create(is);
+
+        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
+        Sheet resultSheet = resultWorkbook.getSheetAt(0);
+        Map props = new HashMap();
+        CellsChecker checker = new CellsChecker(props);
+        checker.checkListCells(sourceSheet, 3, resultSheet, 2, (short) 0, new Object[]{new Integer(0), new Integer(1), new Integer(2), new Integer(3), new Integer(4)});
+        is.close();
+        saveWorkbook(resultWorkbook, varStatusDestXLS);
     }
 
 

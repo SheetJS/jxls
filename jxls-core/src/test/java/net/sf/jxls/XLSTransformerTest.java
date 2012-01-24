@@ -1,43 +1,19 @@
 package net.sf.jxls;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import junit.framework.TestCase;
-import net.sf.jxls.bean.Bean;
-import net.sf.jxls.bean.BeanWithList;
-import net.sf.jxls.bean.Column;
-import net.sf.jxls.bean.Department;
-import net.sf.jxls.bean.Employee;
-import net.sf.jxls.bean.Item;
-import net.sf.jxls.bean.MyBean;
-import net.sf.jxls.bean.SimpleBean;
-import net.sf.jxls.bean.TestNumber;
+import net.sf.jxls.bean.*;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.XLSTransformer;
 import net.sf.jxls.util.Util;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author Leonid Vysochyn
@@ -110,8 +86,6 @@ public class XLSTransformerTest extends TestCase {
     public static final String employeeNotesDestXLS = "target/employeeNotes_output.xls";
     public static final String employeeNotesRusDestXLS = "target/employeeNotesRus_output.xls";
 
-    public static final String varStatusXLS = "/templates/varstatus.xls";
-    public static final String varStatusDestXLS = "target/varstatus_output.xls";
 
     public static final String dynamicColumnsXLS = "/templates/dynamicColumns.xls";
     public static final String dynamicColumnsDestXLS = "target/dynamicColumns_output.xls";
@@ -1189,24 +1163,6 @@ public class XLSTransformerTest extends TestCase {
         saveWorkbook(resultWorkbook, employeeNotesDestXLS);
     }
 
-    public void testVarStatusAttrInForEach() throws IOException, ParsePropertyException, InvalidFormatException {
-        Map beans = new HashMap();
-        beans.put("employees", itEmployees);
-        InputStream is = new BufferedInputStream(getClass().getResourceAsStream(varStatusXLS));
-        XLSTransformer transformer = new XLSTransformer();
-        Workbook resultWorkbook = transformer.transformXLS(is, beans);
-        is.close();
-        is = new BufferedInputStream(getClass().getResourceAsStream(varStatusXLS));
-        Workbook sourceWorkbook = WorkbookFactory.create(is);
-
-        Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
-        Sheet resultSheet = resultWorkbook.getSheetAt(0);
-        Map props = new HashMap();
-        CellsChecker checker = new CellsChecker(props);
-        checker.checkListCells(sourceSheet, 3, resultSheet, 2, (short) 0, new Object[]{new Integer(0), new Integer(1), new Integer(2), new Integer(3), new Integer(4)});
-        is.close();
-        saveWorkbook(resultWorkbook, varStatusDestXLS);
-    }
 
     /*
      * This sample demonstrates a problem with formulas applied to jx:forEach tag
