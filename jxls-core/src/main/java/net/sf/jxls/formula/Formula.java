@@ -56,8 +56,8 @@ public class Formula {
             for (int i = 0, c = fi.formulaParts.size(); i < c; i++) {
               FormulaPart formulaPart = (FormulaPart) fi.formulaParts.get(i);
               formulaParts.add( new FormulaPart( formulaPart, this ) );
-                cellRefs = fi.cellRefs;
-          }
+            }
+            updateCellRefs();
         }
     }
 

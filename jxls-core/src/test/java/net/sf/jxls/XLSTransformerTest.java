@@ -1565,7 +1565,7 @@ public class XLSTransformerTest extends TestCase {
 
     public void testBeanNameTheSameAsMemberName() throws IOException, InvalidFormatException {
         Map beans = new HashMap();
-        TestNumber testNumber = new TestNumber(10);
+        NumberBean testNumber = new NumberBean(10);
         beans.put("test", testNumber);
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream("/templates/beandata.xls"));
         XLSTransformer transformer = new XLSTransformer();
