@@ -22,6 +22,17 @@ public class Department {
         this.staff = staff;
     }
 
+    public static List<Department> generate(int depCount, int employeeCount){
+        List<Department> departments = new ArrayList<Department>();
+        for(int index = 0; index < depCount; index++){
+            Department dep = new Department("Dep " + index);
+            dep.setChief( Employee.generateOne("ch" + index));
+            dep.setStaff( Employee.generate(employeeCount) );
+            departments.add( dep );
+        }
+        return departments;
+    }
+
     public void addEmployee(Employee employee) {
         staff.add(employee);
     }

@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.junit.Ignore;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -110,7 +111,9 @@ public class XLSTransformerTest extends TestCase {
 
     public static final String outlineXLS = "/templates/outline.xls";
     public static final String outlineDestXLS = "target/outline_output.xls";
-
+    
+    public static final String horizontalForXLS = "/templates/foriftagHor.xls";
+    
     SimpleBean simpleBean1;
     SimpleBean simpleBean2;
     SimpleBean simpleBean3;
@@ -1591,6 +1594,52 @@ public class XLSTransformerTest extends TestCase {
             log.info("Output Excel saved to " + fileName);
         }
     }
+    //TODO: this relates to issue in jxls tracker  ID: 3516503
+    public void ignore_testHorizontalForEachTiming() throws ParsePropertyException, InvalidFormatException {
+    	Integer[] iterations = { 100, 500, 1000, 2000 };
+    	Map timeMap = new TreeMap();
+    	long baselineTime = 0;
+    	int baselineIterations = 0;
+    	for ( Integer iteration : iterations ) {
+    		long time = timeHorizontalForEach( iteration );
+    		timeMap.put( iteration, time );
+    		
+    		if ( baselineIterations > 0 ) {
+    			double rowIncreaseFactor = (double)iteration / baselineIterations;
+    			double timeIncreaseFactor = (double)time/baselineTime;
+    			assertTrue("Rows Increased by a factor of ["+rowIncreaseFactor+"] but time grew by ["+timeIncreaseFactor+"]", timeIncreaseFactor / rowIncreaseFactor  < 2.0 );
+    		} else {
+        		baselineIterations = iteration;
+        		baselineTime = time;
+    		}
+    	}
+    }
+    
+    protected long timeHorizontalForEach(int iterations) throws ParsePropertyException, InvalidFormatException {
+    	long start = System.currentTimeMillis();
+    	Map beans = new HashMap();
+    	
+    	List departments = new ArrayList();
+    	for (int rows = 0; rows < iterations; rows++) {
+    		List employees = new ArrayList();
+    		employees.add( new Employee( "Employee "+rows+"-0", 100d, 100d));
+    		employees.add( new Employee( "Employee "+rows+"-1", 100d, 100d));
+    		employees.add( new Employee( "Employee "+rows+"-2", 100d, 100d));
+    		
+    		Department department = new Department("Department "+(rows+1));
+    		department.setStaff(employees);
+    		departments.add(department);
+    	}
+    	beans.put("departments", departments);
+    	InputStream is = new BufferedInputStream(getClass().getResourceAsStream("/templates/foriftagHor.xls"));
+        XLSTransformer transformer = new XLSTransformer();
+        transformer.transformXLS(is, beans);
+        
+        return System.currentTimeMillis() - start;
+    }
+
 
 
 }
+
+

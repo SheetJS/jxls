@@ -98,6 +98,11 @@
                           <arg value="${project.build.directory}/classes/templates/ex_temp.xls" />
                           <arg value="${project.build.directory}/ex_output.xls" />
                       </java>
+                      <java classname="net.sf.jxls.sample.StressTest">
+                          <classpath refid="maven.runtime.classpath" />
+                          <arg value="${project.build.directory}/classes/templates/" />
+                          <arg value="${project.build.directory}/" />
+                      </java>
                   </tasks>
                 </configuration>
                 <goals>
