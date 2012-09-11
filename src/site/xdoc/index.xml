@@ -6,11 +6,12 @@
     <body>
         <section name="News">
             <p>
-                <strong>jXLS 1.0 is released</strong>
+                <strong>jXLS 1.0.1 is released</strong>
             </p>
             <p>Main changes</p>
             <ul>
-                <li>Performance improvements and bug fixes</li>
+                <li>jxls-core: fixed bug ID: 3490991 (Repeated Formulas do not update cell references)</li>
+                <li>jxls-reader: fixed &lt;loopbreakcondition&gt; check for empty cells</li>
             </ul>
             <hr/>
         </section>
@@ -81,7 +82,7 @@
         </section>
         <section name="Support">
             <p>If you are interested in commercial jXLS support please contact jxls-devel mailing list</p>
-            <p>Also please be aware that enterprise edition of jXLS will be available in some time. If you want to request any strategic feature to be implemented please contact jXLS team</p>
+            <p>A new jXLS Plus product is going to be released soon. Along with new features and better performance it will provide flexible and plugin oriented architecture. Stay tuned!</p>
         </section>
     </body>
 </document>
