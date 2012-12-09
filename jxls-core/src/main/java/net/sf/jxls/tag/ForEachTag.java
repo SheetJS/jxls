@@ -358,9 +358,15 @@ public class ForEachTag extends BaseTag {
 
     private void processCollectionItemsOneRow(Collection c2, Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) {
         int k = 0;
-          for (Iterator iterator = c2.iterator(); iterator.hasNext();) {
+        int index = 0;
+        LoopStatus status = new LoopStatus();
+        if( varStatus != null ){
+            beans.put( varStatus, status );
+        }
+          for (Iterator iterator = c2.iterator(); iterator.hasNext(); index++) {
             Object o = iterator.next();
             beans.put(var, o);
+            status.setIndex( index );
             try {
                 short startCellNum = (short) (body.getStartCellNum() + shift.getLastCellShift() + body.getNumberOfColumns() * k++);
                 short endCellNum = (short) (startCellNum + body.getNumberOfColumns() - 1);
@@ -371,6 +377,9 @@ public class ForEachTag extends BaseTag {
             } catch (Exception e) {
                 log.error("Can't parse property ", e);
             }
+        }
+        if( varStatus != null ){
+            beans.remove( varStatus );
         }
     }
 
