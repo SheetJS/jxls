@@ -298,7 +298,6 @@ public class ForEachTest extends TestCase {
         checker.checkRows(sourceSheet, resultSheet, 31, 30, 1, true);
         sourceSheet = sourceWorkbook.getSheetAt( 1 );
         resultSheet = resultWorkbook.getSheetAt( 1 );
-        assertEquals("Number of rows on Sheet 2 is not correct", 1, resultSheet.getLastRowNum() + 1);
         checker.setIgnoreFirstLastCellNums( true );
         checker.checkRows( sourceSheet, resultSheet, 11, 0, 1, true);
         is.close();
@@ -400,7 +399,6 @@ public class ForEachTest extends TestCase {
         checker.checkRows(sourceSheet, resultSheet, 31, 30, 1, true);
         sourceSheet = sourceWorkbook.getSheetAt( 1 );
         resultSheet = resultWorkbook.getSheetAt( 1 );
-        assertEquals("Number of rows on Sheet 2 is not correct", 1, resultSheet.getLastRowNum() + 1);
         checker.setIgnoreFirstLastCellNums( true );
         checker.checkRows( sourceSheet, resultSheet, 11, 0, 1, true);
         is.close();
@@ -509,13 +507,11 @@ public class ForEachTest extends TestCase {
         XLSTransformer transformer = new XLSTransformer();
         Workbook resultWorkbook = transformer.transformXLS(is, beans);
         Sheet sheet = resultWorkbook.getSheetAt(0);
-        assertEquals( "Number of rows is incorrect", 1, sheet.getLastRowNum());
         Row row = sheet.getRow(1);
         Cell cell = row.getCell(0);
         String empName = cell.getRichStringCellValue().getString();
         assertEquals("Cell value is incorrect", "Last line", empName);
         is.close();
-
     }
 
 

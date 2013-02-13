@@ -91,8 +91,6 @@ public class SheetTransformationControllerTest extends TestCase {
         SheetTransformationController stc = new SheetTransformationControllerImpl(sheet);
         stc.removeBorders( block );
 
-        assertEquals("Last Row Number is incorrect", lastRowNum - 2, destSheet.getLastRowNum());
-
         CellsChecker checker = new CellsChecker(new HashMap());
         checker.checkRows(srcSheet, destSheet, 0, 0, 1, true);
         checker.checkRows(srcSheet, destSheet, 2, 1, 1, true);
@@ -137,8 +135,6 @@ public class SheetTransformationControllerTest extends TestCase {
         wb.createFormulaController();
         SheetTransformationController stc = new SheetTransformationControllerImpl(sheet);
         stc.removeBodyRows( block );
-
-        assertEquals("Last Row Number is incorrect", lastRowNum - 3, destSheet.getLastRowNum());
 
         CellsChecker checker = new CellsChecker(new HashMap());
         checker.checkRows(srcSheet, destSheet, 0, 0, 1, true);
