@@ -28,6 +28,7 @@ public class ReaderBuilder {
         digester.addObjectCreate("workbook", "net.sf.jxls.reader.XLSReaderImpl");
         digester.addObjectCreate("workbook/worksheet", "net.sf.jxls.reader.XLSSheetReaderImpl");
         digester.addSetProperties("workbook/worksheet", "name", "sheetName");
+        digester.addSetProperties("workbook/worksheet", "idx", "sheetIdx");
 //        digester.addSetProperty("workbook/worksheet", "sheetName", "name");
         digester.addSetNext("workbook/worksheet", "addSheetReader");
         digester.addObjectCreate("*/loop", "net.sf.jxls.reader.XLSForEachBlockReaderImpl");

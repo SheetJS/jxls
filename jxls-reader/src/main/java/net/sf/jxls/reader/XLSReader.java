@@ -16,4 +16,5 @@ public interface XLSReader {
     Map getSheetReaders();
     void addSheetReader( String sheetName, XLSSheetReader reader);
     void addSheetReader(XLSSheetReader reader);
+    public void addSheetReader(Integer idx, XLSSheetReader reader);
 }

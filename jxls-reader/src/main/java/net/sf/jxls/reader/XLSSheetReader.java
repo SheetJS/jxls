@@ -25,4 +25,7 @@ public interface XLSSheetReader {
     String getSheetName();
     void setSheetName(String sheetName);
 
+    int getSheetIdx();
+    void setSheetIdx(int idx);
+
 }

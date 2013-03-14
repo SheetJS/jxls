@@ -13,6 +13,7 @@ public class XLSSheetReaderImpl implements XLSSheetReader {
 
     List blockReaders = new ArrayList();
     String sheetName;
+    int sheetIdx;
 
     XLSReadStatus readStatus = new XLSReadStatus();
 
@@ -26,6 +27,11 @@ public class XLSSheetReaderImpl implements XLSSheetReader {
             cursor.moveForward();
         }
         return readStatus;
+    }
+
+    public String getSheetNameBySheetIdx(Sheet sheet, int idx){
+        Sheet sheetAtIdx = sheet.getWorkbook().getSheetAt(idx);
+        return sheetAtIdx.getSheetName();
     }
 
     public List getBlockReaders() {
@@ -46,5 +52,13 @@ public class XLSSheetReaderImpl implements XLSSheetReader {
 
     public void setSheetName(String sheetName) {
         this.sheetName = sheetName;
+    }
+
+    public int getSheetIdx(){
+        return sheetIdx;
+    }
+
+    public void setSheetIdx(int sheetIdx){
+        this.sheetIdx = sheetIdx;
     }
 }

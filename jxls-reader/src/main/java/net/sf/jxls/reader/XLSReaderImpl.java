@@ -14,52 +14,69 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  * Basic implementation of {@link XLSReader} interface
+ *
  * @author Leonid Vysochyn
  */
-public class XLSReaderImpl implements XLSReader {
+public class XLSReaderImpl implements XLSReader{
     protected final Log log = LogFactory.getLog(getClass());
 
     Map sheetReaders = new HashMap();
+    Map sheetReadersByIdx = new HashMap();
+
 
     XLSReadStatus readStatus = new XLSReadStatus();
 
 
-    public XLSReadStatus read(InputStream inputXLS, Map beans) throws IOException, InvalidFormatException {
+    public XLSReadStatus read(InputStream inputXLS, Map beans) throws IOException, InvalidFormatException{
         readStatus.clear();
         Workbook workbook = WorkbookFactory.create(inputXLS);
-        for (int sheetNo = 0; sheetNo < workbook.getNumberOfSheets(); sheetNo++) {
-            readStatus.mergeReadStatus( readSheet(workbook, sheetNo, beans) );
+        for(int sheetNo = 0; sheetNo < workbook.getNumberOfSheets(); sheetNo++){
+            readStatus.mergeReadStatus(readSheet(workbook, sheetNo, beans));
         }
         return readStatus;
     }
 
-    private XLSReadStatus readSheet(Workbook workbook, int sheetNo, Map beans) {
-        Sheet sheet = workbook.getSheetAt( sheetNo );
-        String sheetName = workbook.getSheetName( sheetNo );
-        if( log.isInfoEnabled() ){
+    private XLSReadStatus readSheet(Workbook workbook, int sheetNo, Map beans){
+        Sheet sheet = workbook.getSheetAt(sheetNo);
+        String sheetName = workbook.getSheetName(sheetNo);
+        if(log.isInfoEnabled()){
             log.info("Processing sheet " + sheetName);
         }
-        if( sheetReaders.containsKey( sheetName ) ){
-            XLSSheetReader sheetReader = (XLSSheetReader) sheetReaders.get( sheetName );
-            sheetReader.setSheetName( sheetName );
-            return sheetReader.read( sheet, beans );
+        XLSSheetReader sheetReader;
+        if(sheetReaders.containsKey(sheetName)){
+            sheetReader = (XLSSheetReader) sheetReaders.get(sheetName);
+            return readSheet(sheetReader, sheet, sheetName, beans);
+        } else if(sheetReadersByIdx.containsKey(new Integer(sheetNo))){
+            sheetReader = (XLSSheetReader) sheetReadersByIdx.get(new Integer(sheetNo));
+            return readSheet(sheetReader, sheet, sheetName, beans);
+        } else{
+            return null;
         }
-        return null;
     }
 
-    public Map getSheetReaders() {
+    private XLSReadStatus readSheet(XLSSheetReader sheetReader, Sheet sheet, String sheetName, Map beans){
+        sheetReader.setSheetName(sheetName);
+        return sheetReader.read(sheet, beans);
+    }
+
+    public Map getSheetReaders(){
         return sheetReaders;
     }
 
-    public void addSheetReader(String sheetName, XLSSheetReader reader) {
-        sheetReaders.put( sheetName, reader );
+    public void addSheetReader(String sheetName, XLSSheetReader reader){
+        sheetReaders.put(sheetName, reader);
     }
 
-    public void addSheetReader(XLSSheetReader reader) {
-        addSheetReader( reader.getSheetName(), reader );
+    public void addSheetReader(Integer idx, XLSSheetReader reader){
+        sheetReadersByIdx.put(idx, reader);
     }
 
-    public void setSheetReaders(Map sheetReaders) {
+    public void addSheetReader(XLSSheetReader reader){
+        addSheetReader(reader.getSheetName(), reader);
+        addSheetReader(new Integer(reader.getSheetIdx()), reader);
+    }
+
+    public void setSheetReaders(Map sheetReaders){
         this.sheetReaders = sheetReaders;
     }
 }
