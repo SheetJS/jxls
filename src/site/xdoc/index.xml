@@ -6,12 +6,13 @@
     <body>
         <section name="News">
             <p>
-                <strong>jXLS 1.0.1 is released</strong>
+                <strong>jXLS 1.0.2 is released</strong>
             </p>
-            <p>Main changes</p>
+            <p>Main changes in 1.0.2</p>
             <ul>
-                <li>jxls-core: fixed bug ID: 3490991 (Repeated Formulas do not update cell references)</li>
-                <li>jxls-reader: fixed &lt;loopbreakcondition&gt; check for empty cells</li>
+                <li>POI library version updated to the latest available (3.9)</li>
+                <li>varStatus attribute support for single row foreach tag processing</li>
+                <li>jxls-reader: feature request ID:3607643 Support for sheet index in jxls-reader</li>
             </ul>
             <hr/>
         </section>

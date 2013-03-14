@@ -98,6 +98,39 @@
                 </source>
             </section>
         </section>
+        <section id="sheetByIndex" name="Sheet mapping by index">
+            <p>As of version 1.0.2 jxls-reader supports mapping of sheets by index. This can be convenient in case you do not know the names of the sheets.
+            In this case the mapping file will look like this</p>
+            <source>
+                &lt;?xml version="1.0" encoding="ISO-8859-1"?>
+                &lt;workbook>
+                &lt;worksheet idx="0">
+                &lt;section startRow="0" endRow="6">
+                &lt;mapping cell="B1">department.name&lt;/mapping>
+                &lt;mapping cell="A4">department.chief.name&lt;/mapping>
+                &lt;mapping cell="B4">department.chief.age&lt;/mapping>
+                &lt;mapping cell="D4">department.chief.payment&lt;/mapping>
+                &lt;mapping row="3" col="4">department.chief.bonus&lt;/mapping>
+                &lt;/section>
+                &lt;loop startRow="7" endRow="7" items="department.staff" var="employee" varType="net.sf.jxls.reader.sample.Employee">
+                &lt;section startRow="7" endRow="7">
+                &lt;mapping row="7" col="0">employee.name&lt;/mapping>
+                &lt;mapping row="7" col="1">employee.age&lt;/mapping>
+                &lt;mapping row="7" col="3">employee.payment&lt;/mapping>
+                &lt;mapping row="7" col="4">employee.bonus&lt;/mapping>
+                &lt;/section>
+                &lt;loopbreakcondition>
+                &lt;rowcheck offset="0">
+                &lt;cellcheck offset="0">Employee Payment Totals:&lt;/cellcheck>
+                &lt;/rowcheck>
+                &lt;/loopbreakcondition>
+                &lt;/loop>
+                &lt;/worksheet>
+                &lt;/workbook>
+            </source>
+            <p>So instead of using <code>name</code> attribute for <code>worksheet</code> tag we now can use <code>idx</code> attribute to specify sheet index.
+            The sheet index is zero based.</p>
+        </section>
         <section id="errorProcessing" name="Error Processing">
             <p>By default jXLS throws <code>XLSDataReadException</code> if it fails to read some cell value and stops further processing.</p>
             <p>You can override this behaviour and allow to skip errors and continue processing with <code>setSkipErrors(true)</code> method of <code>ReaderConfig</code> class.

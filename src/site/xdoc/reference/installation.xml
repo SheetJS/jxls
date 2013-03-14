@@ -27,7 +27,7 @@
             </p>
 			<ul>
 				<li>
-					<a href="http://poi.apache.org/">POI 3.6</a>
+					<a href="http://poi.apache.org/">POI 3.7 or later</a>
 				</li>
 				<li>
 					<a href="http://commons.apache.org/beanutils/">Commons BeanUtils</a>
@@ -45,7 +45,7 @@
 					<a href="http://commons.apache.org/digester/">Commons Digester</a>
 				</li>
 			</ul>
-            <p><strong>Note: </strong> jXLS may not work with previous POI library releases. So if you have to work with POI 3.2 or earlier check older jXLS releases</p>
+            <p><strong>Note: </strong> jXLS may not work with legacy POI library releases. If you have any issues related to legacy POI api try to use older jXLS releases</p>
 		</section>
         <section id="buildingFromSource" name="Building from source">
             <p>You can build jXLS from source code if you need to get the latest changes which are not released yet.
