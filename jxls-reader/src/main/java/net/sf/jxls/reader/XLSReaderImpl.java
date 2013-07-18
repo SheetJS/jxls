@@ -63,6 +63,14 @@ public class XLSReaderImpl implements XLSReader{
         return sheetReaders;
     }
 
+    public Map getSheetReadersByIdx(){
+        return sheetReadersByIdx;
+    }
+
+    public void setSheetReadersByIdx(Map sheetReaders){
+        sheetReadersByIdx = sheetReaders;
+    }
+
     public void addSheetReader(String sheetName, XLSSheetReader reader){
         sheetReaders.put(sheetName, reader);
     }
@@ -73,7 +81,9 @@ public class XLSReaderImpl implements XLSReader{
 
     public void addSheetReader(XLSSheetReader reader){
         addSheetReader(reader.getSheetName(), reader);
-        addSheetReader(new Integer(reader.getSheetIdx()), reader);
+        if( reader.getSheetIdx() >= 0 ){
+            addSheetReader(new Integer(reader.getSheetIdx()), reader);
+        }
     }
 
     public void setSheetReaders(Map sheetReaders){

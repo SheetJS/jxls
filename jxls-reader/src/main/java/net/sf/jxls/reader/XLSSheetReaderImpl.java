@@ -13,7 +13,7 @@ public class XLSSheetReaderImpl implements XLSSheetReader {
 
     List blockReaders = new ArrayList();
     String sheetName;
-    int sheetIdx;
+    int sheetIdx = -1;
 
     XLSReadStatus readStatus = new XLSReadStatus();
 
