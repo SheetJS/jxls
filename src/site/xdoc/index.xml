@@ -6,13 +6,12 @@
     <body>
         <section name="News">
             <p>
-                <strong>jXLS 1.0.2 is released</strong>
+                <strong>jXLS v1.0.4 is released</strong>
             </p>
-            <p>Main changes in 1.0.2</p>
+            <p>Main changes in v1.0.4</p>
             <ul>
-                <li>POI library version updated to the latest available (3.9)</li>
-                <li>varStatus attribute support for single row foreach tag processing</li>
-                <li>jxls-reader: feature request ID:3607643 Support for sheet index in jxls-reader</li>
+                <li>Multi-thread safety for formulas processing (applied <a href="https://sourceforge.net/p/jxls/patches/9/">patch</a>)</li>
+                <li>Minor bug fixes for right/left cells shifting</li>
             </ul>
             <hr/>
         </section>

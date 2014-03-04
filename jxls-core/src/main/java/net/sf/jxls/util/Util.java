@@ -863,6 +863,10 @@ public final class Util {
                         sheet.setColumnWidth(destCell.getColumnIndex(),
                                 getWidth(sheet, cell.getColumnIndex()));
                     }
+                    // Folowing 2 lines Added by kiransringeri@gmail.com
+                    //Clear cell contents
+                    row.removeCell(cell);
+                    row.createCell(colNum);
                 }
             }
         }
@@ -895,6 +899,10 @@ public final class Util {
                     }
                     copyCell(cell, destCell, true);
                     Util.updateMergedRegionInRow(sheet, mergedRegions, rowNum, colNum, destColNum, removeSourceMergedRegion);
+                    // Folowing 2 lines Added by kiransringeri@gmail.com
+                    //Clear cell contents
+                    row.removeCell(cell);
+                    row.createCell(colNum);
                 }
             }
         }

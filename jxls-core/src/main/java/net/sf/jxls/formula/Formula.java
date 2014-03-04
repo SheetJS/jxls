@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class Formula {
     protected static final Log log = LogFactory.getLog(Formula.class);
-    private static final Map<String, FormulaInfo> cache = new HashMap<String, FormulaInfo>();
+    private static final ThreadLocal<Map<String, FormulaInfo>> cache = new ThreadLocal<Map<String, FormulaInfo>>();
 
     private String formula;
     private Integer rowNum;
@@ -31,7 +31,9 @@ public class Formula {
     private List formulaParts = new ArrayList();
 
     public static void clearCache() {
-        cache.clear();
+        if ( cache.get() != null ) {
+            cache.get().clear();
+        }
     }
 
     public Sheet getSheet() {
@@ -46,11 +48,14 @@ public class Formula {
         this.formula = formula;
         this.sheet = sheet;
         String cacheKey = (sheet!=null ? sheet.getSheetName() : "") + "!" + formula;
-        FormulaInfo fi = cache.get(cacheKey);
+        if ( cache.get() == null ) {
+            cache.set( new HashMap<String, Formula.FormulaInfo>() );
+        }
+        FormulaInfo fi = cache.get().get(cacheKey);
         if (fi == null) {
             parseFormula();
             updateCellRefs();
-            cache.put(cacheKey, new FormulaInfo(this));
+            cache.get().put(cacheKey, new FormulaInfo(this));
         }
         else {
             for (int i = 0, c = fi.formulaParts.size(); i < c; i++) {

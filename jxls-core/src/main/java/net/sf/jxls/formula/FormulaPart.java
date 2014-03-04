@@ -30,19 +30,24 @@ public class FormulaPart {
     private static final String regexCellRef = "([a-zA-Z]+[a-zA-Z0-9]*![a-zA-Z]+[0-9]+|[a-zA-Z]+[0-9]+|'[^?\\\\/:'*]+'![a-zA-Z]+[0-9]+)";
     private static final Pattern regexCellRefPattern = Pattern.compile(regexCellRef);
 
-    private static final Map<String, FormulaPartInfo> cache = new HashMap<String, FormulaPartInfo>();
+    private static final ThreadLocal<Map<String, FormulaPartInfo>> cache = new ThreadLocal<Map<String, FormulaPartInfo>>();
 
     public static void clearCache() {
-        cache.clear();
+        if ( cache.get() != null ) {
+            cache.get().clear();
+        }
     }
 
     public FormulaPart(String formulaPartString, Formula parentFormula) {
         this.formulaPartString = formulaPartString;
         this.parentFormula = parentFormula;
-        FormulaPartInfo fpi = cache.get(formulaPartString);
+        if ( cache.get() == null ) {
+            cache.set(new HashMap<String, FormulaPartInfo>());
+        }
+        FormulaPartInfo fpi = cache.get().get(formulaPartString);
         if (fpi == null) {
             parseFormulaPartString(formulaPartString);
-            cache.put(formulaPartString, new FormulaPartInfo(parts, this));
+            cache.get().put(formulaPartString, new FormulaPartInfo(parts, this));
         }
         else {
             for (int i = 0, c = fpi.parts.size(); i < c; i++) {
