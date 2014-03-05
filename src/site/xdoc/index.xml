@@ -6,12 +6,11 @@
     <body>
         <section name="News">
             <p>
-                <strong>jXLS v1.0.4 is released</strong>
+                <strong>jXLS v1.0.5 is released</strong>
             </p>
-            <p>Main changes in v1.0.4</p>
+            <p>Main changes in v1.0.5</p>
             <ul>
-                <li>Multi-thread safety for formulas processing (applied <a href="https://sourceforge.net/p/jxls/patches/9/">patch</a>)</li>
-                <li>Minor bug fixes for right/left cells shifting</li>
+                <li>Fixed a bug with default formula value (applied <a href="https://sourceforge.net/p/jxls/bugs/59/">patch</a>)</li>
             </ul>
             <hr/>
         </section>
