@@ -33,23 +33,24 @@ public class FormulaPart {
     private static final ThreadLocal<Map<String, FormulaPartInfo>> cache = new ThreadLocal<Map<String, FormulaPartInfo>>();
 
     public static void clearCache() {
-        if ( cache.get() != null ) {
-            cache.get().clear();
-        }
+        cache.remove();
     }
 
     public FormulaPart(String formulaPartString, Formula parentFormula) {
         this.formulaPartString = formulaPartString;
         this.parentFormula = parentFormula;
-        if ( cache.get() == null ) {
-            cache.set(new HashMap<String, FormulaPartInfo>());
+        Map<String, FormulaPartInfo> cacheMap = cache.get();
+        if(cacheMap == null){
+            cacheMap = new HashMap<String, FormulaPartInfo>();
+            cache.set(cacheMap);
         }
-        FormulaPartInfo fpi = cache.get().get(formulaPartString);
+        FormulaPartInfo fpi = cacheMap.get(formulaPartString);
         if (fpi == null) {
             parseFormulaPartString(formulaPartString);
-            cache.get().put(formulaPartString, new FormulaPartInfo(parts, this));
+            cacheMap.put(formulaPartString, new FormulaPartInfo(parts, this));
         }
         else {
+            defaultValue = fpi.defaultValue;
             for (int i = 0, c = fpi.parts.size(); i < c; i++) {
                 Object part = fpi.parts.get(i);
                 if (part instanceof String) {
@@ -257,6 +258,7 @@ public class FormulaPart {
 
     private static class FormulaPartInfo {
         private FormulaPartInfo(final List parts, final FormulaPart parentFormula) {
+            this.defaultValue = parentFormula.defaultValue;
             this.parts = new LinkedList();
             for (int i = 0, c = parts.size(); i < c; i++) {
                 Object part = parts.get(i);
@@ -270,5 +272,6 @@ public class FormulaPart {
         }
 
         private List parts;
+        private Integer defaultValue;
     }
 }

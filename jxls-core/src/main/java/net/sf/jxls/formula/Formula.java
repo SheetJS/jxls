@@ -30,10 +30,8 @@ public class Formula {
 
     private List formulaParts = new ArrayList();
 
-    public static void clearCache() {
-        if ( cache.get() != null ) {
-            cache.get().clear();
-        }
+    public static void clearCache(){
+        cache.remove();
     }
 
     public Sheet getSheet() {
@@ -48,16 +46,17 @@ public class Formula {
         this.formula = formula;
         this.sheet = sheet;
         String cacheKey = (sheet!=null ? sheet.getSheetName() : "") + "!" + formula;
-        if ( cache.get() == null ) {
-            cache.set( new HashMap<String, Formula.FormulaInfo>() );
+        Map<String, FormulaInfo> cacheMap = cache.get();
+        if(cacheMap == null){
+            cacheMap = new HashMap<String, FormulaInfo>();
+            cache.set(cacheMap);
         }
-        FormulaInfo fi = cache.get().get(cacheKey);
+        FormulaInfo fi = cacheMap.get(cacheKey);
         if (fi == null) {
             parseFormula();
             updateCellRefs();
-            cache.get().put(cacheKey, new FormulaInfo(this));
-        }
-        else {
+            cacheMap.put(cacheKey, new FormulaInfo(this));
+        } else {
             for (int i = 0, c = fi.formulaParts.size(); i < c; i++) {
               FormulaPart formulaPart = (FormulaPart) fi.formulaParts.get(i);
               formulaParts.add( new FormulaPart( formulaPart, this ) );
